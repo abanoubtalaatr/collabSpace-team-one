@@ -59,13 +59,6 @@ class ConfigurationServicePovider extends ServiceProvider
     {
         Relation::enforceMorphMap([
             'user' => User::class,
-            'admin' => Admin::class,
-            'compound' => Compound::class,
-            'block' => Block::class,
-            'unit' => Unit::class,
-            'city' => City::class,
-            'banner' => Banner::class,
-            'unit_transaction' => UnitTransaction::class
         ]);
     }
 }
