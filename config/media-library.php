@@ -1,5 +1,6 @@
 <?php
 
+use App\Support\CustomPathGenerator;
 use Spatie\ImageOptimizer\Optimizers\Avifenc;
 use Spatie\ImageOptimizer\Optimizers\Cwebp;
 use Spatie\ImageOptimizer\Optimizers\Gifsicle;
@@ -141,7 +142,7 @@ return [
     /*
      * The class that contains the strategy for determining a media file's path.
      */
-    'path_generator' => DefaultPathGenerator::class,
+    'path_generator' => CustomPathGenerator::class,
 
     /*
      * The class that contains the strategy for determining how to remove files.
