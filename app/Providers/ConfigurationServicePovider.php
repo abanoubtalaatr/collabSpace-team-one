@@ -2,13 +2,6 @@
 
 namespace App\Providers;
 
-use App\Models\Admin;
-use App\Models\Banner;
-use App\Models\Block;
-use App\Models\City;
-use App\Models\Compound;
-use App\Models\Unit;
-use App\Models\UnitTransaction;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
