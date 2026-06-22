@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\ServiceProvider;
@@ -41,37 +42,37 @@ class ResponseServiceProvider extends ServiceProvider
 
         // --- Success Macros ---
 
-        Response::macro('success', function ($message = null, $data = null) use ($buildResponse) {
+        Response::macro('success', function ($message = null, $data = null) use ($buildResponse): JsonResponse {
             return $buildResponse(true, Status::HTTP_OK, $message, $data);
         });
 
-        Response::macro('created', function ($message = null, $data = null) use ($buildResponse) {
+        Response::macro('created', function ($message = null, $data = null) use ($buildResponse): JsonResponse {
             return $buildResponse(true, Status::HTTP_CREATED, $message, $data);
         });
 
-        Response::macro('noContent', function () use ($buildResponse) {
+        Response::macro('noContent', function () use ($buildResponse): JsonResponse {
             return $buildResponse(true, Status::HTTP_NO_CONTENT, null, null);
         });
 
         // --- Error Macros ---
 
-        Response::macro('error', function ($message = null, $data = null, $status = Status::HTTP_BAD_REQUEST) use ($buildResponse) {
+        Response::macro('error', function ($message = null, $data = null, $status = Status::HTTP_BAD_REQUEST) use ($buildResponse): JsonResponse {
             return $buildResponse(false, $status, $message, $data);
         });
 
-        Response::macro('unauthorized', function () use ($buildResponse) {
+        Response::macro('unauthorized', function () use ($buildResponse): JsonResponse {
             return $buildResponse(false, Status::HTTP_UNAUTHORIZED, __('lang.unauthorized'), null);
         });
 
-        Response::macro('forbidden', function () use ($buildResponse) {
+        Response::macro('forbidden', function () use ($buildResponse): JsonResponse {
             return $buildResponse(false, Status::HTTP_FORBIDDEN, __('lang.forbidden'), null);
         });
 
-        Response::macro('notFound', function () use ($buildResponse) {
+        Response::macro('notFound', function () use ($buildResponse): JsonResponse {
             return $buildResponse(false, Status::HTTP_NOT_FOUND, __('lang.not_found'), null);
         });
 
-        Response::macro('internalError', function () use ($buildResponse) {
+        Response::macro('internalError', function () use ($buildResponse): JsonResponse {
             return $buildResponse(false, Status::HTTP_INTERNAL_SERVER_ERROR, __('lang.server_error'), null);
         });
     }
