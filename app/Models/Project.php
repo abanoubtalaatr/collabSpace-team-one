@@ -18,7 +18,7 @@ class Project extends Model
     protected $table = 'projects';
 
     protected $fillable = [
-        'creatd_by',
+        'created_by',
         'name',
         'description',
         'start_date',
