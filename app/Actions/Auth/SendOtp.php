@@ -17,8 +17,11 @@ class SendOtp
     public function handle(string $email, string $purpose, ?string $recipientName = null): void
     {
         // FIXME: fix in production
-        // $otp = (string) random_int(100000, 999999);
-        $otp = '123456';
+        if (app()->isProduction()) {
+            $otp = (string) random_int(100000, 999999);
+        } else {
+            $otp = '123456';
+        }
 
         defer(function () use ($email, $otp, $recipientName) {
             Mail::to($email)->send(new SendOtpMail($otp, $recipientName ?? 'there'));
