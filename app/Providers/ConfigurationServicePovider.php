@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
-class ConfigurationServicePovider extends ServiceProvider
+class ConfigurationServiceProvider extends ServiceProvider
 {
     /**
      * Register services.

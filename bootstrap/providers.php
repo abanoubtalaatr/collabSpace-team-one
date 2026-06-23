@@ -1,11 +1,11 @@
 <?php
 
 use App\Providers\AppServiceProvider;
-use App\Providers\ConfigurationServicePovider;
+use App\Providers\ConfigurationServiceProvider;
 use App\Providers\ResponseServiceProvider;
 
 return [
     AppServiceProvider::class,
-    ConfigurationServicePovider::class,
+    ConfigurationServiceProvider::class,
     ResponseServiceProvider::class
 ];
