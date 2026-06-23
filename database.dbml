@@ -238,7 +238,7 @@ Table "tasks" {
     created_at timestamp
     updated_at timestamp
 }
-Ref "tasks_project_id_foreign":"tasks"."id" > "projects"."id" [update: cascade, delete: cascade]
+Ref "tasks_project_id_foreign":"tasks"."project_id" > "projects"."id" [update: cascade, delete: cascade]
 
 Table "team_user" {
     team_id bigint [not null]
