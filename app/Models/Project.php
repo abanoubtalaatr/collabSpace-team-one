@@ -4,10 +4,19 @@ namespace App\Models;
 
 use App\Enums\ProjectPriority;
 use App\Enums\ProjectStatus;
+use Database\Factories\ProjectFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Searchable\Searchable;
+use Spatie\Searchable\SearchResult;
 
-class Project extends Model
+class Project extends Model implements Searchable
 {
+    /** @use HasFactory<ProjectFactory> */
+    use HasFactory;
+
+    public string $searchableType = 'Project';
+
     protected function casts(): array
     {
         return [
@@ -31,5 +40,10 @@ class Project extends Model
     public function teams()
     {
         return $this->belongsToMany(Team::class, 'project_team');
+    }
+
+    public function getSearchResult(): SearchResult
+    {
+        return new SearchResult($this, $this->name);
     }
 }
