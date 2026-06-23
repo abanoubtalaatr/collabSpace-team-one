@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('creatd_by')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('created_by')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('name');
             $table->text('description');
             $table->date('start_date');

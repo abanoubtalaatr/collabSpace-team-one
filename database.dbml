@@ -204,8 +204,8 @@ Table "users" {
 }
 
 Table "projects" {
-    id int [pk, increment]
-    creatd_by bigint [not null]
+    id bigint [pk, increment]
+    created_by bigint [not null]
     name varchar(255) [not null]
     description text [not null]
     start_date date [not null]
@@ -215,7 +215,7 @@ Table "projects" {
     created_at timestamp
     updated_at timestamp
 }
-Ref "projects_creatd_by_foreign":"users"."id" < "projects"."id" [update: cascade, delete: cascade]
+Ref "projects_created_by_foreign":"users"."id" < "projects"."id" [update: cascade, delete: cascade]
 Enum "projects_priority_enum" {
     "low"
     "medium"
@@ -231,7 +231,7 @@ Enum "projects_status_enum" {
 }
 
 Table "tasks" {
-    id int [pk, increment]
+    id bigint [pk, increment]
     project_id bigint [not null]
     name varchar(255) [not null]
     description text [not null]
@@ -241,7 +241,6 @@ Table "tasks" {
 Ref "tasks_project_id_foreign":"tasks"."id" > "projects"."id" [update: cascade, delete: cascade]
 
 Table "team_user" {
-    id int [pk, increment]
     team_id bigint [not null]
     user_id bigint [not null]
 }
@@ -250,7 +249,6 @@ Ref "team_user_team_id_foreign":"team_user"."team_id" <> "teams"."id" [update: c
 
 
 Table "task_user" {
-    id int [pk, increment]
     task_id bigint [not null]
     user_id bigint [not null]
 }
@@ -258,7 +256,6 @@ Ref "task_user_user_id_foreign":"task_user"."user_id" <> "users"."id" [update: c
 Ref "task_user_task_id_foreign":"task_user"."task_id" <> "tasks"."id" [update: cascade, delete: cascade]
 
 Table "project_team" {
-    id int [pk, increment]
     project_id bigint [not null]
     team_id bigint [not null]
 }
