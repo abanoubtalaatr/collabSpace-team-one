@@ -19,9 +19,9 @@ class LoginUser
             throw ValidationException::withMessages(['email' => __('auth.failed')]);
         }
 
-        if (! $user->email_verified_at) {
-            throw ValidationException::withMessages(['email' => __('auth.unverified')]);
-        }
+        // if (! $user->email_verified_at) {
+        //     throw ValidationException::withMessages(['email' => __('auth.unverified')]);
+        // }
 
         $accessToken = $user->createToken($user->email);
 
