@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Traits;
+namespace App\Concerns;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Symfony\Component\HttpFoundation\Response as Status;
 
-trait ApiResponses
+trait ApiResponse
 {
     private function buildResponse(bool $success, int $status, ?string $message = null, mixed $data = null): array
     {
@@ -26,7 +26,7 @@ trait ApiResponses
         ];
     }
 
-    public function success(mixed $data = null, ?string $message = null): JsonResponse
+    public function success(?string $message, array $data): JsonResponse
     {
         return response()->json(
             $this->buildResponse(true, Status::HTTP_OK, $message, $data),
@@ -34,7 +34,7 @@ trait ApiResponses
         );
     }
 
-    public function created(mixed $data = null, ?string $message = null): JsonResponse
+    public function created(?string $message, array $data): JsonResponse
     {
         return response()->json(
             $this->buildResponse(true, Status::HTTP_CREATED, $message, $data),
