@@ -14,7 +14,7 @@ class sendOtp extends Mailable
 
     public function __construct(
         public string $otp,
-        public string $recipientName = 'there',
+        public string $recipientName,
     ) {}
 
     public function envelope(): Envelope

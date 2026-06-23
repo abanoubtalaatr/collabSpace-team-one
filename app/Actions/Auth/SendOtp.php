@@ -23,14 +23,12 @@ class SendOtp
             $otp = '123456';
         }
 
-        defer(function () use ($email, $otp, $recipientName) {
-            Mail::to($email)->send(new SendOtpMail($otp, $recipientName ?? 'there'));
-        });
-
         Cache::put("{$purpose}_otp_{$email}", [
             'otp' => Hash::make($otp),
             'attempts' => 0,
             'expires_at' => now()->addMinutes(5)
         ], now()->addMinutes(5));
+
+        Mail::to($email)->queue((new SendOtpMail($otp, $recipientName)));
     }
 }
