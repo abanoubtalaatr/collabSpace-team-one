@@ -5,7 +5,8 @@ use App\Http\Controllers\api\project_manager\ProjectController as PMProjectContr
 use App\Http\Controllers\api\team_member\ProjectController as TMProjectController;
 
 Route::middleware(['auth:sanctum'])->group(function () {
-
+ 
+    
     // ── Admin ────────────────────────────────────────────────
     Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
         Route::apiResource('projects', AdminProjectController::class);
@@ -17,7 +18,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     });
 
     // ── Team Member ──────────────────────────────────────────
-    Route::middleware('role:team_member')->prefix('team-member')->name('tm.')->group(function () {
+    Route::middleware('role:member')->prefix('member')->name('tm.')->group(function () {
         Route::apiResource('projects', TMProjectController::class)->only(['index', 'show']);
     });
 

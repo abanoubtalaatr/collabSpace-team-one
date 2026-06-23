@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
+ use App\Repositories\Contracts\ProjectRepositoryInterface;
+use App\Repositories\Contracts\ProjectRepository;
 
 class ConfigurationServicePovider extends ServiceProvider
 {
@@ -16,8 +18,11 @@ class ConfigurationServicePovider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+            $this->app->bind(ProjectRepositoryInterface::class, ProjectRepository::class);
+
     }
+   
+
 
     /**
      * Bootstrap services.

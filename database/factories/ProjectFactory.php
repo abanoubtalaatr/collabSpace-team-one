@@ -22,40 +22,51 @@ class ProjectFactory extends Factory
             'description' => $this->faker->paragraph(),
             'start_date'  => $startDate->format('Y-m-d'),
             'deadline'    => $deadline->format('Y-m-d'),
-            'priority'    => $this->faker->randomElement(Project::priorities()),
-            'status'      => $this->faker->randomElement(Project::statuses()),
-            'created_by'  => User::factory(),
+
+            'priority' => $this->faker->randomElement(
+                ProjectPriority::values()
+            ),
+
+            'status' => $this->faker->randomElement(
+                ProjectStatus::values()
+            ),
+
+            'created_by' => User::factory(),
         ];
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | States
-    |--------------------------------------------------------------------------
-    */
-
     public function pending(): self
     {
-        return $this->state(['status' => ProjectStatus::PENDING->value]);
+        return $this->state([
+            'status' => ProjectStatus::PENDING->value,
+        ]);
     }
 
     public function inProgress(): self
     {
-        return $this->state(['status' => ProjectStatus::IN_PROGRESS->value]);
+        return $this->state([
+            'status' => ProjectStatus::IN_PROGRESS->value,
+        ]);
     }
 
     public function completed(): self
     {
-        return $this->state(['status' => ProjectStatus::COMPLETED->value]);
+        return $this->state([
+            'status' => ProjectStatus::COMPLETED->value,
+        ]);
     }
 
     public function critical(): self
     {
-        return $this->state(['priority' => ProjectPriority::CRITICAL->value]);
+        return $this->state([
+            'priority' => ProjectPriority::CRITICAL->value,
+        ]);
     }
 
     public function createdBy(User $user): self
     {
-        return $this->state(['created_by' => $user->id]);
+        return $this->state([
+            'created_by' => $user->id,
+        ]);
     }
 }

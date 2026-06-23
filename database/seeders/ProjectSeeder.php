@@ -2,45 +2,45 @@
 
 namespace Database\Seeders;
 
+use App\Enums\ProjectStatus;
 use App\Models\Project;
-use App\Models\Team;
 use App\Models\User;
 use Illuminate\Database\Seeder;
-use App\Enums\ProjectStatus;
 
 class ProjectSeeder extends Seeder
 {
     public function run(): void
     {
-        // Fetch or create roles-based users
-        $admin          = User::role('admin')->first()          ?? User::factory()->create(['name' => 'Admin User']);
-        $projectManager = User::role('project_manager')->first() ?? User::factory()->create(['name' => 'Project Manager']);
+        $admin = User::whereHas('roles', function ($query) {
+            $query->where('name', 'admin');
+        })->first();
 
-        // Ensure we have some teams
-        $teams = Team::all()->count() > 0
-            ? Team::all()
-            : Team::factory()->count(3)->create();
+        $projectManager = User::whereHas('roles', function ($query) {
+            $query->where('name', 'project_manager');
+        })->first();
 
-        // ── Seed 10 projects created by the admin ────────────────────────────
+        if (! $admin || ! $projectManager) {
+            $this->command->warn(
+                'Admin or Project Manager users not found. Run UserSeeder first.'
+            );
+
+            return;
+        }
+
+        // Projects created by admin
         Project::factory()
             ->count(5)
             ->createdBy($admin)
-            ->create()
-            ->each(function (Project $project) use ($teams) {
-                $project->teams()->sync($teams->random(rand(1, 2))->pluck('id'));
-            });
+            ->create();
 
-        // ── Seed 5 projects created by the project manager ──────────────────
+        // Projects created by project manager
         Project::factory()
             ->count(3)
             ->createdBy($projectManager)
             ->inProgress()
-            ->create()
-            ->each(function (Project $project) use ($teams) {
-                $project->teams()->sync($teams->random(1)->pluck('id'));
-            });
+            ->create();
 
-        // ── One critical overdue project ─────────────────────────────────────
+        // One critical overdue project
         Project::factory()
             ->createdBy($admin)
             ->critical()
