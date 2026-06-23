@@ -15,11 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->text('description');
-            $table->enum('status', ['pending', 'in_progress', 'in_review', 'completed'])->default('pending');
+            $table->string('status')->default('pending');
             $table->timestamps();
 
             // foreign key relationship with projects table
-            $table->foreignId('project_id')->constrained('projects')->onDelete('cascade');
+            $table->foreignId('project_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
         });
     }
 

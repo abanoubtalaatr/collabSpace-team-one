@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ReportType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -17,6 +18,10 @@ class Report extends Model
         'note',
         'start_date',
         'end_date',
+    ];
+
+    protected $casts = [
+        'report_type' => ReportType::class,
     ];
 
     public function user(): BelongsTo

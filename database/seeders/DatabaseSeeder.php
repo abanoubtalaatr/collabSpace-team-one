@@ -30,5 +30,19 @@ class DatabaseSeeder extends Seeder
         // ]);
 
 
+        $teams = Team::factory(3)->create();
+
+        $users = User::factory(10)->create();
+        foreach ($users as $user) {
+            $user->teams()->attach($teams->random()->id);
+        }
+
+        $projects = Project::factory(5)->create()->each(function ($project) use ($teams) {
+
+            $project->teams()->attach($teams->random()->id);
+        });
+
+        Task::factory(30)->create();
+
     }
 }

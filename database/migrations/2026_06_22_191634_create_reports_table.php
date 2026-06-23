@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
-            $table->enum('report_type', ['project', 'task', 'team', 'user']);
+            $table->string('report_type')->default('project');
             $table->text('note')->nullable();
             $table->date('start_date');
             $table->date('end_date');
