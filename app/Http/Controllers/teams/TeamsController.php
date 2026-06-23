@@ -32,14 +32,13 @@ class TeamsController extends Controller
     public function show($teamId)
     {
         $team = Team::with(['members', 'projects'])->findOrFail($teamId);
-
         return response()->json($team);
     }
 
     public function edit($teamId)
     {
         $team = Team::with(['members', 'projects'])->findOrFail($teamId);
-        return response()->json($team);
+        return response()->json(['message' => 'Display form to edit the team', 'team' => $team]);
     }
 
     public function update(Request $request, $teamId)

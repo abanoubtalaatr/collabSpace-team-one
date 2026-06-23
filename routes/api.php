@@ -16,3 +16,9 @@ Route::post('forgot-password', [AuthController::class, 'forgotPassword'])
     ->name('password.forgot')
     ->middleware(['throttle:3,1', 'guest']);
 Route::post('reset-password', [AuthController::class, 'resetPassword'])->name('password.reset');
+
+
+require __DIR__.'/team.php';
+
+
+

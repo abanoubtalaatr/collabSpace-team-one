@@ -17,8 +17,6 @@ return Application::configure(basePath: dirname(__DIR__))
             if (app()->isLocal() && app()->hasDebugModeEnabled()) {
                 Route::middleware('web')
                     ->group(base_path('routes/development.php'));
-                Route::middleware('abi')
-                    ->group(base_path('routes/team.php'));
             }
         }
     )
