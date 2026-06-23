@@ -1,9 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
-use Database\Factories\TeamFactory;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Laratrust\Models\Team as LaratrustTeam;
 use Spatie\Searchable\Searchable;
 use Spatie\Searchable\SearchResult;
@@ -17,9 +17,9 @@ class Team extends LaratrustTeam implements Searchable
 
     public string $searchableType = 'Team';
 
-    public function projects()
+    public function projects(): BelongsToMany
     {
-        return $this->belongsToMany(Project::class, 'project_team');
+        return $this->belongsToMany(Project::class, 'project_team', 'team_id', 'project_id', 'id', 'id');
     }
 
     public function members()

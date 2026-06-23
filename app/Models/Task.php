@@ -1,33 +1,29 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Database\Factories\TaskFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Spatie\Searchable\Searchable;
-use Spatie\Searchable\SearchResult;
 
 class Task extends Model implements Searchable
 {
-    /** @use HasFactory<TaskFactory> */
-    use HasFactory;
-
-    public string $searchableType = 'Task';
-
     protected function casts(): array
     {
         return [];
     }
 
-    public function project()
+    // Relationships
+    public function project(): BelongsTo
     {
-        return $this->belongsTo(Project::class);
+        return $this->belongsTo(Project::class, 'project_id', 'id');
     }
 
-    public function users()
+    public function users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'task_user');
+        return $this->belongsToMany(User::class, 'task_user', 'task_id', 'user_id', 'id', 'id');
     }
 
     public function getSearchResult(): SearchResult

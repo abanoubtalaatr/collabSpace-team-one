@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use App\Enums\ProjectPriority;
@@ -7,16 +9,9 @@ use App\Enums\ProjectStatus;
 use Database\Factories\ProjectFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Spatie\Searchable\Searchable;
-use Spatie\Searchable\SearchResult;
 
 class Project extends Model implements Searchable
 {
-    /** @use HasFactory<ProjectFactory> */
-    use HasFactory;
-
-    public string $searchableType = 'Project';
-
     protected function casts(): array
     {
         return [
@@ -27,19 +22,20 @@ class Project extends Model implements Searchable
         ];
     }
 
-    public function creator()
+    // Relationships
+    public function creator(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'creatd_by');
+        return $this->belongsTo(User::class, 'creatd_by', 'id');
     }
 
-    public function tasks()
+    public function tasks(): HasMany
     {
-        return $this->hasMany(Task::class);
+        return $this->hasMany(Task::class, 'project_id', 'id');
     }
 
-    public function teams()
+    public function teams(): BelongsToMany
     {
-        return $this->belongsToMany(Team::class, 'project_team');
+        return $this->belongsToMany(Team::class, 'project_team', 'project_id', 'team_id', 'id', 'id');
     }
 
     public function getSearchResult(): SearchResult
