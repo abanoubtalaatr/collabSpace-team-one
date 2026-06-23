@@ -23,7 +23,7 @@ class UpdateProjectAction
             'status'      => $dto->status,
         ]);
 
-        $this->repository->syncTeams($project, $dto->teamIds);
+        //$this->repository->syncTeams($project, $dto->teamIds);
 
         if (!empty($dto->mediaFiles)) {
             foreach ($dto->mediaFiles as $file) {

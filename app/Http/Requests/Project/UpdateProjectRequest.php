@@ -8,7 +8,7 @@ use App\Enums\ProjectStatus;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class StoreProjectRequest extends FormRequest
+class UpdateProjectRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -23,11 +23,11 @@ class StoreProjectRequest extends FormRequest
             'start_date'    => ['nullable', 'date'],
             'deadline'      => ['nullable', 'date', 'after_or_equal:start_date'],
             'priority'      => ['required', Rule::in(ProjectPriority::values())],
-            'status'        => ['sometimes', Rule::in(ProjectStatus::values())],
+            'status'        => ['required', Rule::in(ProjectStatus::values())],
             //'team_ids'      => ['sometimes', 'array'],
-           // 'team_ids.*'    => ['integer', 'exists:teams,id'],
+            //'team_ids.*'    => ['integer', 'exists:teams,id'],
             'attachments'   => ['sometimes', 'array'],
-            'attachments.*' => ['file', 'max:10240'], // 10MB per file
+            'attachments.*' => ['file', 'max:10240'],
         ];
     }
 }

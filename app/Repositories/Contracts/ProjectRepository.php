@@ -10,7 +10,7 @@ class ProjectRepository implements ProjectRepositoryInterface
 {
     public function getAllPaginated(int $perPage = 15): LengthAwarePaginator
     {
-        return Project::with(['creator', 'teams', 'media'])
+        return Project::with(['creator', 'media'])//'teams'
             ->latest()
             ->paginate($perPage);
     }
@@ -33,7 +33,7 @@ class ProjectRepository implements ProjectRepositoryInterface
 
     public function findById(int $id): ?Project
     {
-        return Project::with(['creator', 'tasks', 'teams', 'media'])->find($id);
+        return Project::with(['creator',  'media'])->find($id);//'tasks', 'teams'
     }
 
     public function create(array $data): Project
@@ -45,7 +45,7 @@ class ProjectRepository implements ProjectRepositoryInterface
     {
         $project->update($data);
 
-        return $project->fresh(['creator', 'tasks', 'teams', 'media']);
+        return $project->fresh(['creator', 'media']);//'tasks', 'teams'
     }
 
     public function delete(Project $project): void

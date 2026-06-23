@@ -6,6 +6,7 @@ use App\Models\Project;
 use App\Models\Team;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use App\Enums\ProjectStatus;
 
 class ProjectSeeder extends Seeder
 {
@@ -47,7 +48,7 @@ class ProjectSeeder extends Seeder
                 'name'       => 'Critical Launch Project',
                 'start_date' => now()->subMonth()->toDateString(),
                 'deadline'   => now()->subWeek()->toDateString(),
-                'status'     => Project::STATUS_ON_HOLD,
+                'status'     => ProjectStatus::ON_HOLD->value,
             ]);
 
         $this->command->info('Projects seeded successfully.');

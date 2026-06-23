@@ -24,15 +24,15 @@ class CreateProjectAction
             'created_by'  => $dto->createdBy,
         ]);
 
-        if (!empty($dto->teamIds)) {
+       /* if (!empty($dto->teamIds)) {
             $this->repository->syncTeams($project, $dto->teamIds);
-        }
+        }*/
 
         foreach ($dto->mediaFiles as $file) {
             $project->addMedia($file)
                     ->toMediaCollection(Project::MEDIA_COLLECTION_ATTACHMENTS);
         }
 
-        return $project->load(['creator', 'tasks', 'teams', 'media']);
+        return $project->load(['creator',  'media']);//'tasks', 'teams',
     }
 }

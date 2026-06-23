@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use App\Enums\ProjectPriority;
+use App\Enums\ProjectStatus;
 
 class Project extends Model implements HasMedia
 {
@@ -19,7 +21,7 @@ class Project extends Model implements HasMedia
     | Constants
     |--------------------------------------------------------------------------
     */
-
+    /*
     const PRIORITY_LOW      = 'low';
     const PRIORITY_MEDIUM   = 'medium';
     const PRIORITY_HIGH     = 'high';
@@ -30,7 +32,7 @@ class Project extends Model implements HasMedia
     const STATUS_ON_HOLD     = 'on_hold';
     const STATUS_COMPLETED   = 'completed';
     const STATUS_CANCELLED   = 'cancelled';
-
+    */
     const MEDIA_COLLECTION_ATTACHMENTS = 'attachments';
 
     /*
@@ -58,6 +60,8 @@ class Project extends Model implements HasMedia
     protected $casts = [
         'start_date' => 'date',
         'deadline'   => 'date',
+        'priority' => ProjectPriority::class,
+        'status' => ProjectStatus::class,
     ];
 
     /*
@@ -99,10 +103,10 @@ class Project extends Model implements HasMedia
     |--------------------------------------------------------------------------
     */
 
-    public function scopeForTeamMember($query, int $userId)
+    /*public function scopeForTeamMember($query, int $userId)
     {
         return $query->whereHas('teams.users', fn ($q) => $q->where('users.id', $userId));
-    }
+    }*/
 
     public function scopeCreatedBy($query, int $userId)
     {
@@ -115,14 +119,18 @@ class Project extends Model implements HasMedia
     |--------------------------------------------------------------------------
     */
 
-    public static function priorities(): array
+    public  function priorities(): array
     {
-        return [self::PRIORITY_LOW, self::PRIORITY_MEDIUM, self::PRIORITY_HIGH, self::PRIORITY_CRITICAL];
+        return ProjectPriority::values();
     }
 
-    public static function statuses(): array
+    public  function statuses(): array
     {
-        return [self::STATUS_PENDING, self::STATUS_IN_PROGRESS, self::STATUS_ON_HOLD, self::STATUS_COMPLETED, self::STATUS_CANCELLED];
+        return ProjectStatus::values();
     }
+
+
+
+   
 
 }

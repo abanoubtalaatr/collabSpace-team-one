@@ -21,13 +21,13 @@ class ProjectResource extends JsonResource
                 'id'   => $this->creator->id,
                 'name' => $this->creator->name,
             ]),
-            'teams'       => $this->whenLoaded('teams', fn () =>
+            /*'teams'       => $this->whenLoaded('teams', fn () =>
                 $this->teams->map(fn ($team) => [
                     'id'   => $team->id,
                     'name' => $team->name,
                 ])
-            ),
-            'tasks_count' => $this->whenLoaded('tasks', fn () => $this->tasks->count()),
+            ),*/
+           // 'tasks_count' => $this->whenLoaded('tasks', fn () => $this->tasks->count()),
             'media'       => $this->whenLoaded('media', fn () =>
                 $this->getMedia('attachments')->map(fn ($media) => [
                     'id'        => $media->id,
