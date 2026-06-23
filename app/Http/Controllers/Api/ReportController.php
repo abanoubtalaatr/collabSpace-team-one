@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ReportResource;
+use App\Traits\ApiResponse;
 use App\Models\Project;
 use App\Models\Report;
 use App\Models\Task;
@@ -14,6 +15,8 @@ use Illuminate\Support\Facades\DB;
 
 class ReportController extends Controller
 {
+    use ApiResponse;
+
     /**
      * Display a listing of the resource.
      */
@@ -21,7 +24,7 @@ class ReportController extends Controller
     {
         $reports = Report::with('user')->latest()->get();
 
-        return response()->json([
+        return $this->apiResponse([
             'success' => true,
             'data' => ReportResource::collection($reports)
         ], 200);
@@ -42,7 +45,7 @@ class ReportController extends Controller
             'end_date' => $request->end_date,
         ]);
 
-        return response()->json([
+        return $this->apiResponse([
             'success' => true,
             'message' => 'Report created successfully',
             'data' => new ReportResource($report)
@@ -76,7 +79,7 @@ class ReportController extends Controller
         // calculate completion rate
         $completionRate = $totalProjects > 0 ? ($completedProjects / $totalProjects) * 100 : 0;
 
-        return response()->json([
+        return $this->apiResponse([
             'success' => true,
             'data' => [
                 'total_projects' => $totalProjects,
@@ -110,7 +113,7 @@ class ReportController extends Controller
         // calculate productivity statistics
         $productivity = $totalTasks > 0 ? ($completedTasks / $totalTasks) * 100 : 0;
 
-        return response()->json([
+        return $this->apiResponse([
             'success' => true,
             'report_type' => 'task',
             'data' => [
@@ -148,7 +151,7 @@ class ReportController extends Controller
             ];
         });
 
-        return response()->json([
+        return $this->apiResponse([
             'success' => true,
             'report_type' => 'team',
             'team_name' => $team->name,
@@ -178,7 +181,7 @@ class ReportController extends Controller
         // calculate productivity score
         $productivityScore = $assignedTasks > 0 ? ($completedTasks / $assignedTasks) * 100 : 0;
 
-        return response()->json([
+        return $this->apiResponse([
             'success' => true,
             'report_type' => 'user',
             'data' => [
