@@ -1,10 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Actions\Auth\LoginUser;
 use App\Actions\Auth\RegisterUser;
+use App\Actions\Auth\SendOtp;
+use App\Actions\Auth\VerifyOtp;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ForgotPasswordRequest;
+use App\Http\Requests\Api\VerifyOtpRequest;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Concerns\ApiResponse;
@@ -39,5 +45,23 @@ class AuthController extends Controller
         return response()->json([
             'message' => 'You have successfully been logged out',
         ], Response::HTTP_OK);
+    }
+
+    public function forgotPassword(ForgotPasswordRequest $request, SendOtp $action): JsonResponse
+    {
+        $action->handle($request->email, 'password_reset');
+
+        return response()->json(['message' => 'OTP sent successfully']);
+    }
+
+    public function verifyOtp(VerifyOtpRequest $request, VerifyOtp $action): JsonResponse
+    {
+        $result = $action->handle(
+            $request->email,
+            $request->otp,
+            $request->purpose,
+        );
+
+        return $this->success('OTP verified', $result);
     }
 }
