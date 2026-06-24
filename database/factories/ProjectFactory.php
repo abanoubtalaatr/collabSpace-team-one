@@ -26,7 +26,7 @@ class ProjectFactory extends Factory
         $deadline = fake()->dateTimeBetween($startDate, '+9 months');
 
         return [
-            'creatd_by' => User::factory(),
+            'created_by' => User::factory(),
             'name' => fake()->catchPhrase(),
             'description' => fake()->paragraphs(2, true),
             'start_date' => $startDate,

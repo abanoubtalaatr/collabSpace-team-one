@@ -27,7 +27,7 @@ class GlobalSearchDemoSeeder extends Seeder
         $projects = Project::factory()
             ->count(50)
             ->state(fn (): array => [
-                'creatd_by' => $users->random()->id,
+                'created_by' => $users->random()->id,
             ])
             ->create();
 
