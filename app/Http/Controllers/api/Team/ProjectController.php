@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\api\team_member;
+namespace App\Http\Controllers\api\Team;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProjectResource;
 use App\Services\ProjectService;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Request;
 
 /**
  * Team Member — read-only, scoped to assigned projects.
@@ -23,12 +24,9 @@ class ProjectController extends Controller
         private readonly ProjectService $service,
     ) {}
 
-    public function index(): AnonymousResourceCollection
+     public function index(Request $request): AnonymousResourceCollection
     {
-        $projects = $this->service->getForTeamMemberPaginated(
-            userId: auth()->id(),
-            perPage: 15,
-        );
+        $projects = $this->service->getForTeamMemberPaginated($request,auth()->id(), perPage: 15);
 
         return ProjectResource::collection($projects);
     }
@@ -37,16 +35,8 @@ class ProjectController extends Controller
     {
         $project = $this->service->findOrFail($id);
 
-        // Ensure the member belongs to at least one team assigned to this project
-        $isMemberOfProject = $project->teams()
-            ->whereHas('users', fn ($q) => $q->where('users.id', auth()->id()))
-            ->exists();
-
-        abort_unless($isMemberOfProject, 403, 'You do not have access to this project.');
-
         return new ProjectResource($project);
     }
-
     public function store(): never
     {
         abort(403, 'Team members are not allowed to create projects.');

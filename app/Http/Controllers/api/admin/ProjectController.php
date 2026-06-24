@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\api\admin;
 
+use App\Actions\Project\CreateProjectAction;
+use App\Actions\Project\DeleteProjectAction;
+use App\Actions\Project\UpdateProjectAction;
 use App\DTOs\ProjectDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Project\StoreProjectRequest;
@@ -9,7 +12,9 @@ use App\Http\Requests\Project\UpdateProjectRequest;
 use App\Http\Resources\ProjectResource;
 use App\Services\ProjectService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use App\Concerns\ApiResponse;
 
 /**
  * Admin — Full CRUD on ALL projects.
@@ -20,18 +25,31 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
  *  store   ✅  Create projects
  *  update  ✅  Update any project
  *  destroy ✅  Delete any project
+ *
+ * Supported query filters (?key=value):
+ *  status, priority, created_by, start_date, deadline, search
  */
 class ProjectController extends Controller
 {
+        use ApiResponse;
+
     public function __construct(
-        private readonly ProjectService $service,
+        private readonly ProjectService      $service,
+        private readonly CreateProjectAction $createAction,
+        private readonly UpdateProjectAction $updateAction,
+        private readonly DeleteProjectAction $deleteAction,
     ) {}
 
-    public function index(): AnonymousResourceCollection
+    // -------------------------------------------------------------------------
+    // Queries → Service
+    // -------------------------------------------------------------------------
+
+    public function index(Request $request): AnonymousResourceCollection
     {
-        $projects = $this->service->getAllPaginated(perPage: 15);
+        $projects = $this->service->getAllPaginated($request, perPage: 15);
 
         return ProjectResource::collection($projects);
+        
     }
 
     public function show(int $id): ProjectResource
@@ -41,9 +59,13 @@ class ProjectController extends Controller
         return new ProjectResource($project);
     }
 
+    // -------------------------------------------------------------------------
+    // Mutations → Actions directly
+    // -------------------------------------------------------------------------
+
     public function store(StoreProjectRequest $request): ProjectResource
     {
-        $project = $this->service->create(
+        $project = $this->createAction->execute(
             ProjectDTO::fromStoreRequest($request)
         );
 
@@ -54,7 +76,7 @@ class ProjectController extends Controller
     {
         $project = $this->service->findOrFail($id);
 
-        $updated = $this->service->update(
+        $updated = $this->updateAction->execute(
             $project,
             ProjectDTO::fromUpdateRequest($request)
         );
@@ -66,7 +88,7 @@ class ProjectController extends Controller
     {
         $project = $this->service->findOrFail($id);
 
-        $this->service->delete($project);
+        $this->deleteAction->execute($project);
 
         return response()->json(['message' => 'Project deleted successfully.']);
     }

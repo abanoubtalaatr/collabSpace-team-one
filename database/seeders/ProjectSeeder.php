@@ -16,7 +16,7 @@ class ProjectSeeder extends Seeder
         })->first();
 
         $projectManager = User::whereHas('roles', function ($query) {
-            $query->where('name', 'project_manager');
+            $query->where('name', 'Project');
         })->first();
 
         if (! $admin || ! $projectManager) {

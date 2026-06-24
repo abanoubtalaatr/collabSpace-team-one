@@ -11,28 +11,14 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use App\Enums\ProjectPriority;
 use App\Enums\ProjectStatus;
+use App\Concerns\Filterable;
 
 class Project extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia;
+    use Filterable;           
 
-    /*
-    |--------------------------------------------------------------------------
-    | Constants
-    |--------------------------------------------------------------------------
-    */
-    /*
-    const PRIORITY_LOW      = 'low';
-    const PRIORITY_MEDIUM   = 'medium';
-    const PRIORITY_HIGH     = 'high';
-    const PRIORITY_CRITICAL = 'critical';
-
-    const STATUS_PENDING     = 'pending';
-    const STATUS_IN_PROGRESS = 'in_progress';
-    const STATUS_ON_HOLD     = 'on_hold';
-    const STATUS_COMPLETED   = 'completed';
-    const STATUS_CANCELLED   = 'cancelled';
-    */
+   
     const MEDIA_COLLECTION_ATTACHMENTS = 'attachments';
 
     /*

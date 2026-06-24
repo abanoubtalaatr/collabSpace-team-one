@@ -4,37 +4,53 @@ namespace App\Repositories\Contracts;
 
 use App\Models\Project;
 use App\Repositories\Contracts\ProjectRepositoryInterface;
+use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class ProjectRepository implements ProjectRepositoryInterface
 {
-    public function getAllPaginated(int $perPage = 15): LengthAwarePaginator
+    /*
+    |--------------------------------------------------------------------------
+    | Queries
+    |--------------------------------------------------------------------------
+    */
+
+    public function getAllPaginated(Request $request, int $perPage = 15): LengthAwarePaginator
     {
-        return Project::with(['creator', 'media'])//'teams'
+        return Project::filter($request)
+            ->with(['creator', 'media'])
             ->latest()
             ->paginate($perPage);
     }
 
-    public function getByCreatorPaginated(int $userId, int $perPage = 15): LengthAwarePaginator
+    public function getByCreatorPaginated(Request $request, int $userId, int $perPage = 15): LengthAwarePaginator
     {
-        return Project::with(['creator', 'teams', 'media'])
-            ->createdBy($userId)
+        return Project::filter($request)
+            ->with(['creator', 'media'])
+            ->where('created_by', $userId)
             ->latest()
             ->paginate($perPage);
     }
 
-    public function getForTeamMemberPaginated(int $userId, int $perPage = 15): LengthAwarePaginator
+    public function getForTeamMemberPaginated(Request $request, int $userId, int $perPage = 15): LengthAwarePaginator
     {
-        return Project::with(['creator', 'teams', 'media'])
-            ->forTeamMember($userId)
+        return Project::filter($request)
+            ->with(['creator', 'media'])
+            ->whereHas('teams.users', fn ($q) => $q->where('users.id', $userId))
             ->latest()
             ->paginate($perPage);
     }
 
     public function findById(int $id): ?Project
     {
-        return Project::with(['creator',  'media'])->find($id);//'tasks', 'teams'
+        return Project::with(['creator', 'media'])->find($id);
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Mutations
+    |--------------------------------------------------------------------------
+    */
 
     public function create(array $data): Project
     {
@@ -45,16 +61,11 @@ class ProjectRepository implements ProjectRepositoryInterface
     {
         $project->update($data);
 
-        return $project->fresh(['creator', 'media']);//'tasks', 'teams'
+        return $project->refresh();
     }
 
     public function delete(Project $project): void
     {
         $project->delete();
-    }
-
-    public function syncTeams(Project $project, array $teamIds): void
-    {
-        $project->teams()->sync($teamIds);
     }
 }

@@ -18,7 +18,7 @@ class UserSeeder extends Seeder
         ]);
 
         $projectManagerRole = Role::firstOrCreate([
-            'name' => 'project_manager',
+            'name' => 'Project',
         ], [
             'display_name' => 'Project Manager',
         ]);
