@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Actions\Auth;
 
 use App\Mail\sendOtp as SendOtpMail;
+use App\Models\User;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -16,6 +17,10 @@ class SendOtp
      */
     public function handle(string $email, string $purpose, ?string $recipientName = null): void
     {
+        $recipientName = $recipientName
+            ?? User::query()->where('email', $email)->value('name')
+            ?? 'there';
+
         // FIXME: fix in production
         if (app()->isProduction()) {
             $otp = (string) random_int(100000, 999999);
@@ -26,9 +31,9 @@ class SendOtp
         Cache::put("{$purpose}_otp_{$email}", [
             'otp' => Hash::make($otp),
             'attempts' => 0,
-            'expires_at' => now()->addMinutes(5)
+            'expires_at' => now()->addMinutes(5),
         ], now()->addMinutes(5));
 
-        Mail::to($email)->queue((new SendOtpMail($otp, $recipientName)));
+        Mail::to($email)->queue(new SendOtpMail($otp, $recipientName));
     }
 }

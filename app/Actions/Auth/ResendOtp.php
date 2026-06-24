@@ -21,6 +21,6 @@ class ResendOtp
             throw ValidationException::withMessages(['email' => __('auth.already_verified')]);
         }
 
-        $this->sendOtp->handle($email, 'registration');
+        $this->sendOtp->handle($email, 'registration', $user->name);
     }
 }
