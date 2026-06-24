@@ -12,7 +12,7 @@ use App\Actions\Auth\SendOtp;
 use App\Actions\Auth\VerifyOtp;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ForgotPasswordRequest;
-use App\Http\Requests\Api\VerifyOtpRequest;
+use App\Http\Requests\VerifyOtpRequest;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Concerns\ApiResponse;
@@ -80,6 +80,6 @@ class AuthController extends Controller
     {
         $result = $action->handle($request->validated());
 
-        return response()->success('Password reset successful', $result);
+        return $this->success('Password reset successful', $result);
     }
 }
