@@ -27,7 +27,7 @@ class StoreProjectRequest extends FormRequest
             //'team_ids'      => ['sometimes', 'array'],
            // 'team_ids.*'    => ['integer', 'exists:teams,id'],
             'attachments'   => ['sometimes', 'array'],
-            'attachments.*' => ['file', 'max:10240'], // 10MB per file
+            'attachments.*' => ['file', 'max:10240'] // 10MB per file
         ];
     }
 }

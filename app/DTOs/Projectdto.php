@@ -17,7 +17,7 @@ final class ProjectDTO
         public readonly string  $status,
         public readonly int     $createdBy,
         //public readonly array   $teamIds = [],
-        public readonly array   $mediaFiles = [],
+        public readonly array   $mediaFiles = []
     ) {}
 
     public static function fromStoreRequest(StoreProjectRequest $request): self
@@ -31,7 +31,7 @@ final class ProjectDTO
             status:      $request->validated('status', 'pending'),
             createdBy:   $request->user()->id,
          //   teamIds:     $request->validated('team_ids', []),
-            mediaFiles:  $request->file('attachments', []),
+            mediaFiles:  $request->file('attachments', [])
         );
     }
 
@@ -46,7 +46,7 @@ final class ProjectDTO
             status:      $request->validated('status'),
             createdBy:   $request->user()->id,
           //  teamIds:     $request->validated('team_ids', []),
-            mediaFiles:  $request->file('attachments', []),
+            mediaFiles:  $request->file('attachments', [])
         );
     }
 }
