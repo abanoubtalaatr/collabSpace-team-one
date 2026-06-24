@@ -15,7 +15,7 @@ class ResetPassword
      */
     public function handle(array $data): array
     {
-        $cacheKey = "password_reset_token_{$data['phone']}";
+        $cacheKey = "password_reset_token_{$data['email']}";
         $cachedTokenHash = Cache::get($cacheKey);
 
         if (! $cachedTokenHash) {
@@ -26,16 +26,12 @@ class ResetPassword
             throw ValidationException::withMessages(['reset_token' => 'Invalid reset token.']);
         }
 
-        $user = User::query()->where('phone', $data['phone'])->firstOrFail();
+        $user = User::query()->where('email', $data['email'])->firstOrFail();
 
         return DB::transaction(function () use ($cacheKey, $data, $user): array {
-            $user->update(['password' => Hash::make($data['password'])]);
+            $user->update(['password' => $data['password']]);
 
-            $accessToken = $user->createToken($user->phone);
-
-            $accessToken->accessToken->forceFill([
-                'fcm_token' => $data['fcm_token'],
-            ])->save();
+            $accessToken = $user->createToken($user->email);
 
             DB::afterCommit(fn () => Cache::forget($cacheKey));
 
