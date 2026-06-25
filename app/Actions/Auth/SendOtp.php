@@ -6,6 +6,7 @@ namespace App\Actions\Auth;
 
 use App\Mail\sendOtp as SendOtpMail;
 use App\Models\User;
+use App\Support\AuthCacheKeys;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -17,23 +18,25 @@ class SendOtp
      */
     public function handle(string $email, string $purpose, ?string $recipientName = null): void
     {
+        $email = AuthCacheKeys::normalizeEmail($email);
+
         $recipientName = $recipientName
             ?? User::query()->where('email', $email)->value('name')
             ?? 'there';
 
-        // FIXME: fix in production
         if (app()->isProduction()) {
             $otp = (string) random_int(100000, 999999);
         } else {
             $otp = '123456';
         }
 
-        Cache::put("{$purpose}_otp_{$email}", [
+        $ttl = now()->addMinutes(15);
+
+        Cache::put(AuthCacheKeys::otp($purpose, $email), [
             'otp' => Hash::make($otp),
             'attempts' => 0,
-            'expires_at' => now()->addMinutes(5),
-        ], now()->addMinutes(5));
+        ], $ttl);
 
-        Mail::to($email)->queue(new SendOtpMail($otp, $recipientName));
+        Mail::to($email)->send(new SendOtpMail($otp, $recipientName));
     }
 }

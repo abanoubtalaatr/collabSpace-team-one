@@ -52,17 +52,19 @@ class AuthController extends Controller
 
     public function forgotPassword(ForgotPasswordRequest $request, SendOtp $action): JsonResponse
     {
-        $action->handle($request->email, 'password_reset');
+        $action->handle($request->validated('email'), 'password_reset');
 
         return response()->json(['message' => 'OTP sent successfully']);
     }
 
     public function verifyOtp(VerifyOtpRequest $request, VerifyOtp $action): JsonResponse
     {
+        $validated = $request->validated();
+
         $result = $action->handle(
-            $request->email,
-            $request->otp,
-            $request->purpose,
+            $validated['email'],
+            $validated['otp'],
+            $validated['purpose'],
         );
 
         return $this->success('OTP verified', $result);
@@ -70,7 +72,7 @@ class AuthController extends Controller
 
     public function resendOtp(ResendOtpRequest $request, ResendOtp $action): JsonResponse
     {
-        $action->handle($request->email);
+        $action->handle($request->validated('email'));
 
         return response()->json(['message' => __('auth.otp_resent')]);
     }

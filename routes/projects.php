@@ -1,8 +1,8 @@
 <?php
 
-use App\Http\Controllers\api\admin\ProjectController as AdminProjectController;
-use App\Http\Controllers\api\Project\ProjectController as PMProjectController;
-use App\Http\Controllers\api\Team\ProjectController as TMProjectController;
+use App\Http\Controllers\Api\admin\ProjectController as AdminProjectController;
+use App\Http\Controllers\Api\Project\ProjectController as PMProjectController;
+use App\Http\Controllers\Api\Team\ProjectController as TMProjectController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth:sanctum'])->group(function () {
@@ -13,10 +13,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
     });
 
     // ── Project Manager ──────────────────────────────────────
-    Route::middleware('role:Project')->prefix('Project')->name('Project.')->group(function () {
-        Route::apiResource('projects', PMProjectController::class);
-    });
+    // Route::middleware('role:Project')->group(function () {
+    //     Route::apiResource('projects', PMProjectController::class);
+    // });
 
+        Route::apiResource('projects', PMProjectController::class);
     // ── Team Member ──────────────────────────────────────────
     Route::middleware('role:Member')->prefix('Member')->name('Member.')->group(function () {
         Route::apiResource('projects', TMProjectController::class)->only(['index', 'show']);
