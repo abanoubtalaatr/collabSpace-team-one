@@ -235,10 +235,13 @@ Enum "projects_status_enum" {
 Table "tasks" {
     id bigint [pk, increment]
     project_id bigint [not null]
-    name varchar(255) [not null]
+    title varchar(255) [not null]
     description text [not null]
+    start_date datetime [not null]
+    due_date datetime [not null]
+    progress smallint [not null]
     status tasks_status_enum [not null]
-    completion_rate smallint [not null]
+    priority tasks_priority_enum [not null]
     created_at timestamp
     updated_at timestamp
 }
@@ -247,6 +250,12 @@ Enum "tasks_status_enum" {
     "in_progress"
     "in_review"
     "completed"
+}
+Enum "tasks_priority_enum" {
+    "low"
+    "medium"
+    "high"
+    "critical"
 }
 Ref "tasks_project_id_foreign":"tasks"."project_id" > "projects"."id" [update: cascade, delete: cascade]
 
