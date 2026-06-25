@@ -3,6 +3,7 @@
 namespace App\Actions\Auth;
 
 use App\Models\User;
+use App\Support\AuthCacheKeys;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -15,7 +16,8 @@ class ResetPassword
      */
     public function handle(array $data): array
     {
-        $cacheKey = "password_reset_token_{$data['email']}";
+        $email = AuthCacheKeys::normalizeEmail($data['email']);
+        $cacheKey = AuthCacheKeys::passwordResetToken($email);
         $cachedTokenHash = Cache::get($cacheKey);
 
         if (! $cachedTokenHash) {
@@ -26,7 +28,7 @@ class ResetPassword
             throw ValidationException::withMessages(['reset_token' => 'Invalid reset token.']);
         }
 
-        $user = User::query()->where('email', $data['email'])->firstOrFail();
+        $user = User::query()->where('email', $email)->firstOrFail();
 
         return DB::transaction(function () use ($cacheKey, $data, $user): array {
             $user->update(['password' => $data['password']]);

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Actions\Auth;
 
 use App\Models\User;
+use App\Support\AuthCacheKeys;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -18,7 +19,8 @@ class VerifyOtp
      */
     public function handle(string $email, string $otp, string $purpose): array
     {
-        $key = "{$purpose}_otp_{$email}";
+        $email = AuthCacheKeys::normalizeEmail($email);
+        $key = AuthCacheKeys::otp($purpose, $email);
         $cached = Cache::get($key);
 
         if (! $cached) {
@@ -33,7 +35,7 @@ class VerifyOtp
 
         if (! Hash::check($otp, $cached['otp'])) {
             $cached['attempts']++;
-            Cache::put($key, $cached, $cached['expires_at']);
+            Cache::put($key, $cached, now()->addMinutes(15));
 
             throw ValidationException::withMessages(['otp' => 'Invalid OTP.']);
         }
@@ -74,9 +76,9 @@ class VerifyOtp
         $resetToken = Str::random(40);
 
         Cache::put(
-            "password_reset_token_{$email}",
+            AuthCacheKeys::passwordResetToken($email),
             Hash::make($resetToken),
-            now()->addMinutes(5)
+            now()->addMinutes(15),
         );
 
         return ['reset_token' => $resetToken];
