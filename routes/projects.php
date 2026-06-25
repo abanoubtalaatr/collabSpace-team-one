@@ -13,8 +13,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     });
 
     // ── Project Manager ──────────────────────────────────────
-    Route::middleware('role:Project')->prefix('project')->name('Project.')->group(function () {
-        Route::apiResource('/', PMProjectController::class);
+    Route::middleware('role:Project')->group(function () {
+        Route::apiResource('projects', PMProjectController::class);
     });
 
     // ── Team Member ──────────────────────────────────────────
