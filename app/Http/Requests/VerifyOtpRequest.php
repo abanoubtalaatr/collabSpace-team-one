@@ -15,7 +15,7 @@ class VerifyOtpRequest extends FormRequest
         return [
             'email' => ['required', 'email'],
             'otp' => ['required', 'digits:6'],
-            'purpose' => ['required', Rule::in(['registration', 'password_reset'])],
+            'purpose' => ['required', Rule::in(['registration', 'password_reset', 'forgot_password'])],
         ];
     }
 }
