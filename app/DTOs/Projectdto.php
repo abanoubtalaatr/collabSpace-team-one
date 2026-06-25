@@ -5,8 +5,6 @@ namespace App\DTOs;
 use App\Http\Requests\Project\StoreProjectRequest;
 use App\Http\Requests\Project\UpdateProjectRequest;
 
-// use Illuminate\Http\Request;
-
 final class ProjectDTO
 {
     public function __construct(
@@ -17,7 +15,7 @@ final class ProjectDTO
         public readonly string $priority,
         public readonly string $status,
         public readonly int $createdBy,
-        // public readonly array   $teamIds = [],
+        // public readonly array $teamIds = [],
         public readonly array $mediaFiles = [],
     ) {}
 
@@ -31,7 +29,7 @@ final class ProjectDTO
             priority: $request->validated('priority'),
             status: $request->validated('status', 'pending'),
             createdBy: $request->user()->id,
-            //   teamIds:     $request->validated('team_ids', []),
+            // teamIds: $request->validated('team_ids', []),
             mediaFiles: $request->file('attachments', []),
         );
     }
@@ -46,7 +44,7 @@ final class ProjectDTO
             priority: $request->validated('priority'),
             status: $request->validated('status'),
             createdBy: $request->user()->id,
-            //  teamIds:     $request->validated('team_ids', []),
+            // teamIds: $request->validated('team_ids', []),
             mediaFiles: $request->file('attachments', []),
         );
     }
