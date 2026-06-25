@@ -86,9 +86,16 @@ class User extends Authenticatable implements GlobalSearchable, Searchable
         return $this->belongsToMany(Task::class, 'task_user', 'user_id', 'task_id', 'id', 'id');
     }
 
+    public function conversations(): BelongsToMany
+    {
+        return $this->belongsToMany(Conversation::class, 'conversation_user', 'user_id', 'conversation_id');
+    }
+
     public function meetings(): BelongsToMany
     {
         return $this->belongsToMany(Meeting::class, 'meeting_user', 'user_id', 'meeting_id', 'id', 'id');
+    }
+
     public function getSearchResult(): SearchResult
     {
         return new SearchResult($this, $this->name);
