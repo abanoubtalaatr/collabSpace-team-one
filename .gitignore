@@ -25,24 +25,5 @@ _ide_helper.php
 Homestead.json
 Homestead.yaml
 Thumbs.db
-
-# Laravel Boost & Agentic Configs
-.agents
-.ai
-.amp
-.claude
-.codex
-.cursor
-.factory
-.gemini
-.github/skills
-.junie
-.kiro
-.opencode
-.vscode
-.mcp.json
-AGENTS.md
-boost.json
-CLAUDE.md
-GEMINI.md
-opencode.json
+docker-compose.yml
+Dockerfile
