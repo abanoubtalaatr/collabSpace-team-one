@@ -3,11 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\ReportStoreRequest;
-use App\Http\Resources\ReportResource;
-use App\Traits\ApiResponse;
 use App\Models\Project;
+use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
+
 class ProjectController extends Controller
 {
     use ApiResponse;
@@ -32,8 +31,8 @@ class ProjectController extends Controller
 
         // calculate delayed projects
         $delayedProjects = Project::where('status', '!=', 'completed')
-                                    ->where('deadline', '<', now())
-                                    ->count();
+            ->where('deadline', '<', now())
+            ->count();
 
         // calculate completion rate
         $completionRate = $totalProjects > 0 ? ($completedProjects / $totalProjects) * 100 : 0;
@@ -45,8 +44,8 @@ class ProjectController extends Controller
                 'active_projects' => $activeProjects,
                 'delayed_projects' => $delayedProjects,
                 'completed_projects' => $completedProjects,
-                'completion_rate' => round($completionRate, 2) . '%',
-            ]
+                'completion_rate' => round($completionRate, 2).'%',
+            ],
         ]);
     }
 }

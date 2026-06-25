@@ -10,4 +10,3 @@ enum TaskStatus: string
     case Completed = 'completed';
 
 }
-

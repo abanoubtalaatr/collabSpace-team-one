@@ -2,17 +2,19 @@
 
 namespace Tests\Unit\Project;
 
-use Tests\TestCase;
-use App\Services\ProjectService;
 use App\Models\Project;
 use App\Repositories\Contracts\ProjectRepositoryInterface;
+use App\Services\ProjectService;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Mockery;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Tests\TestCase;
 
 class ProjectServiceTest extends TestCase
 {
     protected ProjectService $service;
+
     protected $repoMock;
 
     protected function setUp(): void
@@ -21,7 +23,7 @@ class ProjectServiceTest extends TestCase
 
         // بنعمل mock للـ Repository عشان نختبر الـ Service لوحده بدون DB
         $this->repoMock = Mockery::mock(ProjectRepositoryInterface::class);
-        $this->service  = new ProjectService($this->repoMock);
+        $this->service = new ProjectService($this->repoMock);
     }
 
     protected function tearDown(): void
@@ -40,7 +42,7 @@ class ProjectServiceTest extends TestCase
     public function it_returns_paginated_projects_for_all(): void
     {
         // Arrange
-        $request   = Request::create('/projects', 'GET');
+        $request = Request::create('/projects', 'GET');
         $paginator = $this->makeFakePaginator(3);
 
         $this->repoMock
@@ -66,7 +68,7 @@ class ProjectServiceTest extends TestCase
     /** @test */
     public function it_returns_paginated_projects_by_creator(): void
     {
-        $request   = Request::create('/projects', 'GET');
+        $request = Request::create('/projects', 'GET');
         $paginator = $this->makeFakePaginator(2);
 
         $this->repoMock
@@ -90,7 +92,7 @@ class ProjectServiceTest extends TestCase
     /** @test */
     public function it_returns_paginated_projects_for_team_member(): void
     {
-        $request   = Request::create('/projects', 'GET');
+        $request = Request::create('/projects', 'GET');
         $paginator = $this->makeFakePaginator(1);
 
         $this->repoMock
@@ -138,7 +140,7 @@ class ProjectServiceTest extends TestCase
             ->andReturn(null);
 
         // بنتوقع إن Laravel هيرمي 404
-        $this->expectException(\Symfony\Component\HttpKernel\Exception\HttpException::class);
+        $this->expectException(HttpException::class);
 
         $this->service->findOrFail(999);
     }

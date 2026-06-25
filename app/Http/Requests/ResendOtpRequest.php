@@ -13,8 +13,8 @@ class ResendOtpRequest extends FormRequest
             'email' => [
                 'required',
                 'email',
-                Rule::exists('users', 'email')
-            ]
+                Rule::exists('users', 'email'),
+            ],
         ];
     }
 }

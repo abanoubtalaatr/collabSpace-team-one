@@ -3,11 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Traits\ApiResponse;
 use App\Models\Team;
-
-
+use App\Traits\ApiResponse;
+use Illuminate\Http\Request;
 
 class TeamController extends Controller
 {
@@ -34,7 +32,7 @@ class TeamController extends Controller
             return [
                 'user_id' => $user->id,
                 'user_name' => $user->name,
-                'active_tasks_count' => $user->tasks_count
+                'active_tasks_count' => $user->tasks_count,
             ];
         });
 
@@ -44,11 +42,10 @@ class TeamController extends Controller
             'team_name' => $team->name,
             'data' => [
                 'active_projects' => $activeProjects,
-                'completion_rates' => round($completionRate, 2) . '%',
+                'completion_rates' => round($completionRate, 2).'%',
                 'workload_distribution' => $workloadDistribution,
                 'team_performance' => $completionRate > 75 ? 'High' : 'Normal',
-            ]
+            ],
         ], 200);
     }
-
 }

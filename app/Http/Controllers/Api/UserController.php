@@ -3,11 +3,10 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Http\Request;
-use App\Traits\ApiResponse;
 use App\Models\User;
-
+use App\Traits\ApiResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -41,10 +40,10 @@ class UserController extends Controller
                 'assigned_tasks' => $assignedTasks,
                 'completed_tasks' => $completedTasks,
                 'uploaded_files' => $uploadedFilesCount,
-                'meeting_attendance' => rand(80, 100) . '%', // Randomized for demonstration
-                'productivity_score' => round($productivityScore, 2) . '%',
+                'meeting_attendance' => rand(80, 100).'%', // Randomized for demonstration
+                'productivity_score' => round($productivityScore, 2).'%',
                 'performance_overview' => $productivityScore >= 80 ? 'Excellent' : 'Good',
-            ]
+            ],
         ], 200);
     }
 }

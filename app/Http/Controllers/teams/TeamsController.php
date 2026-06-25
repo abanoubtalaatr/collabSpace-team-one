@@ -4,17 +4,18 @@ namespace App\Http\Controllers\teams;
 
 use App\Concerns\ApiResponse;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Team;
+use Illuminate\Http\Request;
 
 class TeamsController extends Controller
 {
     use ApiResponse;
+
     public function index()
     {
         $teams = Team::all();
-        
-        return $this->success('return successfully teams.', );
+
+        return $this->success('return successfully teams.');
     }
 
     public function create()
@@ -29,18 +30,21 @@ class TeamsController extends Controller
             'description' => 'nullable|string',
         ]);
         $team = Team::create($request->all());
+
         return response()->json($team, 201);
     }
 
     public function show($teamId)
     {
         $team = Team::with(['members', 'projects'])->findOrFail($teamId);
+
         return response()->json($team);
     }
 
     public function edit($teamId)
     {
         $team = Team::with(['members', 'projects'])->findOrFail($teamId);
+
         return response()->json(['message' => 'Display form to edit the team', 'team' => $team]);
     }
 
@@ -48,13 +52,15 @@ class TeamsController extends Controller
     {
         $team = Team::with(['members'])->findOrFail($teamId);
         $team->update($request->all());
+
         return response()->json($team);
     }
 
     public function delete($teamId)
     {
-        $team = Team::with(['members',])->findOrFail($teamId);
+        $team = Team::with(['members'])->findOrFail($teamId);
         $team->delete();
+
         return response()->json(null, 204);
     }
 }

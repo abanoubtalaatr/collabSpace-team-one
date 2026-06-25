@@ -2,13 +2,13 @@
 
 namespace Tests\Unit\Project;
 
-use Tests\TestCase;
-use App\Actions\Project\UpdateProjectAction;
 use App\Actions\Project\DeleteProjectAction;
+use App\Actions\Project\UpdateProjectAction;
 use App\DTOs\ProjectDTO;
 use App\Models\Project;
 use App\Repositories\Contracts\ProjectRepositoryInterface;
 use Mockery;
+use Tests\TestCase;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +18,7 @@ use Mockery;
 class UpdateProjectActionTest extends TestCase
 {
     protected $repoMock;
+
     protected UpdateProjectAction $action;
 
     protected function setUp(): void
@@ -25,7 +26,7 @@ class UpdateProjectActionTest extends TestCase
         parent::setUp();
 
         $this->repoMock = Mockery::mock(ProjectRepositoryInterface::class);
-        $this->action   = new UpdateProjectAction($this->repoMock);
+        $this->action = new UpdateProjectAction($this->repoMock);
     }
 
     protected function tearDown(): void
@@ -41,34 +42,34 @@ class UpdateProjectActionTest extends TestCase
         $existingProject = new Project(['id' => 1, 'name' => 'Old Name']);
 
         $dto = new ProjectDTO(
-            name:        'New Name',
+            name: 'New Name',
             description: 'Updated desc',
-            startDate:   '2025-02-01',
-            deadline:    '2025-12-01',
-            priority:    'medium',
-            status:      'in_progress',
-            createdBy:   1,
-            mediaFiles:  [],
-            teamIds:     [],
+            startDate: '2025-02-01',
+            deadline: '2025-12-01',
+            priority: 'medium',
+            status: 'in_progress',
+            createdBy: 1,
+            mediaFiles: [],
+            teamIds: [],
         );
 
         $updatedProject = new Project([
-            'id'          => 1,
-            'name'        => 'New Name',
+            'id' => 1,
+            'name' => 'New Name',
             'description' => 'Updated desc',
-            'status'      => 'in_progress',
+            'status' => 'in_progress',
         ]);
 
         $this->repoMock
             ->shouldReceive('update')
             ->once()
             ->with($existingProject, [
-                'name'        => 'New Name',
+                'name' => 'New Name',
                 'description' => 'Updated desc',
-                'start_date'  => '2025-02-01',
-                'deadline'    => '2025-12-01',
-                'priority'    => 'medium',
-                'status'      => 'in_progress',
+                'start_date' => '2025-02-01',
+                'deadline' => '2025-12-01',
+                'priority' => 'medium',
+                'status' => 'in_progress',
             ])
             ->andReturn($updatedProject);
 
@@ -84,16 +85,16 @@ class UpdateProjectActionTest extends TestCase
     public function it_returns_project_instance_after_update(): void
     {
         $project = new Project(['id' => 2, 'name' => 'Project X']);
-        $dto     = new ProjectDTO(
-            name:        'Project X Updated',
+        $dto = new ProjectDTO(
+            name: 'Project X Updated',
             description: null,
-            startDate:   null,
-            deadline:    null,
-            priority:    'high',
-            status:      'active',
-            createdBy:   1,
-            mediaFiles:  [],
-            teamIds:     [],
+            startDate: null,
+            deadline: null,
+            priority: 'high',
+            status: 'active',
+            createdBy: 1,
+            mediaFiles: [],
+            teamIds: [],
         );
 
         $this->repoMock
@@ -115,6 +116,7 @@ class UpdateProjectActionTest extends TestCase
 class DeleteProjectActionTest extends TestCase
 {
     protected $repoMock;
+
     protected DeleteProjectAction $action;
 
     protected function setUp(): void
@@ -122,7 +124,7 @@ class DeleteProjectActionTest extends TestCase
         parent::setUp();
 
         $this->repoMock = Mockery::mock(ProjectRepositoryInterface::class);
-        $this->action   = new DeleteProjectAction($this->repoMock);
+        $this->action = new DeleteProjectAction($this->repoMock);
     }
 
     protected function tearDown(): void
@@ -137,8 +139,8 @@ class DeleteProjectActionTest extends TestCase
         // Arrange — بنعمل project mock عشان clearMediaCollection مش بتتصل بـ DB
         $project = Mockery::mock(Project::class)->makePartial();
         $project->shouldReceive('clearMediaCollection')
-                ->once()
-                ->with(Project::MEDIA_COLLECTION_ATTACHMENTS);
+            ->once()
+            ->with(Project::MEDIA_COLLECTION_ATTACHMENTS);
 
         $this->repoMock
             ->shouldReceive('delete')
@@ -160,17 +162,19 @@ class DeleteProjectActionTest extends TestCase
 
         $project = Mockery::mock(Project::class)->makePartial();
         $project->shouldReceive('clearMediaCollection')
-                ->once()
-                ->withArgs(function ($collection) use (&$callOrder) {
-                    $callOrder[] = 'clearMedia';
-                    return true;
-                });
+            ->once()
+            ->withArgs(function ($collection) use (&$callOrder) {
+                $callOrder[] = 'clearMedia';
+
+                return true;
+            });
 
         $this->repoMock
             ->shouldReceive('delete')
             ->once()
             ->withArgs(function ($p) use (&$callOrder) {
                 $callOrder[] = 'delete';
+
                 return true;
             });
 

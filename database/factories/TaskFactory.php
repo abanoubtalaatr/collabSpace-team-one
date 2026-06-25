@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\TaskStatus;
 use App\Models\Project;
 use App\Models\Task;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -11,18 +12,18 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class TaskFactory extends Factory
 {
+    protected $model = Task::class;
+
     /**
-     * Define the model's default state.
-     *
      * @return array<string, mixed>
      */
     public function definition(): array
     {
         return [
-            'project_id'  => Project::inRandomOrder()->first()?->id ?? Project::factory(),
-            'name'        => $this->faker->sentence(4),
-            'description' => $this->faker->text(),
-            'status'      => $this->faker->randomElement(['pending', 'in_progress', 'in_review', 'completed']),
+            'project_id' => Project::factory(),
+            'name' => fake()->sentence(4),
+            'description' => fake()->paragraphs(2, true),
+            'status' => fake()->randomElement(TaskStatus::cases())->value,
         ];
     }
 }

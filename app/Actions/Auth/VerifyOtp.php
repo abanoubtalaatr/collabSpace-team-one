@@ -55,14 +55,14 @@ class VerifyOtp
         $user = User::query()->where('email', $email)->firstOrFail();
 
         $user->forceFill([
-            'email_verified_at' => now()
+            'email_verified_at' => now(),
         ])->save();
 
         $accessToken = $user->createToken($user->email);
 
         return [
             'user' => $user,
-            'token' => $accessToken->plainTextToken
+            'token' => $accessToken->plainTextToken,
         ];
     }
 

@@ -1,11 +1,11 @@
 <?php
+
 use App\Http\Controllers\Api\ProjectController;
 use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\TaskController;
 use App\Http\Controllers\Api\TeamController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
-
 
 // API routes for reports
 Route::get('/reports', [ReportController::class, 'index']);

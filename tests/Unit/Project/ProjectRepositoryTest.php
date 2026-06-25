@@ -2,12 +2,12 @@
 
 namespace Tests\Unit\Project;
 
-use Tests\TestCase;
 use App\Models\Project;
 use App\Models\User;
 use App\Repositories\Contracts\ProjectRepository;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Request;
+use Tests\TestCase;
 
 class ProjectRepositoryTest extends TestCase
 {
@@ -19,7 +19,7 @@ class ProjectRepositoryTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->repository = new ProjectRepository();
+        $this->repository = new ProjectRepository;
     }
 
     /*
@@ -34,11 +34,11 @@ class ProjectRepositoryTest extends TestCase
         // Arrange
         $user = User::factory()->create();
         $data = [
-            'name'        => 'Repo Test Project',
+            'name' => 'Repo Test Project',
             'description' => 'Testing the repo',
-            'status'      => 'active',
-            'priority'    => 'high',
-            'created_by'  => $user->id,
+            'status' => 'active',
+            'priority' => 'high',
+            'created_by' => $user->id,
         ];
 
         // Act
@@ -47,7 +47,7 @@ class ProjectRepositoryTest extends TestCase
         // Assert
         $this->assertInstanceOf(Project::class, $project);
         $this->assertDatabaseHas('projects', [
-            'name'       => 'Repo Test Project',
+            'name' => 'Repo Test Project',
             'created_by' => $user->id,
         ]);
     }
@@ -61,7 +61,7 @@ class ProjectRepositoryTest extends TestCase
     /** @test */
     public function it_finds_existing_project_by_id(): void
     {
-        $user    = User::factory()->create();
+        $user = User::factory()->create();
         $created = Project::factory()->create(['created_by' => $user->id]);
 
         $found = $this->repository->findById($created->id);
@@ -88,21 +88,21 @@ class ProjectRepositoryTest extends TestCase
     /** @test */
     public function it_updates_project_data_correctly(): void
     {
-        $user    = User::factory()->create();
+        $user = User::factory()->create();
         $project = Project::factory()->create([
-            'name'       => 'Old Name',
+            'name' => 'Old Name',
             'created_by' => $user->id,
         ]);
 
         $updated = $this->repository->update($project, [
-            'name'   => 'New Name',
+            'name' => 'New Name',
             'status' => 'completed',
         ]);
 
         $this->assertEquals('New Name', $updated->name);
         $this->assertEquals('completed', $updated->status);
         $this->assertDatabaseHas('projects', [
-            'id'   => $project->id,
+            'id' => $project->id,
             'name' => 'New Name',
         ]);
     }
@@ -110,7 +110,7 @@ class ProjectRepositoryTest extends TestCase
     /** @test */
     public function it_returns_refreshed_project_after_update(): void
     {
-        $user    = User::factory()->create();
+        $user = User::factory()->create();
         $project = Project::factory()->create(['created_by' => $user->id]);
 
         $result = $this->repository->update($project, ['name' => 'Refreshed Name']);
@@ -128,9 +128,9 @@ class ProjectRepositoryTest extends TestCase
     /** @test */
     public function it_deletes_project_from_database(): void
     {
-        $user    = User::factory()->create();
+        $user = User::factory()->create();
         $project = Project::factory()->create(['created_by' => $user->id]);
-        $id      = $project->id;
+        $id = $project->id;
 
         $this->repository->delete($project);
 
@@ -150,7 +150,7 @@ class ProjectRepositoryTest extends TestCase
         Project::factory()->count(5)->create(['created_by' => $user->id]);
 
         $request = Request::create('/projects', 'GET');
-        $result  = $this->repository->getAllPaginated($request, 3);
+        $result = $this->repository->getAllPaginated($request, 3);
 
         // بنتأكد إن الـ pagination شغال
         $this->assertEquals(3, $result->perPage());
@@ -174,7 +174,7 @@ class ProjectRepositoryTest extends TestCase
         Project::factory()->count(2)->create(['created_by' => $userB->id]);
 
         $request = Request::create('/projects', 'GET');
-        $result  = $this->repository->getByCreatorPaginated($request, $userA->id);
+        $result = $this->repository->getByCreatorPaginated($request, $userA->id);
 
         // بنتأكد إن بتيجي projects الـ userA بس
         $this->assertEquals(3, $result->total());

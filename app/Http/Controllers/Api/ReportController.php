@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ReportStoreRequest;
 use App\Http\Resources\ReportResource;
-use App\Traits\ApiResponse;
 use App\Models\Report;
+use App\Traits\ApiResponse;
 
 class ReportController extends Controller
 {
@@ -21,10 +21,9 @@ class ReportController extends Controller
 
         return $this->apiResponse([
             'success' => true,
-            'data' => ReportResource::collection($reports)
+            'data' => ReportResource::collection($reports),
         ], 200);
     }
-
 
     /**
      * Store a newly created resource in storage.
@@ -43,8 +42,7 @@ class ReportController extends Controller
         return $this->apiResponse([
             'success' => true,
             'message' => 'Report created successfully',
-            'data' => new ReportResource($report)
+            'data' => new ReportResource($report),
         ], 201);
     }
-
 }

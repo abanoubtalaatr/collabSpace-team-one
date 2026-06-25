@@ -3,11 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Traits\ApiResponse;
 use App\Models\Task;
-
-
+use App\Traits\ApiResponse;
+use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
@@ -42,9 +40,8 @@ class TaskController extends Controller
                 'total_tasks' => $totalTasks,
                 'completed_tasks' => $completedTasks,
                 'pending_tasks' => $pendingTasks,
-                'productivity_statistics' => round($productivity, 2) . '%',
-            ]
+                'productivity_statistics' => round($productivity, 2).'%',
+            ],
         ], 200);
     }
-
 }

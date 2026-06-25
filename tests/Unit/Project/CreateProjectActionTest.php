@@ -2,16 +2,17 @@
 
 namespace Tests\Unit\Project;
 
-use Tests\TestCase;
 use App\Actions\Project\CreateProjectAction;
 use App\DTOs\ProjectDTO;
 use App\Models\Project;
 use App\Repositories\Contracts\ProjectRepositoryInterface;
 use Mockery;
+use Tests\TestCase;
 
 class CreateProjectActionTest extends TestCase
 {
     protected $repoMock;
+
     protected CreateProjectAction $action;
 
     protected function setUp(): void
@@ -19,7 +20,7 @@ class CreateProjectActionTest extends TestCase
         parent::setUp();
 
         $this->repoMock = Mockery::mock(ProjectRepositoryInterface::class);
-        $this->action   = new CreateProjectAction($this->repoMock);
+        $this->action = new CreateProjectAction($this->repoMock);
     }
 
     protected function tearDown(): void
@@ -33,21 +34,21 @@ class CreateProjectActionTest extends TestCase
     {
         // Arrange — بنعمل DTO بدون files
         $dto = new ProjectDTO(
-            name:        'My Project',
+            name: 'My Project',
             description: 'Some description',
-            startDate:   '2025-01-01',
-            deadline:    '2025-06-01',
-            priority:    'high',
-            status:      'active',
-            createdBy:   1,
-            mediaFiles:  [],   // مفيش files
-            teamIds:     [],
+            startDate: '2025-01-01',
+            deadline: '2025-06-01',
+            priority: 'high',
+            status: 'active',
+            createdBy: 1,
+            mediaFiles: [],   // مفيش files
+            teamIds: [],
         );
 
         // الـ project اللي هيرجعه الـ repository
         $fakeProject = new Project([
-            'id'         => 1,
-            'name'       => 'My Project',
+            'id' => 1,
+            'name' => 'My Project',
             'created_by' => 1,
         ]);
 
@@ -56,13 +57,13 @@ class CreateProjectActionTest extends TestCase
             ->shouldReceive('create')
             ->once()
             ->with([
-                'name'        => 'My Project',
+                'name' => 'My Project',
                 'description' => 'Some description',
-                'start_date'  => '2025-01-01',
-                'deadline'    => '2025-06-01',
-                'priority'    => 'high',
-                'status'      => 'active',
-                'created_by'  => 1,
+                'start_date' => '2025-01-01',
+                'deadline' => '2025-06-01',
+                'priority' => 'high',
+                'status' => 'active',
+                'created_by' => 1,
             ])
             ->andReturn($fakeProject);
 
@@ -83,15 +84,15 @@ class CreateProjectActionTest extends TestCase
     public function it_passes_correct_data_to_repository(): void
     {
         $dto = new ProjectDTO(
-            name:        'Sprint Project',
+            name: 'Sprint Project',
             description: null,
-            startDate:   null,
-            deadline:    null,
-            priority:    'low',
-            status:      'pending',
-            createdBy:   2,
-            mediaFiles:  [],
-            teamIds:     [],
+            startDate: null,
+            deadline: null,
+            priority: 'low',
+            status: 'pending',
+            createdBy: 2,
+            mediaFiles: [],
+            teamIds: [],
         );
 
         // بنتأكد إن الـ data بتوصل للـ repository صح
@@ -99,10 +100,10 @@ class CreateProjectActionTest extends TestCase
             ->shouldReceive('create')
             ->once()
             ->withArgs(function (array $data) {
-                return $data['name']       === 'Sprint Project'
+                return $data['name'] === 'Sprint Project'
                     && $data['created_by'] === 2
-                    && $data['priority']   === 'low'
-                    && $data['status']     === 'pending';
+                    && $data['priority'] === 'low'
+                    && $data['status'] === 'pending';
             })
             ->andReturn(new Project(['name' => 'Sprint Project']));
 

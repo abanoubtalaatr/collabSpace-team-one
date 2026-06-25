@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\GlobalSearchController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -20,6 +21,8 @@ Route::post('resend-otp', [AuthController::class, 'resendOtp'])
     ->name('otp.resend')
     ->middleware(['throttle:3,1', 'guest']);
 Route::post('reset-password', [AuthController::class, 'resetPassword'])->name('password.reset');
+
+Route::get('search', GlobalSearchController::class)->middleware('auth:sanctum');
 
 require __DIR__.'/report.php';
 require __DIR__.'/team.php';
