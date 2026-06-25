@@ -44,7 +44,7 @@ class User extends Authenticatable
     // Relationships
     public function projects(): HasMany
     {
-        return $this->hasMany(Project::class, 'creatd_by', 'id');
+        return $this->hasMany(Project::class, 'created_by', 'id');
     }
 
     public function teams(): BelongsToMany
