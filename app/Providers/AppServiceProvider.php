@@ -3,6 +3,10 @@
 namespace App\Providers;
 
 use App\Models\Project;
+use App\Models\Role;
+use App\Models\Task;
+use App\Models\Team;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
 
@@ -22,7 +26,11 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Relation::enforceMorphMap([
+            'user' => User::class,
             'project' => Project::class,
+            'task' => Task::class,
+            'team' => Team::class,
+            'role' => Role::class,
         ]);
     }
 }
