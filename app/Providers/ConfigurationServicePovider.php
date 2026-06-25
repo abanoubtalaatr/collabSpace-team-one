@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Models\User;
+use App\Repositories\Contracts\ProjectRepository;
+use App\Repositories\Contracts\ProjectRepositoryInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\DB;
@@ -16,7 +18,8 @@ class ConfigurationServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(ProjectRepositoryInterface::class, ProjectRepository::class);
+
     }
 
     /**

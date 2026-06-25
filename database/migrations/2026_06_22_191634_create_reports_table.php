@@ -11,13 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tasks', function (Blueprint $table) {
+        Schema::create('reports', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('project_id')->references('id')->on('projects')
-                ->onUpdate('cascade')->onDelete('cascade');
-            $table->string('name');
-            $table->text('description');
+            $table->string('report_type')->default('project');
+            $table->text('note')->nullable();
+            $table->date('start_date');
+            $table->date('end_date');
+
             $table->timestamps();
+
+            // foreign key relationship with user
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
         });
     }
 
@@ -26,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tasks');
+        Schema::dropIfExists('reports');
     }
 };

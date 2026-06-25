@@ -4,18 +4,63 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Contracts\GlobalSearchable;
+use App\Enums\TaskStatus;
 use Database\Factories\TaskFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Spatie\Searchable\Searchable;
+use Spatie\Searchable\SearchResult;
 
-class Task extends Model implements Searchable
+class Task extends Model implements GlobalSearchable, Searchable
 {
-    protected function casts(): array
+    /** @use HasFactory<TaskFactory> */
+    use HasFactory;
+
+    protected $table = 'tasks';
+
+    public string $searchableType = 'Task';
+
+    protected $fillable = [
+        'project_id',
+        'name',
+        'description',
+        'status',
+    ];
+
+    /**
+     * @return array<int, string>
+     */
+    public static function globalSearchColumns(): array
     {
-        return [];
+        return ['name', 'description'];
     }
 
-    // Relationships
+    /**
+     * @return array<int, string>
+     */
+    public static function globalSearchRelations(): array
+    {
+        return [
+            'project:id,created_by,name,description,start_date,deadline,priority,status,created_at,updated_at',
+            'users:id,name,email,email_verified_at,created_at,updated_at',
+        ];
+    }
+
+    public static function globalSearchType(): string
+    {
+        return 'task';
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'status' => TaskStatus::class,
+        ];
+    }
+
     public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class, 'project_id', 'id');

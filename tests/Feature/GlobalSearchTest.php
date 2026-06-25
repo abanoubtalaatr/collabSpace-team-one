@@ -7,8 +7,11 @@ use App\Models\Role;
 use App\Models\Task;
 use App\Models\Team;
 use App\Models\User;
+use App\Services\GlobalSearchModelRegistry;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Collection;
 use Illuminate\Testing\TestResponse;
+use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
 class GlobalSearchTest extends TestCase
@@ -26,8 +29,31 @@ class GlobalSearchTest extends TestCase
         $this->assertSame(10, Role::query()->count());
     }
 
+    public function test_it_discovers_searchable_models_from_the_model_contract(): void
+    {
+        $registry = app(GlobalSearchModelRegistry::class);
+
+        $this->assertEqualsCanonicalizing([
+            User::class,
+            Project::class,
+            Task::class,
+            Team::class,
+            Role::class,
+        ], $registry->searchableModels());
+
+        $this->assertSame([Project::class], $registry->resolveModels('project'));
+    }
+
+    public function test_it_requires_authentication(): void
+    {
+        $this->getJson('/api/search?q=test')
+            ->assertUnauthorized();
+    }
+
     public function test_it_searches_users_by_name(): void
     {
+        $this->authenticateForSearch();
+
         $user = User::factory()->create([
             'name' => 'John Atlas Searcher',
             'email' => 'john.atlas.searcher@example.test',
@@ -40,15 +66,22 @@ class GlobalSearchTest extends TestCase
             ->assertJsonPath('query', 'John Atlas')
             ->assertJsonStructure([
                 'query',
-                'results' => [
+                'groups' => [
                     [
                         'type',
-                        'id',
-                        'title',
-                        'data',
+                        'count',
+                        'results' => [
+                            [
+                                'type',
+                                'id',
+                                'title',
+                                'data',
+                            ],
+                        ],
                     ],
                 ],
-            ]);
+            ])
+            ->assertJsonMissingPath('results');
 
         $this->assertSearchContains($response, 'User', $user->id, 'John Atlas Searcher');
         $this->assertSearchResultHasData($response, 'User', $user->id, 'name', 'John Atlas Searcher');
@@ -56,6 +89,8 @@ class GlobalSearchTest extends TestCase
 
     public function test_it_searches_users_by_email(): void
     {
+        $this->authenticateForSearch();
+
         $user = User::factory()->create([
             'name' => 'Email Lookup User',
             'email' => 'needle.email.lookup@example.test',
@@ -68,10 +103,61 @@ class GlobalSearchTest extends TestCase
         $this->assertSearchContains($response, 'User', $user->id, 'Email Lookup User');
         $this->assertSearchResultValue($response, 'User', $user->id, 'source.table', 'users');
         $this->assertSearchResultValue($response, 'User', $user->id, 'source.column', 'email');
+        $this->assertSearchResultValue($response, 'User', $user->id, 'source.value', 'needle.email.lookup@example.test');
+    }
+
+    public function test_it_groups_results_by_searchable_type_for_frontend_display(): void
+    {
+        $this->authenticateForSearch();
+
+        $user = User::factory()->create([
+            'name' => 'Grouped Test User',
+            'email' => 'grouped.test.user@example.test',
+        ]);
+
+        $project = Project::factory()->create([
+            'name' => 'Grouped Test Project',
+            'description' => 'Project visible in grouped search response.',
+        ]);
+
+        $task = Task::factory()->create([
+            'name' => 'Grouped Test Task',
+            'description' => 'Task visible in grouped search response.',
+        ]);
+
+        $response = $this->getJson('/api/search?q=Grouped%20Test');
+
+        $response->assertOk();
+
+        $this->assertSearchContains($response, 'User', $user->id, 'Grouped Test User');
+        $this->assertSearchContains($response, 'Project', $project->id, 'Grouped Test Project');
+        $this->assertSearchContains($response, 'Task', $task->id, 'Grouped Test Task');
+
+        $groups = collect($response->json('groups'));
+
+        $this->assertTrue($groups->contains(
+            fn (array $group): bool => $group['type'] === 'User'
+                && $group['count'] >= 1
+                && collect($group['results'])->contains('id', $user->id)
+        ));
+
+        $this->assertTrue($groups->contains(
+            fn (array $group): bool => $group['type'] === 'Project'
+                && $group['count'] >= 1
+                && collect($group['results'])->contains('id', $project->id)
+        ));
+
+        $this->assertTrue($groups->contains(
+            fn (array $group): bool => $group['type'] === 'Task'
+                && $group['count'] >= 1
+                && collect($group['results'])->contains('id', $task->id)
+        ));
     }
 
     public function test_it_can_search_users_only_by_type(): void
     {
+        $this->authenticateForSearch();
+
         $user = User::factory()->create([
             'name' => 'Only User Search',
             'email' => 'only.user.search@example.test',
@@ -86,6 +172,8 @@ class GlobalSearchTest extends TestCase
 
     public function test_it_can_search_by_specific_field(): void
     {
+        $this->authenticateForSearch();
+
         $user = User::factory()->create([
             'name' => 'Field Search User',
             'email' => 'field-search-user@example.test',
@@ -99,6 +187,8 @@ class GlobalSearchTest extends TestCase
 
     public function test_it_searches_projects_by_name(): void
     {
+        $this->authenticateForSearch();
+
         $project = Project::factory()->create([
             'name' => 'Apollo Knowledge Hub',
             'description' => 'A searchable internal collaboration project.',
@@ -113,6 +203,8 @@ class GlobalSearchTest extends TestCase
 
     public function test_it_searches_tasks_by_title(): void
     {
+        $this->authenticateForSearch();
+
         $task = Task::factory()->create([
             'name' => 'Launch Checklist Search Task',
             'description' => 'A task record using the existing name column as its title.',
@@ -127,6 +219,8 @@ class GlobalSearchTest extends TestCase
 
     public function test_it_searches_teams_by_name(): void
     {
+        $this->authenticateForSearch();
+
         $team = Team::factory()->create([
             'name' => 'northstar-delivery-search-team',
             'display_name' => 'Northstar Delivery Search Team',
@@ -141,6 +235,8 @@ class GlobalSearchTest extends TestCase
 
     public function test_it_searches_roles_by_name(): void
     {
+        $this->authenticateForSearch();
+
         $role = Role::factory()->create([
             'name' => 'finance-reviewer-search-role',
             'display_name' => 'Finance Reviewer Search Role',
@@ -163,16 +259,21 @@ class GlobalSearchTest extends TestCase
 
     public function test_it_returns_empty_results_for_no_matches(): void
     {
+        $this->authenticateForSearch();
+
         $response = $this->getJson('/api/search?q=no-match-token-zzzz-9999');
 
         $response
             ->assertOk()
             ->assertJsonPath('query', 'no-match-token-zzzz-9999')
-            ->assertJsonPath('results', []);
+            ->assertJsonPath('groups', [])
+            ->assertJsonMissingPath('results');
     }
 
     public function test_it_supports_partial_match_search(): void
     {
+        $this->authenticateForSearch();
+
         $project = Project::factory()->create([
             'name' => 'Stellar Operations Workspace',
         ]);
@@ -186,6 +287,8 @@ class GlobalSearchTest extends TestCase
 
     public function test_it_supports_case_insensitive_search(): void
     {
+        $this->authenticateForSearch();
+
         $role = Role::factory()->create([
             'name' => 'CaseInsensitiveSearchLead',
             'display_name' => 'Case Insensitive Search Lead',
@@ -204,7 +307,7 @@ class GlobalSearchTest extends TestCase
         int $id,
         string $title
     ): void {
-        $results = collect($response->json('results'));
+        $results = $this->groupedResults($response);
 
         $this->assertTrue(
             $results->contains(
@@ -223,7 +326,7 @@ class GlobalSearchTest extends TestCase
         string $path,
         mixed $expected
     ): void {
-        $results = collect($response->json('results'));
+        $results = $this->groupedResults($response);
         $result = $results->first(
             fn (array $item): bool => $item['type'] === $type && $item['id'] === $id
         );
@@ -234,7 +337,7 @@ class GlobalSearchTest extends TestCase
 
     private function assertSearchContainsOnlyType(TestResponse $response, string $type): void
     {
-        $results = collect($response->json('results'));
+        $results = $this->groupedResults($response);
 
         $this->assertNotEmpty($results, "Expected at least one result for type [{$type}].");
         $this->assertTrue(
@@ -250,12 +353,23 @@ class GlobalSearchTest extends TestCase
         string $path,
         mixed $expected
     ): void {
-        $results = collect($response->json('results'));
+        $results = $this->groupedResults($response);
         $result = $results->first(
             fn (array $item): bool => $item['type'] === $type && $item['id'] === $id
         );
 
         $this->assertNotNull($result, "Expected to find result [{$type}] #{$id}.");
         $this->assertSame($expected, data_get($result, $path));
+    }
+
+    private function groupedResults(TestResponse $response): Collection
+    {
+        return collect($response->json('groups'))
+            ->flatMap(fn (array $group): array => $group['results']);
+    }
+
+    private function authenticateForSearch(): void
+    {
+        Sanctum::actingAs(User::factory()->create());
     }
 }

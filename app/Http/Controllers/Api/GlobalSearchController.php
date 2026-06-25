@@ -22,6 +22,7 @@ class GlobalSearchController extends Controller
         $field = is_scalar($rawField) ? strtolower(trim((string) $rawField)) : '';
 
         $results = $globalSearchService->search($query, $type, $field);
+        $resolvedResults = SearchResultResource::collection($results)->resolve($request);
 
         return response()->json([
             'query' => $query,
@@ -29,7 +30,15 @@ class GlobalSearchController extends Controller
                 'type' => $type ?: null,
                 'field' => $field ?: null,
             ],
-            'results' => SearchResultResource::collection($results)->resolve($request),
+            'groups' => collect($resolvedResults)
+                ->groupBy('type')
+                ->map(fn ($items, string $type): array => [
+                    'type' => $type,
+                    'count' => $items->count(),
+                    'results' => $items->values()->all(),
+                ])
+                ->values()
+                ->all(),
         ]);
     }
 }

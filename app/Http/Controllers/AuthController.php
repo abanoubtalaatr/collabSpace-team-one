@@ -10,14 +10,13 @@ use App\Actions\Auth\ResendOtp;
 use App\Actions\Auth\ResetPassword;
 use App\Actions\Auth\SendOtp;
 use App\Actions\Auth\VerifyOtp;
-use App\Http\Controllers\Controller;
+use App\Concerns\ApiResponse;
 use App\Http\Requests\ForgotPasswordRequest;
-use App\Http\Requests\VerifyOtpRequest;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
-use App\Concerns\ApiResponse;
 use App\Http\Requests\ResendOtpRequest;
 use App\Http\Requests\ResetPasswordRequest;
+use App\Http\Requests\VerifyOtpRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
@@ -71,23 +70,13 @@ class AuthController extends Controller
 
     public function resendOtp(ResendOtpRequest $request, ResendOtp $action): JsonResponse
     {
-        $action->handle($request->email, $request->country_iso_code);
+        $action->handle($request->email);
 
         return response()->json(['message' => __('auth.otp_resent')]);
     }
 
     /**
-     * explain of resetPassword
-     *
-     * you should first call forget password endpoint, then verify otp you got from email,
-     * take the reset token to reset password endpoint
-     *
-     * so the flow is:
-     *
-     * forget password -> verify otp -> reset password
-     * @param ResetPasswordRequest $request
-     * @param ResetPassword $action
-     * @return JsonResponse
+     * Flow: forgot-password -> verify-otp -> reset-password
      */
     public function resetPassword(ResetPasswordRequest $request, ResetPassword $action): JsonResponse
     {

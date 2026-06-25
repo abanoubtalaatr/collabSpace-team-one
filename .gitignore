@@ -27,3 +27,24 @@ Homestead.yaml
 Thumbs.db
 docker-compose.yml
 Dockerfile
+
+# Laravel Boost & Agentic Configs
+.agents
+.ai
+.amp
+.claude
+.codex
+.cursor
+.factory
+.gemini
+.github/skills
+.junie
+.kiro
+.opencode
+.vscode
+.mcp.json
+AGENTS.md
+boost.json
+CLAUDE.md
+GEMINI.md
+opencode.json

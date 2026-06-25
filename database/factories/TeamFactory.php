@@ -14,8 +14,6 @@ class TeamFactory extends Factory
     protected $model = Team::class;
 
     /**
-     * Define the model's default state.
-     *
      * @return array<string, mixed>
      */
     public function definition(): array

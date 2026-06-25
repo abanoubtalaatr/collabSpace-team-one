@@ -1,0 +1,1902 @@
+{
+	"info": {
+		"_postman_id": "d36dd078-678d-4ccd-845e-89f1ced379d5",
+		"name": "Round12-collabase-team-one",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "44160942",
+		"_collection_link": "https://elhamsamir.postman.co/workspace/Elham-Samir's-Workspace~c3ed5306-ad5f-4ad7-890a-11819ed825af/collection/44160942-d36dd078-678d-4ccd-845e-89f1ced379d5?action=share&source=collection_link&creator=44160942"
+	},
+	"item": [
+		{
+			"name": "Reports Module",
+			"item": [
+				{
+					"name": "Get Project Reports",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/api/reports/projects",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"reports",
+								"projects"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Task Reports",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/api/reports/tasks",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"reports",
+								"tasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Team Reports By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/api/reports/teams/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"reports",
+								"teams",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Reports By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/api/reports/users/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"reports",
+								"users",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "register",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Abdulrahman",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "abdulrahman@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "123Abdulrahman@",
+									"type": "text"
+								},
+								{
+									"key": "password_confirmation",
+									"value": "123Abdulrahman@",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/register",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"",
+									"if (jsonData.success && jsonData.data) {",
+									"",
+									"    pm.collectionVariables.set(\"token\", jsonData.data.token);",
+									"",
+									"} else {",
+									"",
+									"    console.log(\"Failed to update token. Response: \" + JSON.stringify(jsonData));",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "abdulrahman@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "123Abdulrahman@",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "login",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"admin@example.com\",\r\n    \"password\": \"password\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/login",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"login"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 24 Jun 2026 19:41:47 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"Logged in successfully\",\n    \"data\": {\n        \"user\": {\n            \"id\": 2,\n            \"name\": \"Admin User\",\n            \"email\": \"admin@example.com\",\n            \"email_verified_at\": null,\n            \"created_at\": \"2026-06-23T19:25:26.000000Z\",\n            \"updated_at\": \"2026-06-23T19:25:26.000000Z\"\n        },\n        \"token\": \"4|1VCy8xmL8TfeI2MfRE0sUMzqCstdj0E3LYbqQhrs92a7039b\"\n    },\n    \"paginate\": null\n}"
+						},
+						{
+							"name": "login",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"manager@example.com\",\r\n    \"password\": \"password\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/login",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"login"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 24 Jun 2026 19:58:21 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"Logged in successfully\",\n    \"data\": {\n        \"user\": {\n            \"id\": 3,\n            \"name\": \"Project Manager\",\n            \"email\": \"manager@example.com\",\n            \"email_verified_at\": null,\n            \"created_at\": \"2026-06-23T19:25:26.000000Z\",\n            \"updated_at\": \"2026-06-23T19:25:26.000000Z\"\n        },\n        \"token\": \"5|ey1eKXzGxEhC4cOpkdaRXeOt96AkC4zB0N5H2SVg23f7af28\"\n    },\n    \"paginate\": null\n}"
+						}
+					]
+				},
+				{
+					"name": "logout",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{url}}/logout",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "verify-otp",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Abdulrahman",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "abdulrahman@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "otp",
+									"value": "123456",
+									"type": "text"
+								},
+								{
+									"key": "purpose",
+									"value": "registration",
+									"description": "registration or password_reset",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/verify-otp",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"verify-otp"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "forgot-password",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "abdulrahman@gmail.com",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/forgot-password",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"forgot-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "reset-password",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "abdulrahman@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "password_confirmation",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "reset_token",
+									"value": "",
+									"description": "from verify otp request",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/reset-password",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"reset-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "resend-otp",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "abdulrahman@gmail.com",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/resend-otp",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"resend-otp"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Global search",
+			"item": [
+				{
+					"name": "Global Search",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": ""
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "team",
+			"item": [
+				{
+					"name": "view",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": ""
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create Form",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": ""
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "store",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": ""
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "show team",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": ""
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "edit form",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": ""
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": ""
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": ""
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Projects",
+			"item": [
+				{
+					"name": "admin",
+					"item": [
+						{
+							"name": "index",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Auth",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/api/admin/projects/",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"admin",
+										"projects",
+										""
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "index",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Auth",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{url}}/api/admin/projects/",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"admin",
+												"projects",
+												""
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Host",
+											"value": "127.0.0.1:8000"
+										},
+										{
+											"key": "Connection",
+											"value": "close"
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "PHP/8.2.12"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, private"
+										},
+										{
+											"key": "Date",
+											"value": "Wed, 24 Jun 2026 19:51:28 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"data\": [\n        {\n            \"id\": 10,\n            \"name\": \"My First Project\",\n            \"description\": \"This is a test project\",\n            \"start_date\": \"2026-07-01\",\n            \"deadline\": \"2026-12-31\",\n            \"priority\": \"high\",\n            \"status\": \"pending\",\n            \"created_by\": {\n                \"id\": 2,\n                \"name\": \"Admin User\"\n            },\n            \"media\": [],\n            \"created_at\": \"2026-06-23 20:52:17\",\n            \"updated_at\": \"2026-06-23 20:52:17\"\n        },\n        {\n            \"id\": 8,\n            \"name\": \"Culpa expedita non harum.\",\n            \"description\": \"At officia quia qui in. Aut laboriosam excepturi ipsa. Similique blanditiis sint tenetur. At et hic sint qui quasi qui. Veniam voluptatibus eum est dolores sint velit ut.\",\n            \"start_date\": \"2026-06-10\",\n            \"deadline\": \"2026-11-30\",\n            \"priority\": \"critical\",\n            \"status\": \"in_progress\",\n            \"created_by\": {\n                \"id\": 3,\n                \"name\": \"Project Manager\"\n            },\n            \"media\": [],\n            \"created_at\": \"2026-06-23 19:42:27\",\n            \"updated_at\": \"2026-06-23 19:42:27\"\n        },\n        {\n            \"id\": 9,\n            \"name\": \"Critical Launch Project\",\n            \"description\": \"Aut ipsam aliquam asperiores ex eligendi dignissimos placeat minima. Maxime saepe magni aspernatur fugit ab.\",\n            \"start_date\": \"2026-05-23\",\n            \"deadline\": \"2026-06-16\",\n            \"priority\": \"critical\",\n            \"status\": \"on_hold\",\n            \"created_by\": {\n                \"id\": 2,\n                \"name\": \"Admin User\"\n            },\n            \"media\": [],\n            \"created_at\": \"2026-06-23 19:42:27\",\n            \"updated_at\": \"2026-06-23 19:42:27\"\n        },\n        {\n            \"id\": 1,\n            \"name\": \"Eaque tempore nisi.\",\n            \"description\": \"Earum ullam quasi et harum. Adipisci doloribus nam doloribus velit. Nihil impedit et recusandae sint numquam.\",\n            \"start_date\": \"2026-05-26\",\n            \"deadline\": \"2026-08-30\",\n            \"priority\": \"medium\",\n            \"status\": \"cancelled\",\n            \"created_by\": {\n                \"id\": 2,\n                \"name\": \"Admin User\"\n            },\n            \"media\": [],\n            \"created_at\": \"2026-06-23 19:42:26\",\n            \"updated_at\": \"2026-06-23 19:42:26\"\n        },\n        {\n            \"id\": 2,\n            \"name\": \"Qui temporibus sed.\",\n            \"description\": \"Repudiandae blanditiis distinctio temporibus maiores excepturi voluptatibus. Occaecati nulla nihil soluta est maxime autem aut. Consequatur error voluptas placeat velit dolor error id quos.\",\n            \"start_date\": \"2026-05-05\",\n            \"deadline\": \"2026-05-13\",\n            \"priority\": \"high\",\n            \"status\": \"completed\",\n            \"created_by\": {\n                \"id\": 2,\n                \"name\": \"Admin User\"\n            },\n            \"media\": [],\n            \"created_at\": \"2026-06-23 19:42:26\",\n            \"updated_at\": \"2026-06-23 19:42:26\"\n        },\n        {\n            \"id\": 3,\n            \"name\": \"Voluptatem delectus necessitatibus quia.\",\n            \"description\": \"Numquam porro similique id voluptas provident amet. Harum expedita ab quibusdam qui. Ut sed vitae qui labore deserunt excepturi dolorem tempore.\",\n            \"start_date\": \"2026-05-24\",\n            \"deadline\": \"2026-07-19\",\n            \"priority\": \"medium\",\n            \"status\": \"on_hold\",\n            \"created_by\": {\n                \"id\": 2,\n                \"name\": \"Admin User\"\n            },\n            \"media\": [],\n            \"created_at\": \"2026-06-23 19:42:26\",\n            \"updated_at\": \"2026-06-23 19:42:26\"\n        },\n        {\n            \"id\": 4,\n            \"name\": \"Nulla sit numquam pariatur.\",\n            \"description\": \"Dolor eius quia et maiores consequatur repellat. Natus ex veritatis magnam dolor quia fuga. Fuga omnis sit quaerat sed fuga rerum officia.\",\n            \"start_date\": \"2026-05-18\",\n            \"deadline\": \"2026-08-07\",\n            \"priority\": \"low\",\n            \"status\": \"completed\",\n            \"created_by\": {\n                \"id\": 2,\n                \"name\": \"Admin User\"\n            },\n            \"media\": [],\n            \"created_at\": \"2026-06-23 19:42:26\",\n            \"updated_at\": \"2026-06-23 19:42:26\"\n        },\n        {\n            \"id\": 5,\n            \"name\": \"Qui quos pariatur.\",\n            \"description\": \"Maxime vel laboriosam possimus qui aut iusto. In rem magnam qui non dolorum. Perferendis nihil est et sed. Velit repellendus et facere aut deleniti non.\",\n            \"start_date\": \"2026-04-04\",\n            \"deadline\": \"2026-05-21\",\n            \"priority\": \"critical\",\n            \"status\": \"on_hold\",\n            \"created_by\": {\n                \"id\": 2,\n                \"name\": \"Admin User\"\n            },\n            \"media\": [],\n            \"created_at\": \"2026-06-23 19:42:26\",\n            \"updated_at\": \"2026-06-23 19:42:26\"\n        },\n        {\n            \"id\": 6,\n            \"name\": \"Quia inventore quod.\",\n            \"description\": \"Eius odio voluptas possimus maiores natus numquam rem. Voluptas dolores explicabo dolor amet et qui. Reprehenderit officiis doloremque cumque sunt.\",\n            \"start_date\": \"2026-05-08\",\n            \"deadline\": \"2026-08-28\",\n            \"priority\": \"low\",\n            \"status\": \"in_progress\",\n            \"created_by\": {\n                \"id\": 3,\n                \"name\": \"Project Manager\"\n            },\n            \"media\": [],\n            \"created_at\": \"2026-06-23 19:42:26\",\n            \"updated_at\": \"2026-06-23 19:42:26\"\n        },\n        {\n            \"id\": 7,\n            \"name\": \"Veniam aut rerum ab.\",\n            \"description\": \"Illo velit recusandae et quod nostrum. Laborum ea temporibus tenetur eos. Voluptatem aut odit dolores. Expedita laudantium quidem sint sint.\",\n            \"start_date\": \"2026-05-25\",\n            \"deadline\": \"2026-09-14\",\n            \"priority\": \"high\",\n            \"status\": \"in_progress\",\n            \"created_by\": {\n                \"id\": 3,\n                \"name\": \"Project Manager\"\n            },\n            \"media\": [],\n            \"created_at\": \"2026-06-23 19:42:26\",\n            \"updated_at\": \"2026-06-23 19:42:26\"\n        }\n    ],\n    \"links\": {\n        \"first\": \"http://127.0.0.1:8000/api/admin/projects?page=1\",\n        \"last\": \"http://127.0.0.1:8000/api/admin/projects?page=1\",\n        \"prev\": null,\n        \"next\": null\n    },\n    \"meta\": {\n        \"current_page\": 1,\n        \"from\": 1,\n        \"last_page\": 1,\n        \"links\": [\n            {\n                \"url\": null,\n                \"label\": \"&laquo; Previous\",\n                \"page\": null,\n                \"active\": false\n            },\n            {\n                \"url\": \"http://127.0.0.1:8000/api/admin/projects?page=1\",\n                \"label\": \"1\",\n                \"page\": 1,\n                \"active\": true\n            },\n            {\n                \"url\": null,\n                \"label\": \"Next &raquo;\",\n                \"page\": null,\n                \"active\": false\n            }\n        ],\n        \"path\": \"http://127.0.0.1:8000/api/admin/projects\",\n        \"per_page\": 15,\n        \"to\": 10,\n        \"total\": 10\n    }\n}"
+								}
+							]
+						},
+						{
+							"name": "insert",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Auth",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"CollabSpace Project\",\r\n    \"description\": \"Project Description\",\r\n    \"start_date\": \"2026-06-24\",\r\n    \"deadline\": \"2026-12-31\",\r\n    \"priority\": \"high\",\r\n    \"status\": \"pending\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/admin/projects",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"admin",
+										"projects"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "insert",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Auth",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": \"CollabSpace Project\",\r\n    \"description\": \"Project Description\",\r\n    \"start_date\": \"2026-06-24\",\r\n    \"deadline\": \"2026-12-31\",\r\n    \"priority\": \"high\",\r\n    \"status\": \"pending\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}/api/admin/projects",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"admin",
+												"projects"
+											]
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Host",
+											"value": "127.0.0.1:8000"
+										},
+										{
+											"key": "Connection",
+											"value": "close"
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "PHP/8.2.12"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, private"
+										},
+										{
+											"key": "Date",
+											"value": "Wed, 24 Jun 2026 19:51:47 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"data\": {\n        \"id\": 11,\n        \"name\": \"CollabSpace Project\",\n        \"description\": \"Project Description\",\n        \"start_date\": \"2026-06-24\",\n        \"deadline\": \"2026-12-31\",\n        \"priority\": \"high\",\n        \"status\": \"pending\",\n        \"created_by\": {\n            \"id\": 2,\n            \"name\": \"Admin User\"\n        },\n        \"media\": [],\n        \"created_at\": \"2026-06-24 19:51:47\",\n        \"updated_at\": \"2026-06-24 19:51:47\"\n    }\n}"
+								}
+							]
+						},
+						{
+							"name": "update",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Auth",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Updated Project\",\r\n    \"description\": \"Updated Description\",\r\n    \"start_date\": \"2026-06-24\",\r\n    \"deadline\": \"2027-01-15\",\r\n    \"priority\": \"medium\",\r\n    \"status\": \"in_progress\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/admin/projects/1",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"admin",
+										"projects",
+										"1"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "update",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Auth",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": \"Updated Project\",\r\n    \"description\": \"Updated Description\",\r\n    \"start_date\": \"2026-06-24\",\r\n    \"deadline\": \"2027-01-15\",\r\n    \"priority\": \"medium\",\r\n    \"status\": \"in_progress\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}/api/admin/projects/1",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"admin",
+												"projects",
+												"1"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Host",
+											"value": "127.0.0.1:8000"
+										},
+										{
+											"key": "Connection",
+											"value": "close"
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "PHP/8.2.12"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, private"
+										},
+										{
+											"key": "Date",
+											"value": "Wed, 24 Jun 2026 19:52:02 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"data\": {\n        \"id\": 1,\n        \"name\": \"Updated Project\",\n        \"description\": \"Updated Description\",\n        \"start_date\": \"2026-06-24\",\n        \"deadline\": \"2027-01-15\",\n        \"priority\": \"medium\",\n        \"status\": \"in_progress\",\n        \"created_by\": {\n            \"id\": 2,\n            \"name\": \"Admin User\"\n        },\n        \"media\": [],\n        \"created_at\": \"2026-06-23 19:42:26\",\n        \"updated_at\": \"2026-06-24 19:52:02\"\n    }\n}"
+								}
+							]
+						},
+						{
+							"name": "show",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Auth",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/api/admin/projects/1",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"admin",
+										"projects",
+										"1"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "show",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Auth",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{url}}/api/admin/projects/2",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"admin",
+												"projects",
+												"2"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Host",
+											"value": "127.0.0.1:8000"
+										},
+										{
+											"key": "Connection",
+											"value": "close"
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "PHP/8.2.12"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, private"
+										},
+										{
+											"key": "Date",
+											"value": "Wed, 24 Jun 2026 19:53:52 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"data\": {\n        \"id\": 2,\n        \"name\": \"Qui temporibus sed.\",\n        \"description\": \"Repudiandae blanditiis distinctio temporibus maiores excepturi voluptatibus. Occaecati nulla nihil soluta est maxime autem aut. Consequatur error voluptas placeat velit dolor error id quos.\",\n        \"start_date\": \"2026-05-05\",\n        \"deadline\": \"2026-05-13\",\n        \"priority\": \"high\",\n        \"status\": \"completed\",\n        \"created_by\": {\n            \"id\": 2,\n            \"name\": \"Admin User\"\n        },\n        \"media\": [],\n        \"created_at\": \"2026-06-23 19:42:26\",\n        \"updated_at\": \"2026-06-23 19:42:26\"\n    }\n}"
+								}
+							]
+						},
+						{
+							"name": "delete",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Auth",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/api/admin/projects/1",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"admin",
+										"projects",
+										"1"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "delete",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Auth",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{url}}/api/admin/projects/1",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"admin",
+												"projects",
+												"1"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Host",
+											"value": "127.0.0.1:8000"
+										},
+										{
+											"key": "Connection",
+											"value": "close"
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "PHP/8.2.12"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, private"
+										},
+										{
+											"key": "Date",
+											"value": "Wed, 24 Jun 2026 19:52:35 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"message\": \"Project deleted successfully.\"\n}"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Project",
+					"item": [
+						{
+							"name": "index",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Auth",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/Project/projects/",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"Project",
+										"projects",
+										""
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "index",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Auth",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}/api/Project/projects/",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"Project",
+												"projects",
+												""
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Host",
+											"value": "127.0.0.1:8000"
+										},
+										{
+											"key": "Connection",
+											"value": "close"
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "PHP/8.2.12"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, private"
+										},
+										{
+											"key": "Date",
+											"value": "Wed, 24 Jun 2026 20:02:06 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"data\": [\n        {\n            \"id\": 11,\n            \"name\": \"CollabSpace Project\",\n            \"description\": \"Project Description\",\n            \"start_date\": \"2026-06-24\",\n            \"deadline\": \"2026-12-31\",\n            \"priority\": \"high\",\n            \"status\": \"pending\",\n            \"created_by\": {\n                \"id\": 2,\n                \"name\": \"Admin User\"\n            },\n            \"media\": [],\n            \"created_at\": \"2026-06-24 19:51:47\",\n            \"updated_at\": \"2026-06-24 19:51:47\"\n        },\n        {\n            \"id\": 10,\n            \"name\": \"My First Project\",\n            \"description\": \"This is a test project\",\n            \"start_date\": \"2026-07-01\",\n            \"deadline\": \"2026-12-31\",\n            \"priority\": \"high\",\n            \"status\": \"pending\",\n            \"created_by\": {\n                \"id\": 2,\n                \"name\": \"Admin User\"\n            },\n            \"media\": [],\n            \"created_at\": \"2026-06-23 20:52:17\",\n            \"updated_at\": \"2026-06-23 20:52:17\"\n        },\n        {\n            \"id\": 8,\n            \"name\": \"Culpa expedita non harum.\",\n            \"description\": \"At officia quia qui in. Aut laboriosam excepturi ipsa. Similique blanditiis sint tenetur. At et hic sint qui quasi qui. Veniam voluptatibus eum est dolores sint velit ut.\",\n            \"start_date\": \"2026-06-10\",\n            \"deadline\": \"2026-11-30\",\n            \"priority\": \"critical\",\n            \"status\": \"in_progress\",\n            \"created_by\": {\n                \"id\": 3,\n                \"name\": \"Project Manager\"\n            },\n            \"media\": [],\n            \"created_at\": \"2026-06-23 19:42:27\",\n            \"updated_at\": \"2026-06-23 19:42:27\"\n        },\n        {\n            \"id\": 9,\n            \"name\": \"Critical Launch Project\",\n            \"description\": \"Aut ipsam aliquam asperiores ex eligendi dignissimos placeat minima. Maxime saepe magni aspernatur fugit ab.\",\n            \"start_date\": \"2026-05-23\",\n            \"deadline\": \"2026-06-16\",\n            \"priority\": \"critical\",\n            \"status\": \"on_hold\",\n            \"created_by\": {\n                \"id\": 2,\n                \"name\": \"Admin User\"\n            },\n            \"media\": [],\n            \"created_at\": \"2026-06-23 19:42:27\",\n            \"updated_at\": \"2026-06-23 19:42:27\"\n        },\n        {\n            \"id\": 2,\n            \"name\": \"Qui temporibus sed.\",\n            \"description\": \"Repudiandae blanditiis distinctio temporibus maiores excepturi voluptatibus. Occaecati nulla nihil soluta est maxime autem aut. Consequatur error voluptas placeat velit dolor error id quos.\",\n            \"start_date\": \"2026-05-05\",\n            \"deadline\": \"2026-05-13\",\n            \"priority\": \"high\",\n            \"status\": \"completed\",\n            \"created_by\": {\n                \"id\": 2,\n                \"name\": \"Admin User\"\n            },\n            \"media\": [],\n            \"created_at\": \"2026-06-23 19:42:26\",\n            \"updated_at\": \"2026-06-23 19:42:26\"\n        },\n        {\n            \"id\": 3,\n            \"name\": \"Voluptatem delectus necessitatibus quia.\",\n            \"description\": \"Numquam porro similique id voluptas provident amet. Harum expedita ab quibusdam qui. Ut sed vitae qui labore deserunt excepturi dolorem tempore.\",\n            \"start_date\": \"2026-05-24\",\n            \"deadline\": \"2026-07-19\",\n            \"priority\": \"medium\",\n            \"status\": \"on_hold\",\n            \"created_by\": {\n                \"id\": 2,\n                \"name\": \"Admin User\"\n            },\n            \"media\": [],\n            \"created_at\": \"2026-06-23 19:42:26\",\n            \"updated_at\": \"2026-06-23 19:42:26\"\n        },\n        {\n            \"id\": 4,\n            \"name\": \"Nulla sit numquam pariatur.\",\n            \"description\": \"Dolor eius quia et maiores consequatur repellat. Natus ex veritatis magnam dolor quia fuga. Fuga omnis sit quaerat sed fuga rerum officia.\",\n            \"start_date\": \"2026-05-18\",\n            \"deadline\": \"2026-08-07\",\n            \"priority\": \"low\",\n            \"status\": \"completed\",\n            \"created_by\": {\n                \"id\": 2,\n                \"name\": \"Admin User\"\n            },\n            \"media\": [],\n            \"created_at\": \"2026-06-23 19:42:26\",\n            \"updated_at\": \"2026-06-23 19:42:26\"\n        },\n        {\n            \"id\": 5,\n            \"name\": \"Qui quos pariatur.\",\n            \"description\": \"Maxime vel laboriosam possimus qui aut iusto. In rem magnam qui non dolorum. Perferendis nihil est et sed. Velit repellendus et facere aut deleniti non.\",\n            \"start_date\": \"2026-04-04\",\n            \"deadline\": \"2026-05-21\",\n            \"priority\": \"critical\",\n            \"status\": \"on_hold\",\n            \"created_by\": {\n                \"id\": 2,\n                \"name\": \"Admin User\"\n            },\n            \"media\": [],\n            \"created_at\": \"2026-06-23 19:42:26\",\n            \"updated_at\": \"2026-06-23 19:42:26\"\n        },\n        {\n            \"id\": 6,\n            \"name\": \"Quia inventore quod.\",\n            \"description\": \"Eius odio voluptas possimus maiores natus numquam rem. Voluptas dolores explicabo dolor amet et qui. Reprehenderit officiis doloremque cumque sunt.\",\n            \"start_date\": \"2026-05-08\",\n            \"deadline\": \"2026-08-28\",\n            \"priority\": \"low\",\n            \"status\": \"in_progress\",\n            \"created_by\": {\n                \"id\": 3,\n                \"name\": \"Project Manager\"\n            },\n            \"media\": [],\n            \"created_at\": \"2026-06-23 19:42:26\",\n            \"updated_at\": \"2026-06-23 19:42:26\"\n        },\n        {\n            \"id\": 7,\n            \"name\": \"Veniam aut rerum ab.\",\n            \"description\": \"Illo velit recusandae et quod nostrum. Laborum ea temporibus tenetur eos. Voluptatem aut odit dolores. Expedita laudantium quidem sint sint.\",\n            \"start_date\": \"2026-05-25\",\n            \"deadline\": \"2026-09-14\",\n            \"priority\": \"high\",\n            \"status\": \"in_progress\",\n            \"created_by\": {\n                \"id\": 3,\n                \"name\": \"Project Manager\"\n            },\n            \"media\": [],\n            \"created_at\": \"2026-06-23 19:42:26\",\n            \"updated_at\": \"2026-06-23 19:42:26\"\n        }\n    ],\n    \"links\": {\n        \"first\": \"http://127.0.0.1:8000/api/Project/projects?page=1\",\n        \"last\": \"http://127.0.0.1:8000/api/Project/projects?page=1\",\n        \"prev\": null,\n        \"next\": null\n    },\n    \"meta\": {\n        \"current_page\": 1,\n        \"from\": 1,\n        \"last_page\": 1,\n        \"links\": [\n            {\n                \"url\": null,\n                \"label\": \"&laquo; Previous\",\n                \"page\": null,\n                \"active\": false\n            },\n            {\n                \"url\": \"http://127.0.0.1:8000/api/Project/projects?page=1\",\n                \"label\": \"1\",\n                \"page\": 1,\n                \"active\": true\n            },\n            {\n                \"url\": null,\n                \"label\": \"Next &raquo;\",\n                \"page\": null,\n                \"active\": false\n            }\n        ],\n        \"path\": \"http://127.0.0.1:8000/api/Project/projects\",\n        \"per_page\": 15,\n        \"to\": 10,\n        \"total\": 10\n    }\n}"
+								}
+							]
+						},
+						{
+							"name": "insert",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Auth",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"CollabSpace Project\",\r\n    \"description\": \"Project Description\",\r\n    \"start_date\": \"2026-06-24\",\r\n    \"deadline\": \"2026-12-31\",\r\n    \"priority\": \"high\",\r\n    \"status\": \"pending\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/Project/projects/",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"Project",
+										"projects",
+										""
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "insert",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Auth",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": \"CollabSpace Project\",\r\n    \"description\": \"Project Description\",\r\n    \"start_date\": \"2026-06-24\",\r\n    \"deadline\": \"2026-12-31\",\r\n    \"priority\": \"high\",\r\n    \"status\": \"pending\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}/api/Project/projects/",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"Project",
+												"projects",
+												""
+											]
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Host",
+											"value": "127.0.0.1:8000"
+										},
+										{
+											"key": "Connection",
+											"value": "close"
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "PHP/8.2.12"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, private"
+										},
+										{
+											"key": "Date",
+											"value": "Wed, 24 Jun 2026 20:03:15 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"data\": {\n        \"id\": 12,\n        \"name\": \"CollabSpace Project\",\n        \"description\": \"Project Description\",\n        \"start_date\": \"2026-06-24\",\n        \"deadline\": \"2026-12-31\",\n        \"priority\": \"high\",\n        \"status\": \"pending\",\n        \"created_by\": {\n            \"id\": 3,\n            \"name\": \"Project Manager\"\n        },\n        \"media\": [],\n        \"created_at\": \"2026-06-24 20:03:15\",\n        \"updated_at\": \"2026-06-24 20:03:15\"\n    }\n}"
+								}
+							]
+						},
+						{
+							"name": "update",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Auth",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Updated Project\",\r\n    \"description\": \"Updated Description\",\r\n    \"start_date\": \"2026-06-24\",\r\n    \"deadline\": \"2027-01-15\",\r\n    \"priority\": \"medium\",\r\n    \"status\": \"in_progress\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/Project/projects/1",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"Project",
+										"projects",
+										"1"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "update",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Auth",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": \"Updated Project\",\r\n    \"description\": \"Updated Description\",\r\n    \"start_date\": \"2026-06-24\",\r\n    \"deadline\": \"2027-01-15\",\r\n    \"priority\": \"medium\",\r\n    \"status\": \"in_progress\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}/api/Project/projects/12",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"Project",
+												"projects",
+												"12"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Host",
+											"value": "127.0.0.1:8000"
+										},
+										{
+											"key": "Connection",
+											"value": "close"
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "PHP/8.2.12"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, private"
+										},
+										{
+											"key": "Date",
+											"value": "Wed, 24 Jun 2026 20:03:51 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"data\": {\n        \"id\": 12,\n        \"name\": \"Updated Project\",\n        \"description\": \"Updated Description\",\n        \"start_date\": \"2026-06-24\",\n        \"deadline\": \"2027-01-15\",\n        \"priority\": \"medium\",\n        \"status\": \"in_progress\",\n        \"created_by\": {\n            \"id\": 3,\n            \"name\": \"Project Manager\"\n        },\n        \"media\": [],\n        \"created_at\": \"2026-06-24 20:03:15\",\n        \"updated_at\": \"2026-06-24 20:03:51\"\n    }\n}"
+								}
+							]
+						},
+						{
+							"name": "show",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Auth",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/api/Project/projects/1",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"Project",
+										"projects",
+										"1"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "show",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Auth",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{url}}/api/Project/projects/12",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"Project",
+												"projects",
+												"12"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Host",
+											"value": "127.0.0.1:8000"
+										},
+										{
+											"key": "Connection",
+											"value": "close"
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "PHP/8.2.12"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, private"
+										},
+										{
+											"key": "Date",
+											"value": "Wed, 24 Jun 2026 20:04:22 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"data\": {\n        \"id\": 12,\n        \"name\": \"Updated Project\",\n        \"description\": \"Updated Description\",\n        \"start_date\": \"2026-06-24\",\n        \"deadline\": \"2027-01-15\",\n        \"priority\": \"medium\",\n        \"status\": \"in_progress\",\n        \"created_by\": {\n            \"id\": 3,\n            \"name\": \"Project Manager\"\n        },\n        \"media\": [],\n        \"created_at\": \"2026-06-24 20:03:15\",\n        \"updated_at\": \"2026-06-24 20:03:51\"\n    }\n}"
+								}
+							]
+						},
+						{
+							"name": "delete",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Auth",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/api/Project/projects/1",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"Project",
+										"projects",
+										"1"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "delete",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Auth",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{url}}/api/Project/projects/12",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"Project",
+												"projects",
+												"12"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Host",
+											"value": "127.0.0.1:8000"
+										},
+										{
+											"key": "Connection",
+											"value": "close"
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "PHP/8.2.12"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, private"
+										},
+										{
+											"key": "Date",
+											"value": "Wed, 24 Jun 2026 20:04:52 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"message\": \"Project deleted successfully.\"\n}"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Member",
+					"item": [
+						{
+							"name": "index",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Auth",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/api/member/projects/",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"member",
+										"projects",
+										""
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "index",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Auth",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{url}}/api/Member/projects/",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"Member",
+												"projects",
+												""
+											]
+										}
+									},
+									"status": "Forbidden",
+									"code": 403,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Host",
+											"value": "127.0.0.1:8000"
+										},
+										{
+											"key": "Connection",
+											"value": "close"
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "PHP/8.2.12"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, private"
+										},
+										{
+											"key": "Date",
+											"value": "Wed, 24 Jun 2026 20:05:22 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"message\": \"User does not have any of the necessary access rights.\",\n    \"exception\": \"Symfony\\\\Component\\\\HttpKernel\\\\Exception\\\\HttpException\",\n    \"file\": \"F:\\\\Internships\\\\Huma Volve Round 12\\\\Code\\\\Session 2\\\\collabSpace-team-one\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Foundation\\\\Application.php\",\n    \"line\": 1440,\n    \"trace\": [\n        {\n            \"file\": \"F:\\\\Internships\\\\Huma Volve Round 12\\\\Code\\\\Session 2\\\\collabSpace-team-one\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Support\\\\Facades\\\\Facade.php\",\n            \"line\": 363,\n            \"function\": \"abort\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Application\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"F:\\\\Internships\\\\Huma Volve Round 12\\\\Code\\\\Session 2\\\\collabSpace-team-one\\\\vendor\\\\santigarcor\\\\laratrust\\\\src\\\\Middleware\\\\LaratrustMiddleware.php\",\n            \"line\": 49,\n            \"function\": \"__callStatic\",\n            \"class\": \"Illuminate\\\\Support\\\\Facades\\\\Facade\",\n            \"type\": \"::\"\n        },\n        {\n            \"file\": \"F:\\\\Internships\\\\Huma Volve Round 12\\\\Code\\\\Session 2\\\\collabSpace-team-one\\\\vendor\\\\santigarcor\\\\laratrust\\\\src\\\\Middleware\\\\Role.php\",\n            \"line\": 21,\n            \"function\": \"unauthorized\",\n            \"class\": \"Laratrust\\\\Middleware\\\\LaratrustMiddleware\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"F:\\\\Internships\\\\Huma Volve Round 12\\\\Code\\\\Session 2\\\\collabSpace-team-one\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Pipeline\\\\Pipeline.php\",\n            \"line\": 219,\n            \"function\": \"handle\",\n            \"class\": \"Laratrust\\\\Middleware\\\\Role\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"F:\\\\Internships\\\\Huma Volve Round 12\\\\Code\\\\Session 2\\\\collabSpace-team-one\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Routing\\\\Middleware\\\\SubstituteBindings.php\",\n            \"line\": 52,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"F:\\\\Internships\\\\Huma Volve Round 12\\\\Code\\\\Session 2\\\\collabSpace-team-one\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Pipeline\\\\Pipeline.php\",\n            \"line\": 219,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Routing\\\\Middleware\\\\SubstituteBindings\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"F:\\\\Internships\\\\Huma Volve Round 12\\\\Code\\\\Session 2\\\\collabSpace-team-one\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Auth\\\\Middleware\\\\Authenticate.php\",\n            \"line\": 63,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"F:\\\\Internships\\\\Huma Volve Round 12\\\\Code\\\\Session 2\\\\collabSpace-team-one\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Pipeline\\\\Pipeline.php\",\n            \"line\": 219,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Auth\\\\Middleware\\\\Authenticate\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"F:\\\\Internships\\\\Huma Volve Round 12\\\\Code\\\\Session 2\\\\collabSpace-team-one\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Pipeline\\\\Pipeline.php\",\n            \"line\": 137,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"F:\\\\Internships\\\\Huma Volve Round 12\\\\Code\\\\Session 2\\\\collabSpace-team-one\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Routing\\\\Router.php\",\n            \"line\": 821,\n            \"function\": \"then\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"F:\\\\Internships\\\\Huma Volve Round 12\\\\Code\\\\Session 2\\\\collabSpace-team-one\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Routing\\\\Router.php\",\n            \"line\": 800,\n            \"function\": \"runRouteWithinStack\",\n            \"class\": \"Illuminate\\\\Routing\\\\Router\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"F:\\\\Internships\\\\Huma Volve Round 12\\\\Code\\\\Session 2\\\\collabSpace-team-one\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Routing\\\\Router.php\",\n            \"line\": 764,\n            \"function\": \"runRoute\",\n            \"class\": \"Illuminate\\\\Routing\\\\Router\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"F:\\\\Internships\\\\Huma Volve Round 12\\\\Code\\\\Session 2\\\\collabSpace-team-one\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Routing\\\\Router.php\",\n            \"line\": 753,\n            \"function\": \"dispatchToRoute\",\n            \"class\": \"Illuminate\\\\Routing\\\\Router\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"F:\\\\Internships\\\\Huma Volve Round 12\\\\Code\\\\Session 2\\\\collabSpace-team-one\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Foundation\\\\Http\\\\Kernel.php\",\n            \"line\": 200,\n            \"function\": \"dispatch\",\n            \"class\": \"Illuminate\\\\Routing\\\\Router\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"F:\\\\Internships\\\\Huma Volve Round 12\\\\Code\\\\Session 2\\\\collabSpace-team-one\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Pipeline\\\\Pipeline.php\",\n            \"line\": 180,\n            \"function\": \"Illuminate\\\\Foundation\\\\Http\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Kernel\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"F:\\\\Internships\\\\Huma Volve Round 12\\\\Code\\\\Session 2\\\\collabSpace-team-one\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\TransformsRequest.php\",\n            \"line\": 21,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"F:\\\\Internships\\\\Huma Volve Round 12\\\\Code\\\\Session 2\\\\collabSpace-team-one\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\ConvertEmptyStringsToNull.php\",\n            \"line\": 31,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\TransformsRequest\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"F:\\\\Internships\\\\Huma Volve Round 12\\\\Code\\\\Session 2\\\\collabSpace-team-one\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Pipeline\\\\Pipeline.php\",\n            \"line\": 219,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\ConvertEmptyStringsToNull\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"F:\\\\Internships\\\\Huma Volve Round 12\\\\Code\\\\Session 2\\\\collabSpace-team-one\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\TransformsRequest.php\",\n            \"line\": 21,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"F:\\\\Internships\\\\Huma Volve Round 12\\\\Code\\\\Session 2\\\\collabSpace-team-one\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\TrimStrings.php\",\n            \"line\": 51,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\TransformsRequest\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"F:\\\\Internships\\\\Huma Volve Round 12\\\\Code\\\\Session 2\\\\collabSpace-team-one\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Pipeline\\\\Pipeline.php\",\n            \"line\": 219,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\TrimStrings\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"F:\\\\Internships\\\\Huma Volve Round 12\\\\Code\\\\Session 2\\\\collabSpace-team-one\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Http\\\\Middleware\\\\ValidatePostSize.php\",\n            \"line\": 27,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"F:\\\\Internships\\\\Huma Volve Round 12\\\\Code\\\\Session 2\\\\collabSpace-team-one\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Pipeline\\\\Pipeline.php\",\n            \"line\": 219,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Http\\\\Middleware\\\\ValidatePostSize\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"F:\\\\Internships\\\\Huma Volve Round 12\\\\Code\\\\Session 2\\\\collabSpace-team-one\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\PreventRequestsDuringMaintenance.php\",\n            \"line\": 109,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"F:\\\\Internships\\\\Huma Volve Round 12\\\\Code\\\\Session 2\\\\collabSpace-team-one\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Pipeline\\\\Pipeline.php\",\n            \"line\": 219,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\PreventRequestsDuringMaintenance\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"F:\\\\Internships\\\\Huma Volve Round 12\\\\Code\\\\Session 2\\\\collabSpace-team-one\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Http\\\\Middleware\\\\HandleCors.php\",\n            \"line\": 74,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"F:\\\\Internships\\\\Huma Volve Round 12\\\\Code\\\\Session 2\\\\collabSpace-team-one\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Pipeline\\\\Pipeline.php\",\n            \"line\": 219,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Http\\\\Middleware\\\\HandleCors\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"F:\\\\Internships\\\\Huma Volve Round 12\\\\Code\\\\Session 2\\\\collabSpace-team-one\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Http\\\\Middleware\\\\TrustProxies.php\",\n            \"line\": 58,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"F:\\\\Internships\\\\Huma Volve Round 12\\\\Code\\\\Session 2\\\\collabSpace-team-one\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Pipeline\\\\Pipeline.php\",\n            \"line\": 219,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Http\\\\Middleware\\\\TrustProxies\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"F:\\\\Internships\\\\Huma Volve Round 12\\\\Code\\\\Session 2\\\\collabSpace-team-one\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\InvokeDeferredCallbacks.php\",\n            \"line\": 22,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"F:\\\\Internships\\\\Huma Volve Round 12\\\\Code\\\\Session 2\\\\collabSpace-team-one\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Pipeline\\\\Pipeline.php\",\n            \"line\": 219,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Middleware\\\\InvokeDeferredCallbacks\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"F:\\\\Internships\\\\Huma Volve Round 12\\\\Code\\\\Session 2\\\\collabSpace-team-one\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Http\\\\Middleware\\\\ValidatePathEncoding.php\",\n            \"line\": 28,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"F:\\\\Internships\\\\Huma Volve Round 12\\\\Code\\\\Session 2\\\\collabSpace-team-one\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Pipeline\\\\Pipeline.php\",\n            \"line\": 219,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Http\\\\Middleware\\\\ValidatePathEncoding\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"F:\\\\Internships\\\\Huma Volve Round 12\\\\Code\\\\Session 2\\\\collabSpace-team-one\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Pipeline\\\\Pipeline.php\",\n            \"line\": 137,\n            \"function\": \"Illuminate\\\\Pipeline\\\\{closure}\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"F:\\\\Internships\\\\Huma Volve Round 12\\\\Code\\\\Session 2\\\\collabSpace-team-one\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Foundation\\\\Http\\\\Kernel.php\",\n            \"line\": 175,\n            \"function\": \"then\",\n            \"class\": \"Illuminate\\\\Pipeline\\\\Pipeline\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"F:\\\\Internships\\\\Huma Volve Round 12\\\\Code\\\\Session 2\\\\collabSpace-team-one\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Foundation\\\\Http\\\\Kernel.php\",\n            \"line\": 144,\n            \"function\": \"sendRequestThroughRouter\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Kernel\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"F:\\\\Internships\\\\Huma Volve Round 12\\\\Code\\\\Session 2\\\\collabSpace-team-one\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Foundation\\\\Application.php\",\n            \"line\": 1220,\n            \"function\": \"handle\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Http\\\\Kernel\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"F:\\\\Internships\\\\Huma Volve Round 12\\\\Code\\\\Session 2\\\\collabSpace-team-one\\\\public\\\\index.php\",\n            \"line\": 20,\n            \"function\": \"handleRequest\",\n            \"class\": \"Illuminate\\\\Foundation\\\\Application\",\n            \"type\": \"->\"\n        },\n        {\n            \"file\": \"F:\\\\Internships\\\\Huma Volve Round 12\\\\Code\\\\Session 2\\\\collabSpace-team-one\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Foundation\\\\resources\\\\server.php\",\n            \"line\": 23,\n            \"function\": \"require_once\"\n        }\n    ]\n}"
+								}
+							]
+						},
+						{
+							"name": "show",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Auth",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/member/projects/1",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"member",
+										"projects",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "http://127.0.0.1:8000"
+		},
+		{
+			"key": "token",
+			"value": ""
+		}
+	]
+}

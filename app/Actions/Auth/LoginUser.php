@@ -27,7 +27,7 @@ class LoginUser
 
         return [
             'user' => $user,
-            'token' => $accessToken->plainTextToken
+            'token' => $accessToken->plainTextToken,
         ];
     }
 }
