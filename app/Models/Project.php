@@ -3,8 +3,10 @@
 namespace App\Models;
 
 use App\Concerns\Filterable;
+use App\Contracts\GlobalSearchable;
 use App\Enums\ProjectPriority;
 use App\Enums\ProjectStatus;
+use Database\Factories\ProjectFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,14 +14,19 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\Searchable\Searchable;
+use Spatie\Searchable\SearchResult;
 
-class Project extends Model implements HasMedia
+class Project extends Model implements GlobalSearchable, HasMedia, Searchable
 {
+    /** @use HasFactory<ProjectFactory> */
     use Filterable, HasFactory, InteractsWithMedia;
 
     protected $table = 'projects';
 
     public const MEDIA_COLLECTION_ATTACHMENTS = 'attachments';
+
+    public string $searchableType = 'Project';
 
     protected $fillable = [
         'name',
@@ -37,6 +44,31 @@ class Project extends Model implements HasMedia
         'priority' => ProjectPriority::class,
         'status' => ProjectStatus::class,
     ];
+
+    /**
+     * @return array<int, string>
+     */
+    public static function globalSearchColumns(): array
+    {
+        return ['name', 'description'];
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    public static function globalSearchRelations(): array
+    {
+        return [
+            'creator:id,name,email,email_verified_at,created_at,updated_at',
+            'teams:id,name,display_name,description,created_at,updated_at',
+            'tasks:id,project_id,name,description,created_at,updated_at',
+        ];
+    }
+
+    public static function globalSearchType(): string
+    {
+        return 'project';
+    }
 
     public function creator(): BelongsTo
     {
@@ -77,5 +109,10 @@ class Project extends Model implements HasMedia
     public function statuses(): array
     {
         return ProjectStatus::values();
+    }
+
+    public function getSearchResult(): SearchResult
+    {
+        return new SearchResult($this, $this->name);
     }
 }
