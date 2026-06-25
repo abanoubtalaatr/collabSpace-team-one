@@ -4,7 +4,6 @@ namespace App\Http\Requests\Project;
 
 use App\Enums\ProjectPriority;
 use App\Enums\ProjectStatus;
-// use App\Models\Project;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -12,7 +11,7 @@ class StoreProjectRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true; // Authorization handled via middleware/policy
+        return true;
     }
 
     public function rules(): array
@@ -24,10 +23,10 @@ class StoreProjectRequest extends FormRequest
             'deadline' => ['nullable', 'date', 'after_or_equal:start_date'],
             'priority' => ['required', Rule::in(ProjectPriority::values())],
             'status' => ['sometimes', Rule::in(ProjectStatus::values())],
-            // 'team_ids'      => ['sometimes', 'array'],
-            // 'team_ids.*'    => ['integer', 'exists:teams,id'],
+            // 'team_ids' => ['sometimes', 'array'],
+            // 'team_ids.*' => ['integer', 'exists:teams,id'],
             'attachments' => ['sometimes', 'array'],
-            'attachments.*' => ['file', 'max:10240'], // 10MB per file
+            'attachments.*' => ['file', 'max:10240'],
         ];
     }
 }
