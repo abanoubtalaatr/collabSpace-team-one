@@ -13,10 +13,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
     });
 
     // ── Project Manager ──────────────────────────────────────
-    Route::middleware('role:Project')->group(function () {
-        Route::apiResource('projects', PMProjectController::class);
-    });
+    // Route::middleware('role:Project')->group(function () {
+    //     Route::apiResource('projects', PMProjectController::class);
+    // });
 
+        Route::apiResource('projects', PMProjectController::class);
     // ── Team Member ──────────────────────────────────────────
     Route::middleware('role:Member')->prefix('Member')->name('Member.')->group(function () {
         Route::apiResource('projects', TMProjectController::class)->only(['index', 'show']);
