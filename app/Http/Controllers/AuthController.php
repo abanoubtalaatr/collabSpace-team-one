@@ -12,7 +12,7 @@ use App\Actions\Auth\SendOtp;
 use App\Actions\Auth\VerifyOtp;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ForgotPasswordRequest;
-use App\Http\Requests\Api\VerifyOtpRequest;
+use App\Http\Requests\VerifyOtpRequest;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Concerns\ApiResponse;
@@ -76,10 +76,23 @@ class AuthController extends Controller
         return response()->json(['message' => __('auth.otp_resent')]);
     }
 
+    /**
+     * explain of resetPassword
+     *
+     * you should first call forget password endpoint, then verify otp you got from email,
+     * take the reset token to reset password endpoint
+     *
+     * so the flow is:
+     *
+     * forget password -> verify otp -> reset password
+     * @param ResetPasswordRequest $request
+     * @param ResetPassword $action
+     * @return JsonResponse
+     */
     public function resetPassword(ResetPasswordRequest $request, ResetPassword $action): JsonResponse
     {
         $result = $action->handle($request->validated());
 
-        return response()->success('Password reset successful', $result);
+        return $this->success('Password reset successful', $result);
     }
 }
