@@ -5,20 +5,27 @@ declare(strict_types=1);
 namespace App\Actions\Auth;
 
 use App\Models\User;
+use App\Support\AuthCacheKeys;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 class VerifyOtp
 {
+    private const RESET_TOKEN_TTL_MINUTES = 15;
+
     /**
-     * @param  'registration'|'password_reset'  $purpose
+     * @param  'registration'|'password_reset'|'forgot_password'  $purpose
      * @return array{user?: User, token?: string, reset_token?: string}
      */
     public function handle(string $email, string $otp, string $purpose): array
     {
-        $key = "{$purpose}_otp_{$email}";
+        $email = AuthCacheKeys::normalizeEmail($email);
+        $purpose = $this->normalizePurpose($purpose);
+
+        $key = AuthCacheKeys::otp($purpose, $email);
         $cached = Cache::get($key);
 
         if (! $cached) {
@@ -33,7 +40,7 @@ class VerifyOtp
 
         if (! Hash::check($otp, $cached['otp'])) {
             $cached['attempts']++;
-            Cache::put($key, $cached, $cached['expires_at']);
+            Cache::put($key, $cached, now()->addMinutes(self::RESET_TOKEN_TTL_MINUTES));
 
             throw ValidationException::withMessages(['otp' => 'Invalid OTP.']);
         }
@@ -47,6 +54,15 @@ class VerifyOtp
         return $this->handlePasswordResetVerification($email);
     }
 
+    private function normalizePurpose(string $purpose): string
+    {
+        return match (strtolower(trim($purpose))) {
+            'forgot_password', 'password_reset' => 'password_reset',
+            'registration' => 'registration',
+            default => $purpose,
+        };
+    }
+
     /**
      * @return array{user: User, token: string}
      */
@@ -55,14 +71,14 @@ class VerifyOtp
         $user = User::query()->where('email', $email)->firstOrFail();
 
         $user->forceFill([
-            'email_verified_at' => now()
+            'email_verified_at' => now(),
         ])->save();
 
         $accessToken = $user->createToken($user->email);
 
         return [
             'user' => $user,
-            'token' => $accessToken->plainTextToken
+            'token' => $accessToken->plainTextToken,
         ];
     }
 
@@ -73,10 +89,12 @@ class VerifyOtp
     {
         $resetToken = Str::random(40);
 
-        Cache::put(
-            "password_reset_token_{$email}",
-            Hash::make($resetToken),
-            now()->addMinutes(5)
+        DB::table('password_reset_tokens')->updateOrInsert(
+            ['email' => $email],
+            [
+                'token' => Hash::make($resetToken),
+                'created_at' => now(),
+            ]
         );
 
         return ['reset_token' => $resetToken];

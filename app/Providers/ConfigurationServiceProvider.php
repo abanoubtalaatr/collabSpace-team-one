@@ -2,9 +2,9 @@
 
 namespace App\Providers;
 
-use App\Models\User;
+use App\Repositories\Contracts\ProjectRepository;
+use App\Repositories\Contracts\ProjectRepositoryInterface;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
@@ -16,7 +16,7 @@ class ConfigurationServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(ProjectRepositoryInterface::class, ProjectRepository::class);
     }
 
     /**
@@ -27,31 +27,23 @@ class ConfigurationServiceProvider extends ServiceProvider
         $this->configureCommands();
         $this->configureModels();
         $this->configureUrl();
-        $this->relationEnforceMorphMap();
     }
 
-    private function configureCommands()
+    private function configureCommands(): void
     {
         DB::prohibitDestructiveCommands(
             app()->isProduction()
         );
     }
 
-    private function configureModels()
+    private function configureModels(): void
     {
         Model::shouldBeStrict();
         Model::automaticallyEagerLoadRelationships();
     }
 
-    private function configureUrl()
+    private function configureUrl(): void
     {
         URL::forceHttps(app()->isProduction());
-    }
-
-    private function relationEnforceMorphMap()
-    {
-        Relation::enforceMorphMap([
-            'user' => User::class,
-        ]);
     }
 }
