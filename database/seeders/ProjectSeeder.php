@@ -45,10 +45,10 @@ class ProjectSeeder extends Seeder
             ->createdBy($admin)
             ->critical()
             ->create([
-                'name'       => 'Critical Launch Project',
+                'name' => 'Critical Launch Project',
                 'start_date' => now()->subMonth()->toDateString(),
-                'deadline'   => now()->subWeek()->toDateString(),
-                'status'     => ProjectStatus::ON_HOLD->value,
+                'deadline' => now()->subWeek()->toDateString(),
+                'status' => ProjectStatus::ON_HOLD->value,
             ]);
 
         $this->command->info('Projects seeded successfully.');

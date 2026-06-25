@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Filters;
-use App\Filters\QueryFilter;
 
 class ProjectFilter extends QueryFilter
 {

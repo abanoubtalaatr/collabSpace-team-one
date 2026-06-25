@@ -15,20 +15,20 @@ class UpdateProjectAction
     public function execute(Project $project, ProjectDTO $dto): Project
     {
         $project = $this->repository->update($project, [
-            'name'        => $dto->name,
+            'name' => $dto->name,
             'description' => $dto->description,
-            'start_date'  => $dto->startDate,
-            'deadline'    => $dto->deadline,
-            'priority'    => $dto->priority,
-            'status'      => $dto->status,
+            'start_date' => $dto->startDate,
+            'deadline' => $dto->deadline,
+            'priority' => $dto->priority,
+            'status' => $dto->status,
         ]);
 
-        //$this->repository->syncTeams($project, $dto->teamIds);
+        // $this->repository->syncTeams($project, $dto->teamIds);
 
-        if (!empty($dto->mediaFiles)) {
+        if (! empty($dto->mediaFiles)) {
             foreach ($dto->mediaFiles as $file) {
                 $project->addMedia($file)
-                        ->toMediaCollection(Project::MEDIA_COLLECTION_ATTACHMENTS);
+                    ->toMediaCollection(Project::MEDIA_COLLECTION_ATTACHMENTS);
             }
         }
 

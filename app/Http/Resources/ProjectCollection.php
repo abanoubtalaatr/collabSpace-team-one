@@ -2,10 +2,8 @@
 
 namespace App\Http\Resources;
 
-use App\Http\Resources\ProjectResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
-
 
 class ProjectCollection extends ResourceCollection
 {

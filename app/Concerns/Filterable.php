@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Concerns;
 
@@ -7,12 +7,12 @@ use Illuminate\Http\Request;
 
 trait Filterable
 {
-    //new 
-    
+    // new
+
     public function scopeFilter(Builder $query, Request $request): Builder
     {
         $static = self::resolveFilterClass();
-        
+
         return (new $static($request))->apply($query);
     }
 
