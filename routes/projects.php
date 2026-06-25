@@ -1,8 +1,8 @@
 <?php
 
-use App\Http\Controllers\api\admin\ProjectController as AdminProjectController;
-use App\Http\Controllers\api\Project\ProjectController as PMProjectController;
-use App\Http\Controllers\api\Team\ProjectController as TMProjectController;
+use App\Http\Controllers\Api\admin\ProjectController as AdminProjectController;
+use App\Http\Controllers\Api\Project\ProjectController as PMProjectController;
+use App\Http\Controllers\Api\Team\ProjectController as TMProjectController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth:sanctum'])->group(function () {

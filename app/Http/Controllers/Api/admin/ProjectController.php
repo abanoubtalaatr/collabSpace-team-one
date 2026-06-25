@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\api\admin;
+namespace App\Http\Controllers\Api\admin;
 
 use App\Actions\Project\CreateProjectAction;
 use App\Actions\Project\DeleteProjectAction;
