@@ -1,23 +1,52 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
-use App\Concerns\InteractsWithGlobalSearch;
-use App\Contracts\GloballySearchable;
+use App\Contracts\GlobalSearchable;
 use App\Enums\ProjectPriority;
 use App\Enums\ProjectStatus;
 use Database\Factories\ProjectFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\Searchable\Searchable;
 use Spatie\Searchable\SearchResult;
 
-class Project extends Model implements GloballySearchable, Searchable
+class Project extends Model implements GlobalSearchable, Searchable
 {
     /** @use HasFactory<ProjectFactory> */
-    use HasFactory, InteractsWithGlobalSearch;
+    use HasFactory;
 
     public string $searchableType = 'Project';
+
+    /**
+     * @return array<int, string>
+     */
+    public static function globalSearchColumns(): array
+    {
+        return ['name', 'description'];
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    public static function globalSearchRelations(): array
+    {
+        return [
+            'creator:id,name,email,email_verified_at,created_at,updated_at',
+            'teams:id,name,display_name,description,created_at,updated_at',
+            'tasks:id,project_id,name,description,created_at,updated_at',
+        ];
+    }
+
+    public static function globalSearchType(): string
+    {
+        return 'project';
+    }
 
     protected function casts(): array
     {
@@ -29,47 +58,23 @@ class Project extends Model implements GloballySearchable, Searchable
         ];
     }
 
-    public static function searchKey(): string
+    public function creator(): BelongsTo
     {
-        return 'project';
+        return $this->belongsTo(User::class, 'created_by', 'id');
     }
 
-    public static function searchFields(): array
+    public function tasks(): HasMany
     {
-        return ['name', 'description'];
+        return $this->hasMany(Task::class, 'project_id', 'id');
     }
 
-    public function searchTitle(): string
+    public function teams(): BelongsToMany
     {
-        return $this->name;
-    }
-
-    public function toSearchPayload(): array
-    {
-        return $this->loadMissing([
-            'creator:id,name,email,email_verified_at,created_at,updated_at',
-            'teams:id,name,display_name,description,created_at,updated_at',
-            'tasks:id,project_id,name,description,created_at,updated_at',
-        ])->toArray();
-    }
-
-    public function creator()
-    {
-        return $this->belongsTo(User::class, 'creatd_by');
-    }
-
-    public function tasks()
-    {
-        return $this->hasMany(Task::class);
-    }
-
-    public function teams()
-    {
-        return $this->belongsToMany(Team::class, 'project_team');
+        return $this->belongsToMany(Team::class, 'project_team', 'project_id', 'team_id', 'id', 'id');
     }
 
     public function getSearchResult(): SearchResult
     {
-        return new SearchResult($this, $this->searchTitle());
+        return new SearchResult($this, $this->name);
     }
 }

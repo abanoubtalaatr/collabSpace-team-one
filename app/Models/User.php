@@ -1,28 +1,60 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use App\Concerns\InteractsWithGlobalSearch;
-use App\Contracts\GloballySearchable;
+use App\Contracts\GlobalSearchable;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
+use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laratrust\Traits\HasRolesAndPermissions;
+use Laravel\Sanctum\HasApiTokens;
 use Spatie\Searchable\Searchable;
 use Spatie\Searchable\SearchResult;
 
 #[Fillable(['name', 'email', 'password'])]
 #[Hidden(['password', 'remember_token'])]
-class User extends Authenticatable implements GloballySearchable, Searchable
+#[UseFactory(UserFactory::class)]
+class User extends Authenticatable implements GlobalSearchable, Searchable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, HasRolesAndPermissions, InteractsWithGlobalSearch, Notifiable;
+    use HasApiTokens, HasFactory, HasRolesAndPermissions, Notifiable;
 
     public string $searchableType = 'User';
+
+    /**
+     * @return array<int, string>
+     */
+    public static function globalSearchColumns(): array
+    {
+        return ['name', 'email'];
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    public static function globalSearchRelations(): array
+    {
+        return [
+            'projects:id,created_by,name,description,start_date,deadline,priority,status,created_at,updated_at',
+            'teams:id,name,display_name,description,created_at,updated_at',
+            'tasks:id,project_id,name,description,created_at,updated_at',
+            'roles:id,name,display_name,description,created_at,updated_at',
+        ];
+    }
+
+    public static function globalSearchType(): string
+    {
+        return 'user';
+    }
 
     protected function casts(): array
     {
@@ -32,48 +64,23 @@ class User extends Authenticatable implements GloballySearchable, Searchable
         ];
     }
 
-    public static function searchKey(): string
+    public function projects(): HasMany
     {
-        return 'user';
+        return $this->hasMany(Project::class, 'created_by', 'id');
     }
 
-    public static function searchFields(): array
+    public function teams(): BelongsToMany
     {
-        return ['name', 'email'];
+        return $this->belongsToMany(Team::class, 'team_user', 'user_id', 'team_id', 'id', 'id');
     }
 
-    public function searchTitle(): string
+    public function tasks(): BelongsToMany
     {
-        return $this->name;
-    }
-
-    public function toSearchPayload(): array
-    {
-        return $this->loadMissing([
-            'projects:id,creatd_by,name,description,start_date,deadline,priority,status,created_at,updated_at',
-            'teams:id,name,display_name,description,created_at,updated_at',
-            'tasks:id,project_id,name,description,created_at,updated_at',
-            'roles:id,name,display_name,description,created_at,updated_at',
-        ])->toArray();
-    }
-
-    public function projects()
-    {
-        return $this->hasMany(Project::class, 'creatd_by');
-    }
-
-    public function teams()
-    {
-        return $this->belongsToMany(Team::class, 'team_user');
-    }
-
-    public function tasks()
-    {
-        return $this->belongsToMany(Task::class, 'task_user');
+        return $this->belongsToMany(Task::class, 'task_user', 'user_id', 'task_id', 'id', 'id');
     }
 
     public function getSearchResult(): SearchResult
     {
-        return new SearchResult($this, $this->searchTitle());
+        return new SearchResult($this, $this->name);
     }
 }

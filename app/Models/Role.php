@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
-use App\Concerns\InteractsWithGlobalSearch;
-use App\Contracts\GloballySearchable;
+use App\Contracts\GlobalSearchable;
 use Database\Factories\RoleFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
@@ -11,35 +12,36 @@ use Laratrust\Models\Role as RoleModel;
 use Spatie\Searchable\Searchable;
 use Spatie\Searchable\SearchResult;
 
-class Role extends RoleModel implements GloballySearchable, Searchable
+class Role extends RoleModel implements GlobalSearchable, Searchable
 {
     /** @use HasFactory<RoleFactory> */
-    use HasFactory, InteractsWithGlobalSearch;
+    use HasFactory;
 
     public $guarded = [];
 
     public string $searchableType = 'Role';
 
-    public static function searchKey(): string
-    {
-        return 'role';
-    }
-
-    public static function searchFields(): array
+    /**
+     * @return array<int, string>
+     */
+    public static function globalSearchColumns(): array
     {
         return ['name'];
     }
 
-    public function searchTitle(): string
+    /**
+     * @return array<int, string>
+     */
+    public static function globalSearchRelations(): array
     {
-        return $this->name;
+        return [
+            'users:id,name,email,email_verified_at,created_at,updated_at',
+        ];
     }
 
-    public function toSearchPayload(): array
+    public static function globalSearchType(): string
     {
-        return $this->loadMissing([
-            'users:id,name,email,email_verified_at,created_at,updated_at',
-        ])->toArray();
+        return 'role';
     }
 
     public function users(): MorphToMany
@@ -49,6 +51,6 @@ class Role extends RoleModel implements GloballySearchable, Searchable
 
     public function getSearchResult(): SearchResult
     {
-        return new SearchResult($this, $this->searchTitle());
+        return new SearchResult($this, $this->name);
     }
 }
