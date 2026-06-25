@@ -15,7 +15,9 @@ class TeamsController extends Controller
     {
         $teams = Team::all();
 
-        return $this->success('return successfully teams.');
+        return $this->success('Teams retrieved successfully.', [
+            'teams' => $teams,
+        ]);
     }
 
     public function create()
