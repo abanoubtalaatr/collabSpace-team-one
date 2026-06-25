@@ -15,6 +15,15 @@ Route::delete('logout', [AuthController::class, 'logout'])->middleware(['auth:sa
 Route::post('forgot-password', [AuthController::class, 'forgotPassword'])
     ->name('password.forgot')
     ->middleware(['throttle:3,1', 'guest']);
+Route::post('verify-otp', [AuthController::class, 'verifyOtp'])->name('password.verify');
+Route::post('resend-otp', [AuthController::class, 'resendOtp'])
+    ->name('otp.resend')
+    ->middleware(['throttle:3,1', 'guest']);
 Route::post('reset-password', [AuthController::class, 'resetPassword'])->name('password.reset');
 
 require __DIR__ . '/report.php';
+
+require __DIR__.'/team.php';
+
+
+

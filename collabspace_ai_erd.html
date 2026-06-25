@@ -1,0 +1,179 @@
+<style>
+#erd svg.erDiagram .divider path { stroke-opacity: 0.5; }
+#erd svg.erDiagram .row-rect-odd path,
+#erd svg.erDiagram .row-rect-odd rect,
+#erd svg.erDiagram .row-rect-even path,
+#erd svg.erDiagram .row-rect-even rect { stroke: none !important; }
+</style>
+<div id="erd"></div>
+<script type="module">
+import mermaid from 'https://esm.sh/mermaid@11/dist/mermaid.esm.min.mjs';
+const dark = matchMedia('(prefers-color-scheme: dark)').matches;
+await document.fonts.ready;
+mermaid.initialize({
+  startOnLoad: false,
+  theme: 'base',
+  fontFamily: '"Anthropic Sans", sans-serif',
+  themeVariables: {
+    darkMode: dark,
+    fontSize: '13px',
+    fontFamily: '"Anthropic Sans", sans-serif',
+    lineColor: dark ? '#9c9a92' : '#73726c',
+    textColor: dark ? '#c2c0b6' : '#3d3d3a',
+  },
+});
+const def = `erDiagram
+  ROLES ||--o{ USERS : has
+  USERS ||--o{ TEAM_MEMBERS : joins
+  TEAMS ||--o{ TEAM_MEMBERS : includes
+  USERS ||--o{ PROJECTS : creates
+  PROJECTS ||--o{ PROJECT_TEAMS : assigned_to
+  TEAMS ||--o{ PROJECT_TEAMS : works_on
+  PROJECTS ||--o{ TASKS : contains
+  USERS ||--o{ TASKS : assigned_to
+  PROJECTS ||--o{ FILES : stores
+  USERS ||--o{ FILES : uploads
+  PROJECTS ||--o{ MEETINGS : schedules
+  MEETINGS ||--o{ MEETING_PARTICIPANTS : has
+  USERS ||--o{ MEETING_PARTICIPANTS : attends
+  MEETINGS ||--o| MEETING_SUMMARIES : generates
+  PROJECTS ||--o{ MESSAGES : contains
+  USERS ||--o{ MESSAGES : sends
+  USERS ||--o{ NOTIFICATIONS : receives
+  USERS ||--o{ AUDIT_LOGS : performs
+
+  ROLES {
+    int id PK
+    string name
+  }
+  USERS {
+    int id PK
+    string full_name
+    string email
+    string password_hash
+    string job_title
+    int years_experience
+    int role_id FK
+    string google_id
+    timestamp created_at
+  }
+  TEAMS {
+    int id PK
+    string name
+    timestamp created_at
+  }
+  TEAM_MEMBERS {
+    int id PK
+    int team_id FK
+    int user_id FK
+    timestamp joined_at
+  }
+  PROJECTS {
+    int id PK
+    string name
+    string description
+    date start_date
+    date deadline
+    string priority
+    string status
+    float progress_percentage
+    int created_by FK
+    timestamp created_at
+  }
+  PROJECT_TEAMS {
+    int id PK
+    int project_id FK
+    int team_id FK
+  }
+  TASKS {
+    int id PK
+    string name
+    string description
+    int project_id FK
+    int assigned_to FK
+    string status
+    timestamp created_at
+  }
+  FILES {
+    int id PK
+    string file_name
+    string file_url
+    int uploaded_by FK
+    int project_id FK
+    int task_id FK
+    timestamp uploaded_at
+  }
+  MEETINGS {
+    int id PK
+    string title
+    string description
+    date meeting_date
+    time start_time
+    time end_time
+    string meeting_link
+    int project_id FK
+    int created_by FK
+  }
+  MEETING_PARTICIPANTS {
+    int id PK
+    int meeting_id FK
+    int user_id FK
+  }
+  MEETING_SUMMARIES {
+    int id PK
+    int meeting_id FK
+    string summary
+    string decisions
+    string action_items
+    string risks
+    string next_steps
+  }
+  MESSAGES {
+    int id PK
+    int project_id FK
+    int sender_id FK
+    string content
+    boolean is_edited
+    boolean is_deleted
+    timestamp sent_at
+  }
+  NOTIFICATIONS {
+    int id PK
+    int user_id FK
+    string type
+    string content
+    boolean is_read
+    timestamp created_at
+  }
+  AUDIT_LOGS {
+    int id PK
+    int user_id FK
+    string action
+    string entity
+    timestamp logged_at
+  }`;
+const { svg } = await mermaid.render('erd-svg', def);
+document.getElementById('erd').innerHTML = svg;
+document.querySelectorAll('#erd svg.erDiagram .node').forEach(node => {
+  const firstPath = node.querySelector('path[d]');
+  if (!firstPath) return;
+  const d = firstPath.getAttribute('d');
+  const nums = d.match(/-?[\d.]+/g)?.map(Number);
+  if (!nums || nums.length < 8) return;
+  const xs = [nums[0], nums[2], nums[4], nums[6]];
+  const ys = [nums[1], nums[3], nums[5], nums[7]];
+  const x = Math.min(...xs), y = Math.min(...ys);
+  const w = Math.max(...xs) - x, h = Math.max(...ys) - y;
+  const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+  rect.setAttribute('x', x); rect.setAttribute('y', y);
+  rect.setAttribute('width', w); rect.setAttribute('height', h);
+  rect.setAttribute('rx', '8');
+  for (const a of ['fill', 'stroke', 'stroke-width', 'class', 'style']) {
+    if (firstPath.hasAttribute(a)) rect.setAttribute(a, firstPath.getAttribute(a));
+  }
+  firstPath.replaceWith(rect);
+});
+document.querySelectorAll('#erd svg.erDiagram .row-rect-odd path, #erd svg.erDiagram .row-rect-even path').forEach(p => {
+  p.setAttribute('stroke', 'none');
+});
+</script>
