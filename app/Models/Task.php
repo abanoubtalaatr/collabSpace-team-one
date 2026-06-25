@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Contracts\GlobalSearchable;
+use App\Enums\TaskPriority;
 use App\Enums\TaskStatus;
 use Database\Factories\TaskFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -25,9 +26,13 @@ class Task extends Model implements GlobalSearchable, Searchable
 
     protected $fillable = [
         'project_id',
-        'name',
+        'title',
         'description',
+        'start_date',
+        'due_date',
+        'progress',
         'status',
+        'priority',
     ];
 
     /**
@@ -35,7 +40,7 @@ class Task extends Model implements GlobalSearchable, Searchable
      */
     public static function globalSearchColumns(): array
     {
-        return ['name', 'description'];
+        return ['title', 'description'];
     }
 
     /**
@@ -57,7 +62,11 @@ class Task extends Model implements GlobalSearchable, Searchable
     protected function casts(): array
     {
         return [
+            'start_date' => 'date',
+            'due_date' => 'date',
+            'progress' => 'integer',
             'status' => TaskStatus::class,
+            'priority' => TaskPriority::class,
         ];
     }
 
@@ -73,6 +82,6 @@ class Task extends Model implements GlobalSearchable, Searchable
 
     public function getSearchResult(): SearchResult
     {
-        return new SearchResult($this, $this->name);
+        return new SearchResult($this, $this->title);
     }
 }

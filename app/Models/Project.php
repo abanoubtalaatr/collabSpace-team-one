@@ -85,6 +85,11 @@ class Project extends Model implements GlobalSearchable, HasMedia, Searchable
         return $this->belongsToMany(Team::class, 'project_team');
     }
 
+    public function conversations(): HasMany
+    {
+        return $this->hasMany(Conversation::class);
+    }
+
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection(self::MEDIA_COLLECTION_ATTACHMENTS)
