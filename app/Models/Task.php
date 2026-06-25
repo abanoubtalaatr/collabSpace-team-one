@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Contracts\GlobalSearchable;
+use App\Enums\TaskStatus;
 use Database\Factories\TaskFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -18,7 +19,16 @@ class Task extends Model implements GlobalSearchable, Searchable
     /** @use HasFactory<TaskFactory> */
     use HasFactory;
 
+    protected $table = 'tasks';
+
     public string $searchableType = 'Task';
+
+    protected $fillable = [
+        'project_id',
+        'name',
+        'description',
+        'status',
+    ];
 
     /**
      * @return array<int, string>
@@ -46,7 +56,9 @@ class Task extends Model implements GlobalSearchable, Searchable
 
     protected function casts(): array
     {
-        return [];
+        return [
+            'status' => TaskStatus::class,
+        ];
     }
 
     public function project(): BelongsTo

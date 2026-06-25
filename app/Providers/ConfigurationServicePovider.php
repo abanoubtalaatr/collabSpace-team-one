@@ -3,20 +3,23 @@
 namespace App\Providers;
 
 use App\Models\User;
+use App\Repositories\Contracts\ProjectRepository;
+use App\Repositories\Contracts\ProjectRepositoryInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
-class ConfigurationServicePovider extends ServiceProvider
+class ConfigurationServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
      */
     public function register(): void
     {
-        //
+        $this->app->bind(ProjectRepositoryInterface::class, ProjectRepository::class);
+
     }
 
     /**
