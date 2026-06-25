@@ -21,14 +21,4 @@ class Team extends LaratrustTeam implements Searchable
     {
         return $this->belongsToMany(Project::class, 'project_team', 'team_id', 'project_id', 'id', 'id');
     }
-
-    public function members()
-    {
-        return $this->belongsToMany(User::class, 'team_user');
-    }
-
-    public function getSearchResult(): SearchResult
-    {
-        return new SearchResult($this, $this->name);
-    }
 }
