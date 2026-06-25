@@ -2,16 +2,19 @@
 
 namespace App\Http\Controllers\teams;
 
+use App\Concerns\ApiResponse;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Team;
 
 class TeamsController extends Controller
 {
+    use ApiResponse;
     public function index()
     {
         $teams = Team::all();
-        return response()->json($teams);
+        
+        return $this->success('return successfully teams.', );
     }
 
     public function create()

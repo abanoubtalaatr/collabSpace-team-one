@@ -10,7 +10,6 @@ use Laratrust\Models\Team as LaratrustTeam;
 
 class Team extends LaratrustTeam
 {
-    use HasFactory;
     public $guarded = [];
 
     // Relationships
