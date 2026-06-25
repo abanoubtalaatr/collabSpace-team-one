@@ -38,7 +38,7 @@ class Project extends Model
     // Relationships
     public function creator(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'creatd_by', 'id');
+        return $this->belongsTo(User::class, 'created_by', 'id');
     }
 
     public function tasks(): HasMany

@@ -13,6 +13,8 @@ return new class extends Migration
             $table->foreignId('project_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('name');
             $table->text('description');
+            $table->enum('status', ['Pending', 'in_progress', 'in_review', 'completed'])->default('Pending');
+            $table->smallInteger('completion_rate')->default(0);
             $table->timestamps();
         });
     }

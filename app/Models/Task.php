@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\TaskStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -16,11 +17,16 @@ class Task extends Model
         'project_id',
         'name',
         'description',
+        'status',
+        'completion_rate',
     ];
 
     protected function casts(): array
     {
-        return [];
+        return [
+            'status' => TaskStatus::class,
+            'completion_rate' => 'integer',
+        ];
     }
 
     // Relationships

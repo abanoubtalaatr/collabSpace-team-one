@@ -18,14 +18,15 @@ use Laravel\Sanctum\HasApiTokens;
 #[UseFactory(UserFactory::class)]
 class User extends Authenticatable
 {
-    use HasFactory, HasApiTokens, HasRolesAndPermissions, Notifiable;
+    use HasApiTokens, HasFactory, HasRolesAndPermissions, Notifiable;
 
     protected $table = 'users';
 
     protected $fillable = [
         'name',
         'email',
-        'password',
+        'job_title',
+        'exp',
     ];
 
     protected $hidden = [
@@ -38,13 +39,14 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'exp' => 'integer',
         ];
     }
 
     // Relationships
     public function projects(): HasMany
     {
-        return $this->hasMany(Project::class, 'creatd_by', 'id');
+        return $this->hasMany(Project::class, 'created_by', 'id');
     }
 
     public function teams(): BelongsToMany
@@ -55,5 +57,10 @@ class User extends Authenticatable
     public function tasks(): BelongsToMany
     {
         return $this->belongsToMany(Task::class, 'task_user', 'user_id', 'task_id', 'id', 'id');
+    }
+
+    public function meetings(): BelongsToMany
+    {
+        return $this->belongsToMany(Meeting::class, 'meeting_user', 'user_id', 'meeting_id', 'id', 'id');
     }
 }

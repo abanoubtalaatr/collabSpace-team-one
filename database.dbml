@@ -193,6 +193,8 @@ Table "users" {
   "name" varchar(255) [not null]
   "email" varchar(255) [not null]
   "email_verified_at" timestamp
+  "job_title" varchar(100) [not null]
+  "exp" smallint [not null]
   "password" varchar(255) [not null]
   "remember_token" varchar(100)
   "created_at" timestamp
@@ -235,8 +237,16 @@ Table "tasks" {
     project_id bigint [not null]
     name varchar(255) [not null]
     description text [not null]
+    status tasks_status_enum [not null]
+    completion_rate smallint [not null]
     created_at timestamp
     updated_at timestamp
+}
+Enum "tasks_status_enum" {
+    "Pending"
+    "in_progress"
+    "in_review"
+    "completed"
 }
 Ref "tasks_project_id_foreign":"tasks"."project_id" > "projects"."id" [update: cascade, delete: cascade]
 
@@ -261,6 +271,25 @@ Table "project_team" {
 }
 Ref "project_team_project_id_foreign":"project_team"."project_id" <> "projects"."id" [update: cascade, delete: cascade]
 Ref "project_team_team_id_foreign":"project_team"."team_id" <> "teams"."id" [update: cascade, delete: cascade]
+
+Table "meetings" {
+    id bigint [pk, increment]
+    title varchar(255) [not null]
+    description text [null]
+    schedualed_at datetime [not null]
+    starts_at time [not null]
+    ends_at time [not null]
+    created_at timestamp
+    updated_at timestamp
+}
+
+Table "meeting_user" {
+    id bigint [pk, increment]
+    meeting_id bigint [not null]
+    user_id bigint [not null]
+}
+Ref "meeting_user_meeting_id_foreign":"meeting_user"."meeting_id" <> "meetings"."id" [update: cascade, delete: cascade]
+Ref "meeting_user_user_id_foreign":"meeting_user"."user_id" <> "users"."id" [update: cascade, delete: cascade]
 
 
 Ref "permission_role_permission_id_foreign":"permissions"."id" < "permission_role"."permission_id" [update: cascade, delete: cascade]
