@@ -30,6 +30,12 @@ class User extends Authenticatable implements GlobalSearchable, Searchable
 
     public string $searchableType = 'User';
 
+    protected $fillable = [
+        'name',
+        'email',
+        'job_title',
+        'exp',
+    ];
     /**
      * @return array<int, string>
      */
@@ -61,6 +67,7 @@ class User extends Authenticatable implements GlobalSearchable, Searchable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'exp' => 'integer',
         ];
     }
 
@@ -82,6 +89,11 @@ class User extends Authenticatable implements GlobalSearchable, Searchable
     public function conversations(): BelongsToMany
     {
         return $this->belongsToMany(Conversation::class, 'conversation_user', 'user_id', 'conversation_id');
+    }
+
+    public function meetings(): BelongsToMany
+    {
+        return $this->belongsToMany(Meeting::class, 'meeting_user', 'user_id', 'meeting_id', 'id', 'id');
     }
 
     public function getSearchResult(): SearchResult

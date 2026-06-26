@@ -72,7 +72,7 @@ class Project extends Model implements GlobalSearchable, HasMedia, Searchable
 
     public function creator(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'created_by');
+        return $this->belongsTo(User::class, 'created_by', 'id');
     }
 
     public function tasks(): HasMany

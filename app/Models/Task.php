@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\TaskStatus;
 use App\Contracts\GlobalSearchable;
 use App\Enums\TaskPriority;
-use App\Enums\TaskStatus;
 use Database\Factories\TaskFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -35,6 +35,17 @@ class Task extends Model implements GlobalSearchable, Searchable
         'priority',
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'status' => TaskStatus::class,
+            'start_date' => 'date',
+            'due_date' => 'date',
+            'progress' => 'integer',
+            'priority' => TaskPriority::class,
+        ];
+    }
+
     /**
      * @return array<int, string>
      */
@@ -59,17 +70,12 @@ class Task extends Model implements GlobalSearchable, Searchable
         return 'task';
     }
 
-    protected function casts(): array
+    public function getSearchResult(): SearchResult
     {
-        return [
-            'start_date' => 'date',
-            'due_date' => 'date',
-            'progress' => 'integer',
-            'status' => TaskStatus::class,
-            'priority' => TaskPriority::class,
-        ];
+        return new SearchResult($this, $this->title);
     }
 
+    // Relationships
     public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class, 'project_id', 'id');
@@ -78,10 +84,5 @@ class Task extends Model implements GlobalSearchable, Searchable
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'task_user', 'task_id', 'user_id', 'id', 'id');
-    }
-
-    public function getSearchResult(): SearchResult
-    {
-        return new SearchResult($this, $this->title);
     }
 }
