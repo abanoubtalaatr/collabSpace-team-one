@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\File;
 use App\Models\Project;
 use App\Models\Role;
 use App\Models\Task;
@@ -39,6 +40,7 @@ class AppServiceProvider extends ServiceProvider
             'task' => Task::class,
             'team' => Team::class,
             'role' => Role::class,
+            'file' => File::class,
         ]);
     }
 }

@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Enums\TaskStatus;
 use App\Contracts\GlobalSearchable;
 use App\Enums\TaskPriority;
+use App\Enums\TaskStatus;
 use Database\Factories\TaskFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Spatie\Searchable\Searchable;
 use Spatie\Searchable\SearchResult;
 
@@ -84,5 +85,10 @@ class Task extends Model implements GlobalSearchable, Searchable
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'task_user', 'task_id', 'user_id', 'id', 'id');
+    }
+
+    public function files(): MorphMany
+    {
+        return $this->morphMany(File::class, 'attachable');
     }
 }

@@ -1,0 +1,377 @@
+{
+	"info": {
+		"_postman_id": "files-collabspace-2026",
+		"name": "CollabSpace - Files API",
+		"description": "Files module: upload, attach/detach files to projects or tasks.\n\nSupported types: pdf, doc, docx, xls, xlsx, ppt, pptx, txt, jpg, png, gif, webp (max 20MB).\n\n**Setup:** Run Auth → Login first to save `token`.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.data && jsonData.data.token) {",
+									"    pm.collectionVariables.set('token', jsonData.data.token);",
+									"    console.log('Token saved.');",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": { "type": "noauth" },
+						"method": "POST",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"manager@example.com\",\n    \"password\": \"password\"\n}"
+						},
+						"url": "{{url}}/api/login"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Files (General)",
+			"item": [
+				{
+					"name": "List All Files",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }],
+						"url": {
+							"raw": "{{url}}/api/files?per_page=15",
+							"host": ["{{url}}"],
+							"path": ["api", "files"],
+							"query": [{ "key": "per_page", "value": "15" }]
+						},
+						"description": "Filters: status, file_type, extension, project_id, task_id, mine=1"
+					},
+					"response": []
+				},
+				{
+					"name": "List My Files",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }],
+						"url": {
+							"raw": "{{url}}/api/files?mine=1",
+							"host": ["{{url}}"],
+							"path": ["api", "files"],
+							"query": [{ "key": "mine", "value": "1" }]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Attached Files",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }],
+						"url": {
+							"raw": "{{url}}/api/files?status=attached",
+							"host": ["{{url}}"],
+							"path": ["api", "files"],
+							"query": [{ "key": "status", "value": "attached" }]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Detached Files",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }],
+						"url": {
+							"raw": "{{url}}/api/files?status=detached",
+							"host": ["{{url}}"],
+							"path": ["api", "files"],
+							"query": [{ "key": "status", "value": "detached" }]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Filter by Type (PDF)",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }],
+						"url": {
+							"raw": "{{url}}/api/files?file_type=pdf",
+							"host": ["{{url}}"],
+							"path": ["api", "files"],
+							"query": [{ "key": "file_type", "value": "pdf" }]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload File (Detached)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"var fileId = jsonData.id || (jsonData.data && jsonData.data.id);",
+									"if (fileId) { pm.collectionVariables.set('file_id', fileId); }"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Accept", "value": "application/json" }],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{ "key": "file", "type": "file", "src": [] },
+								{ "key": "name", "value": "My Document", "type": "text" }
+							]
+						},
+						"url": "{{url}}/api/files",
+						"description": "Upload without attaching. Use Attach endpoint later."
+					},
+					"response": []
+				},
+				{
+					"name": "Upload & Attach to Project",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"var fileId = jsonData.id || (jsonData.data && jsonData.data.id);",
+									"if (fileId) { pm.collectionVariables.set('file_id', fileId); }"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Accept", "value": "application/json" }],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{ "key": "file", "type": "file", "src": [] },
+								{ "key": "name", "value": "Project Attachment", "type": "text" },
+								{ "key": "project_id", "value": "{{project_id}}", "type": "text" }
+							]
+						},
+						"url": "{{url}}/api/files"
+					},
+					"response": []
+				},
+				{
+					"name": "Upload & Attach to Task",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"var fileId = jsonData.id || (jsonData.data && jsonData.data.id);",
+									"if (fileId) { pm.collectionVariables.set('file_id', fileId); }"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Accept", "value": "application/json" }],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{ "key": "file", "type": "file", "src": [] },
+								{ "key": "name", "value": "Task Attachment", "type": "text" },
+								{ "key": "task_id", "value": "{{task_id}}", "type": "text" }
+							]
+						},
+						"url": "{{url}}/api/files"
+					},
+					"response": []
+				},
+				{
+					"name": "Get File",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }],
+						"url": "{{url}}/api/files/{{file_id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Attach File to Project",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"attachable_type\": \"project\",\n    \"attachable_id\": {{project_id}}\n}"
+						},
+						"url": "{{url}}/api/files/{{file_id}}/attach"
+					},
+					"response": []
+				},
+				{
+					"name": "Attach File to Task",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"attachable_type\": \"task\",\n    \"attachable_id\": {{task_id}}\n}"
+						},
+						"url": "{{url}}/api/files/{{file_id}}/attach"
+					},
+					"response": []
+				},
+				{
+					"name": "Detach File",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Accept", "value": "application/json" }],
+						"url": "{{url}}/api/files/{{file_id}}/detach",
+						"description": "Removes file from project/task but keeps it in storage (detached)."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete File",
+					"request": {
+						"method": "DELETE",
+						"header": [{ "key": "Accept", "value": "application/json" }],
+						"url": "{{url}}/api/files/{{file_id}}",
+						"description": "Permanently deletes file from DB and storage."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Project Files",
+			"item": [
+				{
+					"name": "List Project Files",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }],
+						"url": "{{url}}/api/projects/{{project_id}}/files"
+					},
+					"response": []
+				},
+				{
+					"name": "Upload to Project",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"var fileId = jsonData.id || (jsonData.data && jsonData.data.id);",
+									"if (fileId) { pm.collectionVariables.set('file_id', fileId); }"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Accept", "value": "application/json" }],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{ "key": "file", "type": "file", "src": [] },
+								{ "key": "name", "value": "Project PDF", "type": "text" }
+							]
+						},
+						"url": "{{url}}/api/projects/{{project_id}}/files"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Task Files",
+			"item": [
+				{
+					"name": "List Task Files",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }],
+						"url": "{{url}}/api/tasks/{{task_id}}/files"
+					},
+					"response": []
+				},
+				{
+					"name": "Upload to Task",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"var fileId = jsonData.id || (jsonData.data && jsonData.data.id);",
+									"if (fileId) { pm.collectionVariables.set('file_id', fileId); }"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Accept", "value": "application/json" }],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{ "key": "file", "type": "file", "src": [] },
+								{ "key": "name", "value": "Task Document", "type": "text" }
+							]
+						},
+						"url": "{{url}}/api/tasks/{{task_id}}/files"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{ "key": "url", "value": "http://127.0.0.1:8000" },
+		{ "key": "token", "value": "" },
+		{ "key": "file_id", "value": "1" },
+		{ "key": "project_id", "value": "1" },
+		{ "key": "task_id", "value": "1" }
+	]
+}
