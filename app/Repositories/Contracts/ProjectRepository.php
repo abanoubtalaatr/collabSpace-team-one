@@ -17,7 +17,7 @@ class ProjectRepository implements ProjectRepositoryInterface
     public function getAllPaginated(Request $request, int $perPage = 15): LengthAwarePaginator
     {
         return Project::filter($request)
-            ->with(['creator', 'media'])
+            ->with(['creator', 'media', 'teams:id,name,display_name'])
             ->latest()
             ->paginate($perPage);
     }
@@ -25,7 +25,7 @@ class ProjectRepository implements ProjectRepositoryInterface
     public function getByCreatorPaginated(Request $request, int $userId, int $perPage = 15): LengthAwarePaginator
     {
         return Project::filter($request)
-            ->with(['creator', 'media'])
+            ->with(['creator', 'media', 'teams:id,name,display_name'])
             ->where('created_by', $userId)
             ->latest()
             ->paginate($perPage);
@@ -34,7 +34,7 @@ class ProjectRepository implements ProjectRepositoryInterface
     public function getForTeamMemberPaginated(Request $request, int $userId, int $perPage = 15): LengthAwarePaginator
     {
         return Project::filter($request)
-            ->with(['creator', 'media'])
+            ->with(['creator', 'media', 'teams:id,name,display_name'])
             ->whereHas('teams.members', fn ($q) => $q->where('users.id', $userId))
             ->latest()
             ->paginate($perPage);
@@ -42,7 +42,7 @@ class ProjectRepository implements ProjectRepositoryInterface
 
     public function findById(int $id): ?Project
     {
-        return Project::with(['creator', 'media'])->find($id);
+        return Project::with(['creator', 'media', 'teams:id,name,display_name'])->find($id);
     }
 
     /*
