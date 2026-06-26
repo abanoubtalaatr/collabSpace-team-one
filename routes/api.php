@@ -29,3 +29,4 @@ require __DIR__.'/team.php';
 require __DIR__.'/projects.php';
 require __DIR__.'/tasks.php';
 require __DIR__.'/chat.php';
+require __DIR__.'/profile.php';

@@ -1,0 +1,389 @@
+{
+	"info": {
+		"_postman_id": "a1b2c3d4-chat-collabspace-2026",
+		"name": "CollabSpace - Chat API",
+		"description": "Chat APIs: project group chat, direct (1-to-1) chat, messages, and Pusher broadcasting auth.\n\n**Setup:**\n1. Set collection variable `url` (e.g. `http://127.0.0.1:8000` or your production URL).\n2. Run **Auth → Login** — token is saved automatically.\n3. Use Chat requests (Bearer auth is applied on the collection).",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.data && jsonData.data.token) {",
+									"    pm.collectionVariables.set('token', jsonData.data.token);",
+									"    console.log('Token saved to collection variable.');",
+									"} else {",
+									"    console.log('Login failed:', JSON.stringify(jsonData));",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"manager@example.com\",\n    \"password\": \"password\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"login"
+							]
+						},
+						"description": "Login and auto-save Sanctum token to `token` variable."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Current User",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/user",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"user"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Authenticate before using Chat endpoints."
+		},
+		{
+			"name": "Conversations",
+			"item": [
+				{
+					"name": "List My Conversations",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/conversations?per_page=15",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"conversations"
+							],
+							"query": [
+								{
+									"key": "per_page",
+									"value": "15"
+								}
+							]
+						},
+						"description": "All conversations where the authenticated user is a participant."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Conversation",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/conversations/{{conversation_id}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"conversations",
+								"{{conversation_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Start / Get Direct Chat (1-to-1)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.data && jsonData.data.id) {",
+									"    pm.collectionVariables.set('conversation_id', jsonData.data.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\": {{user_id}}\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/conversations/direct",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"conversations",
+								"direct"
+							]
+						},
+						"description": "Direct chat between two users. Both must belong to at least one shared team."
+					},
+					"response": []
+				},
+				{
+					"name": "Get / Create Project Group Chat",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.data && jsonData.data.id) {",
+									"    pm.collectionVariables.set('conversation_id', jsonData.data.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/projects/{{project_id}}/conversation",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"projects",
+								"{{project_id}}",
+								"conversation"
+							]
+						},
+						"description": "Project group chat for all members of teams assigned to the project (+ project creator)."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Messages",
+			"item": [
+				{
+					"name": "List Messages",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/conversations/{{conversation_id}}/messages?per_page=30",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"conversations",
+								"{{conversation_id}}",
+								"messages"
+							],
+							"query": [
+								{
+									"key": "per_page",
+									"value": "30"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send Message",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"body\": \"Hello from Postman!\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/conversations/{{conversation_id}}/messages",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"conversations",
+								"{{conversation_id}}",
+								"messages"
+							]
+						},
+						"description": "Sends a message and broadcasts `message.sent` on private channel `conversation.{id}` via Pusher."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Pusher (Broadcasting)",
+			"item": [
+				{
+					"name": "Broadcasting Auth",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"channel_name\": \"private-conversation.{{conversation_id}}\",\n    \"socket_id\": \"1234.5678\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/api/broadcasting/auth",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"broadcasting",
+								"auth"
+							]
+						},
+						"description": "Used by Laravel Echo to authorize private Pusher channels. Replace `socket_id` with the real value from Pusher client."
+					},
+					"response": []
+				}
+			],
+			"description": "Private channel name format: `private-conversation.{conversation_id}`"
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "http://127.0.0.1:8000"
+		},
+		{
+			"key": "token",
+			"value": ""
+		},
+		{
+			"key": "conversation_id",
+			"value": "1"
+		},
+		{
+			"key": "project_id",
+			"value": "1"
+		},
+		{
+			"key": "user_id",
+			"value": "2"
+		}
+	]
+}

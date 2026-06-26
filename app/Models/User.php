@@ -4,44 +4,56 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Contracts\GlobalSearchable;
+use App\Enums\UserAvailability;
 use Database\Factories\UserFactory;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
-use Illuminate\Database\Eloquent\Attributes\Hidden;
-use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laratrust\Traits\HasRolesAndPermissions;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Searchable\Searchable;
 use Spatie\Searchable\SearchResult;
 
-#[Fillable(['name', 'email', 'password'])]
-#[Hidden(['password', 'remember_token'])]
-#[UseFactory(UserFactory::class)]
-class User extends Authenticatable implements GlobalSearchable, Searchable
+class User extends Authenticatable implements GlobalSearchable, HasMedia, Searchable
 {
     /** @use HasFactory<UserFactory> */
-    use HasApiTokens, HasFactory, HasRolesAndPermissions, Notifiable;
+    use HasApiTokens, HasFactory, HasRolesAndPermissions, InteractsWithMedia, Notifiable;
+
+    public const MEDIA_COLLECTION_FILES = 'profile_files';
 
     public string $searchableType = 'User';
 
     protected $fillable = [
         'name',
         'email',
+        'password',
         'job_title',
         'exp',
+        'phone',
+        'country_code',
+        'about',
+        'availability_status',
+        'current_team_id',
+        'current_project_id',
     ];
+
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
     /**
      * @return array<int, string>
      */
     public static function globalSearchColumns(): array
     {
-        return ['name', 'email'];
+        return ['name', 'email', 'phone'];
     }
 
     /**
@@ -52,7 +64,7 @@ class User extends Authenticatable implements GlobalSearchable, Searchable
         return [
             'projects:id,created_by,name,description,start_date,deadline,priority,status,created_at,updated_at',
             'teams:id,name,display_name,description,created_at,updated_at',
-            'tasks:id,project_id,name,description,created_at,updated_at',
+            'tasks:id,project_id,title,description,created_at,updated_at',
             'roles:id,name,display_name,description,created_at,updated_at',
         ];
     }
@@ -68,7 +80,14 @@ class User extends Authenticatable implements GlobalSearchable, Searchable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'exp' => 'integer',
+            'availability_status' => UserAvailability::class,
         ];
+    }
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection(self::MEDIA_COLLECTION_FILES)
+            ->useDisk('public');
     }
 
     public function projects(): HasMany
@@ -94,6 +113,16 @@ class User extends Authenticatable implements GlobalSearchable, Searchable
     public function meetings(): BelongsToMany
     {
         return $this->belongsToMany(Meeting::class, 'meeting_user', 'user_id', 'meeting_id', 'id', 'id');
+    }
+
+    public function currentTeam(): BelongsTo
+    {
+        return $this->belongsTo(Team::class, 'current_team_id');
+    }
+
+    public function currentProject(): BelongsTo
+    {
+        return $this->belongsTo(Project::class, 'current_project_id');
     }
 
     public function getSearchResult(): SearchResult
