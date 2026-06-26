@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\admin;
 use App\Actions\Project\CreateProjectAction;
 use App\Actions\Project\DeleteProjectAction;
 use App\Actions\Project\UpdateProjectAction;
+use App\Concerns\ApiResponse;
 use App\DTOs\ProjectDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Project\StoreProjectRequest;
@@ -14,7 +15,6 @@ use App\Services\ProjectService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use App\Concerns\ApiResponse;
 
 /**
  * Admin — Full CRUD on ALL projects.
@@ -31,10 +31,10 @@ use App\Concerns\ApiResponse;
  */
 class ProjectController extends Controller
 {
-        use ApiResponse;
+    use ApiResponse;
 
     public function __construct(
-        private readonly ProjectService      $service,
+        private readonly ProjectService $service,
         private readonly CreateProjectAction $createAction,
         private readonly UpdateProjectAction $updateAction,
         private readonly DeleteProjectAction $deleteAction,
@@ -49,7 +49,7 @@ class ProjectController extends Controller
         $projects = $this->service->getAllPaginated($request, perPage: 15);
 
         return ProjectResource::collection($projects);
-        
+
     }
 
     public function show(int $id): ProjectResource
@@ -78,7 +78,8 @@ class ProjectController extends Controller
 
         $updated = $this->updateAction->execute(
             $project,
-            ProjectDTO::fromUpdateRequest($request)
+            ProjectDTO::fromUpdateRequest($request),
+            $request->user()
         );
 
         return new ProjectResource($updated);

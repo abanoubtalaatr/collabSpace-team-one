@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Actions\Task\CreateTaskAction;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Task\StoreTaskRequest;
+use App\Http\Resources\TaskResource;
 use App\Models\Task;
 use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
@@ -10,6 +13,20 @@ use Illuminate\Http\Request;
 class TaskController extends Controller
 {
     use ApiResponse;
+
+    public function __construct(
+        private readonly CreateTaskAction $createTaskAction,
+    ) {}
+
+    public function store(StoreTaskRequest $request): TaskResource
+    {
+        $task = $this->createTaskAction->execute(
+            $request->validated(),
+            $request->user()
+        );
+
+        return new TaskResource($task);
+    }
 
     /**
      * Display task report statistics based on the given date range.

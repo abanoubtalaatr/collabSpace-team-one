@@ -22,10 +22,10 @@ Route::post('resend-otp', [AuthController::class, 'resendOtp'])
     ->middleware(['throttle:3,1', 'guest']);
 Route::post('reset-password', [AuthController::class, 'resetPassword'])->name('password.reset');
 
-
 Route::get('search', GlobalSearchController::class)->middleware('auth:sanctum');
-
 
 require __DIR__.'/report.php';
 require __DIR__.'/team.php';
 require __DIR__.'/projects.php';
+require __DIR__.'/tasks.php';
+require __DIR__.'/notifications.php';
