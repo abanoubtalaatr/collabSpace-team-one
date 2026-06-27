@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\Report;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
@@ -29,21 +29,18 @@ class UserController extends Controller
         $productivityScore = $assignedTasks > 0 ? ($completedTasks / $assignedTasks) * 100 : 0;
 
         return $this->apiResponse([
-            'success' => true,
             'report_type' => 'user',
-            'data' => [
-                'personal_information' => [
-                    'id' => $user->id,
-                    'name' => $user->name,
-                    'email' => $user->email,
-                ],
-                'assigned_tasks' => $assignedTasks,
-                'completed_tasks' => $completedTasks,
-                'uploaded_files' => $uploadedFilesCount,
-                'meeting_attendance' => rand(80, 100).'%', // Randomized for demonstration
-                'productivity_score' => round($productivityScore, 2).'%',
-                'performance_overview' => $productivityScore >= 80 ? 'Excellent' : 'Good',
+            'personal_information' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
             ],
-        ], 200);
+            'assigned_tasks' => $assignedTasks,
+            'completed_tasks' => $completedTasks,
+            'uploaded_files' => $uploadedFilesCount,
+            'meeting_attendance' => rand(80, 100).'%', // Randomized for demonstration
+            'productivity_score' => round($productivityScore, 2).'%',
+            'performance_overview' => $productivityScore >= 80 ? 'Excellent' : 'Good',
+        ], 'User report generated successfully');
     }
 }
