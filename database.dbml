@@ -1,6 +1,6 @@
 Table "cache" {
   "key" varchar(255) [pk, not null]
-  "value" mediumtext [not null]
+  "value" mediumtext [not null] هي
   "expiration" bigint [not null]
 
   Indexes {

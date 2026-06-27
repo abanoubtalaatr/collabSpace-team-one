@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\GlobalSearchController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
@@ -23,6 +24,12 @@ Route::post('resend-otp', [AuthController::class, 'resendOtp'])
 Route::post('reset-password', [AuthController::class, 'resetPassword'])->name('password.reset');
 
 Route::get('search', GlobalSearchController::class)->middleware('auth:sanctum');
+
+Route::middleware('auth:sanctum')->prefix('dashboard')->group(function () {
+    Route::get('stats', [DashboardController::class, 'stats']);
+    Route::get('recent-files', [DashboardController::class, 'recentFiles']);
+    Route::get('project-overview', [DashboardController::class, 'projectOverview']);
+});
 
 require __DIR__.'/report.php';
 require __DIR__.'/team.php';
