@@ -99,6 +99,40 @@ Table "password_reset_tokens" {
   "created_at" timestamp
 }
 
+Table "personal_access_tokens" {
+  "id" bigint [pk, not null, increment]
+  "tokenable_type" varchar(255) [not null]
+  "tokenable_id" bigint [not null]
+  "name" text [not null]
+  "token" varchar(64) [not null]
+  "abilities" text
+  "last_used_at" timestamp
+  "expires_at" timestamp
+  "created_at" timestamp
+  "updated_at" timestamp
+
+  Indexes {
+    (tokenable_type, tokenable_id) [name: "personal_access_tokens_tokenable_type_tokenable_id_index"]
+    token [unique, name: "personal_access_tokens_token_unique"]
+    expires_at [name: "personal_access_tokens_expires_at_index"]
+  }
+}
+
+Table "notifications" {
+  "id" char(36) [pk, not null]
+  "type" varchar(255) [not null]
+  "notifiable_type" varchar(255) [not null]
+  "notifiable_id" bigint [not null]
+  "data" text [not null]
+  "read_at" timestamp
+  "created_at" timestamp
+  "updated_at" timestamp
+
+  Indexes {
+    (notifiable_type, notifiable_id) [name: "notifications_notifiable_type_notifiable_id_index"]
+  }
+}
+
 Table "permission_role" {
   "permission_id" bigint [not null]
   "role_id" bigint [not null]
@@ -210,39 +244,40 @@ Table "projects" {
     description text [not null]
     start_date date [not null]
     deadline date [not null]
-    priority projects_priority_enum [not null]
-    status projects_status_enum [not null]
+    priority varchar(255) [not null]
+    status varchar(255) [not null]
     created_at timestamp
     updated_at timestamp
+
+    Indexes {
+        created_by [name: "projects_created_by_foreign"]
+    }
 }
-Ref "projects_created_by_foreign":"users"."id" < "projects"."id" [update: cascade, delete: cascade]
-Enum "projects_priority_enum" {
-    "low"
-    "medium"
-    "high"
-    "critical"
-}
-Enum "projects_status_enum" {
-    "pending"
-    "in_progress"
-    "on_hold"
-    "completed"
-    "cancelled"
-}
+Ref "projects_created_by_foreign":"projects"."created_by" > "users"."id" [update: cascade, delete: cascade]
 
 Table "tasks" {
     id bigint [pk, increment]
     project_id bigint [not null]
     name varchar(255) [not null]
     description text [not null]
+    status varchar(255) [not null, default: 'pending']
     created_at timestamp
     updated_at timestamp
+
+    Indexes {
+        project_id [name: "tasks_project_id_foreign"]
+    }
 }
 Ref "tasks_project_id_foreign":"tasks"."project_id" > "projects"."id" [update: cascade, delete: cascade]
 
 Table "team_user" {
     team_id bigint [not null]
     user_id bigint [not null]
+
+    Indexes {
+        team_id [name: "team_user_team_id_foreign"]
+        user_id [name: "team_user_user_id_foreign"]
+    }
 }
 Ref "team_user_user_id_foreign":"team_user"."user_id" <> "users"."id" [update: cascade, delete: cascade]
 Ref "team_user_team_id_foreign":"team_user"."team_id" <> "teams"."id" [update: cascade, delete: cascade]
@@ -251,6 +286,11 @@ Ref "team_user_team_id_foreign":"team_user"."team_id" <> "teams"."id" [update: c
 Table "task_user" {
     task_id bigint [not null]
     user_id bigint [not null]
+
+    Indexes {
+        task_id [name: "task_user_task_id_foreign"]
+        user_id [name: "task_user_user_id_foreign"]
+    }
 }
 Ref "task_user_user_id_foreign":"task_user"."user_id" <> "users"."id" [update: cascade, delete: cascade]
 Ref "task_user_task_id_foreign":"task_user"."task_id" <> "tasks"."id" [update: cascade, delete: cascade]
@@ -258,9 +298,30 @@ Ref "task_user_task_id_foreign":"task_user"."task_id" <> "tasks"."id" [update: c
 Table "project_team" {
     project_id bigint [not null]
     team_id bigint [not null]
+
+    Indexes {
+        project_id [name: "project_team_project_id_foreign"]
+        team_id [name: "project_team_team_id_foreign"]
+    }
 }
 Ref "project_team_project_id_foreign":"project_team"."project_id" <> "projects"."id" [update: cascade, delete: cascade]
 Ref "project_team_team_id_foreign":"project_team"."team_id" <> "teams"."id" [update: cascade, delete: cascade]
+
+Table "reports" {
+    id bigint [pk, increment]
+    report_type varchar(255) [not null, default: 'project']
+    note text
+    start_date date [not null]
+    end_date date [not null]
+    created_at timestamp
+    updated_at timestamp
+    user_id bigint [not null]
+
+    Indexes {
+        user_id [name: "reports_user_id_foreign"]
+    }
+}
+Ref "reports_user_id_foreign":"reports"."user_id" > "users"."id" [delete: cascade]
 
 
 Ref "permission_role_permission_id_foreign":"permissions"."id" < "permission_role"."permission_id" [update: cascade, delete: cascade]
