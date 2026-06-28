@@ -15,7 +15,9 @@ class SearchTasks implements Tool
      */
     public function description(): Stringable|string
     {
-        return 'A description of the tool.';
+        return 'Search for tasks by title, description, and optionally by status.
+            Use this tool whenever the user asks about tasks, wants to find specific tasks,
+            or asks for open, completed, or in-progress tasks.';
     }
 
     /**
@@ -24,8 +26,11 @@ class SearchTasks implements Tool
     public function handle(Request $request): string
     {
         $tasks = Task::query()
-            ->where('title', 'like', "%{$request->string('query')}%")
-            ->orWhere('description', 'like', "%{$request->string('query')}%")
+            ->where(function ($query) use ($request) {
+                $query->where('title', 'like', "%{$request->string('query')}%")
+                    ->orWhere('description', 'like', "%{$request->string('query')}%");
+            })
+            ->where('status', $request->string('status'))
             ->limit(10)
             ->get([
                 'id',
@@ -52,6 +57,9 @@ class SearchTasks implements Tool
                 ->string()
                 ->description('Search text for the task name or description')
                 ->required(),
+            'status' => $schema
+                ->string()
+                ->description('Filter tasks by status. Allowed values: pending, in_progress, in_review, completed.')
         ];
     }
 }
