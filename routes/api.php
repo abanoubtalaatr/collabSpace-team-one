@@ -33,3 +33,4 @@ require __DIR__.'/tasks.php';
 require __DIR__.'/chat.php';
 require __DIR__.'/profile.php';
 require __DIR__.'/files.php';
+require __DIR__.'/meetings.php';
