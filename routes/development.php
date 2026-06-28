@@ -7,7 +7,7 @@ use Laravel\Ai\Enums\Lab;
 Route::get('test', function () {
     $response = (new WorkspaceAssistant())
         ->prompt(
-            'the task name saad',
+            'get me last task compelted',
             // provider: Lab::Groq,
         );
 

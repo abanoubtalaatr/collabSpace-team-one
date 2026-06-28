@@ -4,6 +4,7 @@ namespace App\Ai\Tools;
 
 use App\Models\Task;
 use Illuminate\Contracts\JsonSchema\JsonSchema;
+use Illuminate\Database\Eloquent\Builder;
 use Laravel\Ai\Contracts\Tool;
 use Laravel\Ai\Tools\Request;
 use Stringable;
@@ -26,11 +27,13 @@ class SearchTasks implements Tool
     public function handle(Request $request): string
     {
         $tasks = Task::query()
-            ->where(function ($query) use ($request) {
+            ->where(function (Builder $query) use ($request) {
                 $query->where('title', 'like', "%{$request->string('query')}%")
                     ->orWhere('description', 'like', "%{$request->string('query')}%");
             })
-            ->where('status', $request->string('status'))
+            ->when($request->string('status'), function (Builder $query) use ($request) {
+                $query->where('status', $request->string('status'));
+            })
             ->limit(10)
             ->get([
                 'id',
