@@ -83,32 +83,4 @@ class TaskController extends Controller
         return response()->json(['message' => 'Task deleted successfully.']);
     }
 
-    /**
-     * Display task report statistics based on the given date range.
-     */
-    public function getTaskReport(Request $request): JsonResponse
-    {
-        $startDate = $request->query('start_date');
-        $endDate = $request->query('end_date');
-
-        $query = Task::query();
-
-        if ($startDate && $endDate) {
-            $query->whereBetween('created_at', [$startDate, $endDate]);
-        }
-
-        $totalTasks = $query->count();
-        $completedTasks = (clone $query)->where('status', 'completed')->count();
-        $pendingTasks = (clone $query)->where('status', 'pending')->count();
-
-        $productivity = $totalTasks > 0 ? ($completedTasks / $totalTasks) * 100 : 0;
-
-        return $this->apiResponse([
-            'report_type' => 'task',
-            'total_tasks' => $totalTasks,
-            'completed_tasks' => $completedTasks,
-            'pending_tasks' => $pendingTasks,
-            'productivity_statistics' => round($productivity, 2).'%',
-        ], 'Task report generated successfully');
-    }
 }
