@@ -24,7 +24,7 @@ Route::post('reset-password', [AuthController::class, 'resetPassword'])->name('p
 
 Route::get('search', GlobalSearchController::class)->middleware('auth:sanctum');
 
-// Route::post('/workspace/ai', WorkspaceAiController::class);
+require __DIR__.'/ai.php';
 
 require __DIR__.'/report.php';
 require __DIR__.'/team.php';

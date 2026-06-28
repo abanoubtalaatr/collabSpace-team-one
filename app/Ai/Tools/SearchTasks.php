@@ -2,7 +2,7 @@
 
 namespace App\Ai\Tools;
 
-use App\Models\Task;
+use App\Ai\Concerns\ScopesToUser;
 use Illuminate\Contracts\JsonSchema\JsonSchema;
 use Illuminate\Database\Eloquent\Builder;
 use Laravel\Ai\Contracts\Tool;
@@ -11,56 +11,47 @@ use Stringable;
 
 class SearchTasks implements Tool
 {
-    /**
-     * Get the description of the tool's purpose.
-     */
+    use ScopesToUser;
+
     public function description(): Stringable|string
     {
-        return 'Search for tasks by title, description, and optionally by status.
-            Use this tool whenever the user asks about tasks, wants to find specific tasks,
-            or asks for open, completed, or in-progress tasks.';
+        return 'Search tasks assigned to the current user (or all tasks they can see) by title, description, and status.';
     }
 
-    /**
-     * Execute the tool.
-     */
     public function handle(Request $request): string
     {
-        $tasks = Task::query()
-            ->where(function (Builder $query) use ($request) {
-                $query->where('title', 'like', "%{$request->string('query')}%")
-                    ->orWhere('description', 'like', "%{$request->string('query')}%");
+        $query = $request->string('query')->value();
+        $status = $request->string('status')->value();
+
+        $tasks = $this->user->tasks()
+            ->with('project:id,name')
+            ->when($query, function (Builder $builder) use ($query) {
+                $builder->where(function (Builder $q) use ($query) {
+                    $q->where('title', 'like', "%{$query}%")
+                        ->orWhere('description', 'like', "%{$query}%");
+                });
             })
-            ->when($request->string('status'), function (Builder $query) use ($request) {
-                $query->where('status', $request->string('status'));
-            })
-            ->limit(10)
-            ->get([
-                'id',
-                'project_id',
-                'title',
-                'description',
-            ]);
+            ->when($status, fn (Builder $builder) => $builder->where('status', $status))
+            ->latest('updated_at')
+            ->limit(15)
+            ->get(['id', 'project_id', 'title', 'description', 'status', 'priority', 'progress', 'due_date']);
 
         if ($tasks->isEmpty()) {
-            return 'No tasks found.';
+            return 'No tasks found for this user.';
         }
 
         return $tasks->toJson(JSON_PRETTY_PRINT);
     }
 
-    /**
-     * Get the tool's schema definition.
-     */
     public function schema(JsonSchema $schema): array
     {
         return [
-            'value' => $schema->string()->required(),
             'query' => $schema->string()
-                ->description('Search text for the task name or description')
-                ->required(),
+                ->description('Optional search text for task title or description')
+                ->nullable(),
             'status' => $schema->string()
-                ->description('Filter tasks by status. Allowed values: pending, in_progress, in_review, completed.'),
+                ->description('Filter by status: pending, in_progress, in_review, completed')
+                ->nullable(),
         ];
     }
 }
