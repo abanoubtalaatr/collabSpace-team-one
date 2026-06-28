@@ -53,13 +53,11 @@ class SearchTasks implements Tool
     {
         return [
             'value' => $schema->string()->required(),
-            'query' => $schema
-                ->string()
+            'query' => $schema->string()
                 ->description('Search text for the task name or description')
                 ->required(),
-            'status' => $schema
-                ->string()
-                ->description('Filter tasks by status. Allowed values: pending, in_progress, in_review, completed.')
+            'status' => $schema->string()
+                ->description('Filter tasks by status. Allowed values: pending, in_progress, in_review, completed.'),
         ];
     }
 }
