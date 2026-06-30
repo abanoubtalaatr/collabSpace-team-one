@@ -4,6 +4,7 @@ namespace App\Services\Dashboard;
 
 use App\Enums\TaskStatus;
 use App\Models\Project;
+use App\Models\Task;
 use App\Models\User;
 use App\Repositories\Dashboard\DashboardRepository;
 use Illuminate\Support\Collection;
@@ -16,11 +17,12 @@ class DashboardService
     ) {}
 
     /**
-     * @return array<string, int|float>
+     * @return array<string, mixed>
      */
     public function stats(User $user): array
     {
-        $query = $this->repository->taskScopeFor($user, $this->roleFor($user));
+        $role = $this->roleFor($user);
+        $query = $this->repository->taskScopeFor($user, $role);
 
         $pendingTasks = (clone $query)->where('status', TaskStatus::Pending->value)->count();
         $inProgressTasks = (clone $query)->where('status', TaskStatus::InProgress->value)->count();
@@ -28,13 +30,33 @@ class DashboardService
         $completedTasks = (clone $query)->where('status', TaskStatus::Completed->value)->count();
         $totalTasks = (clone $query)->count();
 
+        $tasks = (clone $query)
+            ->select(['id', 'status', 'progress', 'created_at'])
+            ->whereYear('created_at', now()->year)
+            ->get();
+
+        $averageProgress = $tasks->isEmpty()
+            ? 0
+            : round((float) $tasks->avg('progress'), 2);
+
         return [
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'avatar_url' => $user->avatarUrl(),
+            ],
             'pending_tasks' => $pendingTasks,
             'in_progress_tasks' => $inProgressTasks,
             'in_review_tasks' => $inReviewTasks,
             'completed_tasks' => $completedTasks,
             'total_tasks' => $totalTasks,
+            'progress' => $averageProgress,
             'completion_rate' => $totalTasks > 0 ? round(($completedTasks / $totalTasks) * 100, 2) : 0,
+            'chart_data' => [
+                'status' => $this->statusChartData($pendingTasks, $inProgressTasks, $inReviewTasks, $completedTasks),
+                'monthly' => $this->monthlyChartData($tasks),
+            ],
         ];
     }
 
@@ -47,7 +69,7 @@ class DashboardService
     }
 
     /**
-     * @return array<int, array{month: string, total_tasks: int, completed_tasks: int}>
+     * @return array<int, array{month: string, total_tasks: int, completed_tasks: int, progress: float}>
      */
     public function projectOverview(User $user, int $projectId): array
     {
@@ -62,6 +84,45 @@ class DashboardService
 
         return collect(range(1, 12))
             ->map(fn (int $month): array => $this->monthOverview($tasks, $month))
+            ->all();
+    }
+
+    /**
+     * @return array<int, array{label: string, key: string, value: int}>
+     */
+    private function statusChartData(int $pending, int $inProgress, int $inReview, int $completed): array
+    {
+        return [
+            ['label' => 'Pending', 'key' => TaskStatus::Pending->value, 'value' => $pending],
+            ['label' => 'In Progress', 'key' => TaskStatus::InProgress->value, 'value' => $inProgress],
+            ['label' => 'In Review', 'key' => TaskStatus::InReview->value, 'value' => $inReview],
+            ['label' => 'Completed', 'key' => TaskStatus::Completed->value, 'value' => $completed],
+        ];
+    }
+
+    /**
+     * @param  Collection<int, Task>  $tasks
+     * @return array<int, array{month: string, month_number: int, total_tasks: int, completed_tasks: int, progress: float}>
+     */
+    private function monthlyChartData(Collection $tasks): array
+    {
+        return collect(range(1, 12))
+            ->map(function (int $month) use ($tasks): array {
+                $monthTasks = $tasks->filter(fn ($task): bool => (int) $task->created_at->month === $month);
+
+                return [
+                    'month' => now()->startOfYear()->month($month)->format('M'),
+                    'month_number' => $month,
+                    'total_tasks' => $monthTasks->count(),
+                    'completed_tasks' => $monthTasks
+                        ->filter(fn ($task): bool => $this->statusValue($task->status) === TaskStatus::Completed->value)
+                        ->count(),
+                    'progress' => $monthTasks->isEmpty()
+                        ? 0
+                        : round((float) $monthTasks->avg('progress'), 2),
+                ];
+            })
+            ->values()
             ->all();
     }
 
@@ -95,7 +156,7 @@ class DashboardService
 
     /**
      * @param  Collection<int, mixed>  $tasks
-     * @return array{month: string, total_tasks: int, completed_tasks: int}
+     * @return array{month: string, total_tasks: int, completed_tasks: int, progress: float}
      */
     private function monthOverview(Collection $tasks, int $month): array
     {
@@ -107,6 +168,9 @@ class DashboardService
             'completed_tasks' => $monthTasks
                 ->filter(fn ($task): bool => $this->statusValue($task->status) === TaskStatus::Completed->value)
                 ->count(),
+            'progress' => $monthTasks->isEmpty()
+                ? 0
+                : round((float) $monthTasks->avg('progress'), 2),
         ];
     }
 

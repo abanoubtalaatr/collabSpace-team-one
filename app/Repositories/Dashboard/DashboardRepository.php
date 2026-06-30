@@ -59,7 +59,7 @@ class DashboardRepository
     public function overviewTasks(User $user, string $role, Project $project): Collection
     {
         $query = Task::query()
-            ->select(['id', 'project_id', 'status', 'created_at'])
+            ->select(['id', 'project_id', 'status', 'progress', 'created_at'])
             ->where('project_id', $project->id)
             ->whereYear('created_at', now()->year);
 

@@ -144,11 +144,13 @@ class DashboardApiSeeder extends Seeder
 
         $task = Task::firstOrNew([
             'project_id' => $project->id,
-            'name' => $name,
+            'title' => $name,
         ]);
 
         $task->forceFill([
             'description' => fake()->paragraph(),
+            'progress' => fake()->numberBetween(0, 100),
+            'priority' => 'medium',
             'status' => $status->value,
             'created_at' => $createdAt,
             'updated_at' => $createdAt,

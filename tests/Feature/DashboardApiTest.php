@@ -35,6 +35,17 @@ class DashboardApiTest extends TestCase
         $this->actingAs($admin, 'sanctum')
             ->getJson('/api/dashboard/stats')
             ->assertOk()
+            ->assertJsonPath('data.user.name', $admin->name)
+            ->assertJsonStructure([
+                'data' => [
+                    'user' => ['id', 'name', 'email', 'avatar_url'],
+                    'progress',
+                    'chart_data' => [
+                        'status' => [['label', 'key', 'value']],
+                        'monthly' => [['month', 'month_number', 'total_tasks', 'completed_tasks', 'progress']],
+                    ],
+                ],
+            ])
             ->assertJsonPath('data.pending_tasks', 1)
             ->assertJsonPath('data.in_progress_tasks', 1)
             ->assertJsonPath('data.in_review_tasks', 1)
@@ -133,14 +144,37 @@ class DashboardApiTest extends TestCase
             ->assertJsonPath('data.0.uploaded_by', 'Mohamed Wahib');
     }
 
-    public function test_project_overview_returns_monthly_data_for_authorized_project(): void
+    public function test_stats_progress_uses_average_task_progress(): void
     {
         $admin = $this->userWithRole('admin');
         $project = Project::factory()->create();
 
-        $this->createTask($project, TaskStatus::Completed, now()->month(1)->startOfMonth());
-        $this->createTask($project, TaskStatus::Pending, now()->month(1)->startOfMonth()->addDay());
-        $this->createTask($project, TaskStatus::Completed, now()->month(2)->startOfMonth());
+        Task::factory()->create([
+            'project_id' => $project->id,
+            'progress' => 40,
+            'created_at' => now(),
+        ]);
+        Task::factory()->create([
+            'project_id' => $project->id,
+            'progress' => 80,
+            'created_at' => now(),
+        ]);
+
+        $this->actingAs($admin, 'sanctum')
+            ->getJson('/api/dashboard/stats')
+            ->assertOk()
+            ->assertJsonPath('data.progress', 60);
+    }
+
+    public function test_project_overview_returns_monthly_data_for_authorized_project(): void
+    {
+        $admin = $this->userWithRole('admin');
+        $project = Project::factory()->create();
+        $year = now()->year;
+
+        $this->createTask($project, TaskStatus::Completed, now()->setDate($year, 1, 5), 100);
+        $this->createTask($project, TaskStatus::Pending, now()->setDate($year, 1, 10), 20);
+        $this->createTask($project, TaskStatus::Completed, now()->setDate($year, 2, 5), 90);
 
         $this->actingAs($admin, 'sanctum')
             ->getJson("/api/dashboard/project-overview?project_id={$project->id}")
@@ -148,9 +182,11 @@ class DashboardApiTest extends TestCase
             ->assertJsonPath('data.0.month', 'Jan')
             ->assertJsonPath('data.0.total_tasks', 2)
             ->assertJsonPath('data.0.completed_tasks', 1)
+            ->assertJsonPath('data.0.progress', 60)
             ->assertJsonPath('data.1.month', 'Feb')
             ->assertJsonPath('data.1.total_tasks', 1)
-            ->assertJsonPath('data.1.completed_tasks', 1);
+            ->assertJsonPath('data.1.completed_tasks', 1)
+            ->assertJsonPath('data.1.progress', 90);
     }
 
     public function test_member_project_overview_only_counts_assigned_tasks(): void
@@ -215,11 +251,12 @@ class DashboardApiTest extends TestCase
         return $user;
     }
 
-    private function createTask(Project $project, TaskStatus $status, mixed $createdAt = null): Task
+    private function createTask(Project $project, TaskStatus $status, mixed $createdAt = null, int $progress = 0): Task
     {
         return Task::factory()->create([
             'project_id' => $project->id,
             'status' => $status->value,
+            'progress' => $progress,
             'created_at' => $createdAt ?? now(),
             'updated_at' => $createdAt ?? now(),
         ]);

@@ -129,4 +129,11 @@ class User extends Authenticatable implements GlobalSearchable, HasMedia, Search
     {
         return new SearchResult($this, $this->name);
     }
+
+    public function avatarUrl(): ?string
+    {
+        return $this->getMedia(self::MEDIA_COLLECTION_FILES)
+            ->first(fn ($media) => str_starts_with((string) $media->mime_type, 'image/'))
+            ?->getFullUrl();
+    }
 }
