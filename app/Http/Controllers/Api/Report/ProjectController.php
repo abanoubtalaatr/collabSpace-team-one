@@ -19,9 +19,9 @@ class ProjectController extends Controller
         $dates = array_filter($request->only(['start_date', 'end_date']));
 
         $query = Project::query()
-        ->when(count($dates) === 2, function ($q) use ($dates){
-            $q->whereBetween('created_at', [$dates['start_date'], $dates['end_date']]);
-        });
+            ->when(count($dates) === 2, function ($q) use ($dates) {
+                $q->whereBetween('created_at', [$dates['start_date'], $dates['end_date']]);
+            });
 
         $totalProjects = $query->count();
         $activeProjects = (clone $query)->where('status', 'in_progress')->count();
@@ -36,11 +36,11 @@ class ProjectController extends Controller
         $completionRate = $totalProjects > 0 ? ($completedProjects / $totalProjects) * 100 : 0;
 
         return $this->apiResponse([
-            'total_projects'     => $totalProjects,
-            'active_projects'    => $activeProjects,
-            'delayed_projects'   => $delayedProjects,
+            'total_projects' => $totalProjects,
+            'active_projects' => $activeProjects,
+            'delayed_projects' => $delayedProjects,
             'completed_projects' => $completedProjects,
-            'completion_rate'    => round($completionRate, 2) . '%',
+            'completion_rate' => round($completionRate, 2).'%',
         ]);
     }
 }

@@ -2,58 +2,87 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Concerns\ApiResponse;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\NotificationResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class NotificationController extends Controller
 {
-    use ApiResponse;
-
-    public function index(Request $request): JsonResponse
+    public function index(Request $request): AnonymousResourceCollection
     {
-        $notifications = $request->user()
-            ->notifications()
-            ->when($request->boolean('unread_only'), fn ($query) => $query->whereNull('read_at'))
-            ->latest()
-            ->paginate($request->integer('per_page', 20));
-
-        return $this->success(
-            'Notifications retrieved successfully.',
-            [
-                'notifications' => $notifications->map(fn ($notification) => [
-                    'id' => $notification->id,
-                    'type' => $notification->data['type'] ?? $notification->type,
-                    'data' => $notification->data,
-                    'read_at' => $notification->read_at?->toDateTimeString(),
-                    'created_at' => $notification->created_at?->toDateTimeString(),
-                ]),
-            ],
+        return NotificationResource::collection(
+            $request->user()->notifications()->latest()->paginate(15)
         );
     }
 
-    public function markAsRead(Request $request, string $notificationId): JsonResponse
+    public function unread(Request $request): AnonymousResourceCollection
     {
-        $notification = $request->user()
-            ->notifications()
-            ->where('id', $notificationId)
-            ->firstOrFail();
+        return NotificationResource::collection(
+            $request->user()->unreadNotifications()->latest()->paginate(15)
+        );
+    }
 
-        $notification->markAsRead();
-
-        return $this->success('Notification marked as read.', [
-            'notification' => [
-                'id' => $notification->id,
-                'read_at' => $notification->read_at?->toDateTimeString(),
+    public function unreadCount(Request $request): JsonResponse
+    {
+        return response()->json([
+            'data' => [
+                'count' => $request->user()->unreadNotifications()->count(),
             ],
         ]);
     }
 
+    public function show(Request $request, string $notification): NotificationResource
+    {
+        $notification = $request->user()
+            ->notifications()
+            ->whereKey($notification)
+            ->firstOrFail();
+
+        return new NotificationResource($notification);
+    }
+
+    public function markAsRead(Request $request, string $notification): NotificationResource
+    {
+        $notification = $request->user()
+            ->notifications()
+            ->whereKey($notification)
+            ->firstOrFail();
+
+        $notification->markAsRead();
+
+        return new NotificationResource($notification->refresh());
+    }
+
     public function markAllAsRead(Request $request): JsonResponse
     {
-        $request->user()->unreadNotifications->markAsRead();
+        $request->user()->unreadNotifications()->update(['read_at' => now()]);
 
-        return $this->success('All notifications marked as read.', []);
+        return response()->json([
+            'message' => 'All notifications marked as read.',
+        ]);
+    }
+
+    public function destroy(Request $request, string $notification): JsonResponse
+    {
+        $request->user()
+            ->notifications()
+            ->whereKey($notification)
+            ->firstOrFail()
+            ->delete();
+
+        return response()->json([
+            'message' => 'Notification deleted successfully.',
+        ]);
+    }
+
+    public function destroyRead(Request $request): JsonResponse
+    {
+        $request->user()->readNotifications()->delete();
+
+        return response()->json([
+            'message' => 'Read notifications deleted successfully.',
+        ]);
     }
 }

@@ -8,6 +8,7 @@ use App\Contracts\GlobalSearchable;
 use App\Enums\TaskPriority;
 use App\Enums\TaskStatus;
 use Database\Factories\TaskFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -76,7 +77,6 @@ class Task extends Model implements GlobalSearchable, Searchable
         return new SearchResult($this, $this->title);
     }
 
-    // Relationships
     public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class, 'project_id', 'id');
@@ -85,6 +85,24 @@ class Task extends Model implements GlobalSearchable, Searchable
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'task_user', 'task_id', 'user_id', 'id', 'id');
+    }
+
+    /**
+     * @param  Builder<Task>  $query
+     * @return Builder<Task>
+     */
+    public function scopeForProjectCreator(Builder $query, int $userId): Builder
+    {
+        return $query->whereHas('project', fn (Builder $projectQuery): Builder => $projectQuery->where('created_by', $userId));
+    }
+
+    /**
+     * @param  Builder<Task>  $query
+     * @return Builder<Task>
+     */
+    public function scopeAssignedToUser(Builder $query, int $userId): Builder
+    {
+        return $query->whereHas('users', fn (Builder $userQuery): Builder => $userQuery->where('users.id', $userId));
     }
 
     public function files(): MorphMany

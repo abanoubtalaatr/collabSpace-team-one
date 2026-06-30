@@ -3,14 +3,10 @@
 namespace App\Http\Controllers\Api\Report;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Task\StoreTaskRequest;
-use App\Http\Requests\Task\UpdateTaskRequest;
-use App\Http\Resources\TaskResource;
 use App\Models\Task;
 use App\Traits\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class TaskController extends Controller
 {
@@ -24,9 +20,9 @@ class TaskController extends Controller
         $dates = array_filter($request->only(['start_date', 'end_date']));
 
         $query = Task::query()
-        ->when(count($dates) === 2, function ($q) use ($dates){
-            $q->whereBetween('created_at', [$dates['start_date'], $dates['end_date']]);
-        });
+            ->when(count($dates) === 2, function ($q) use ($dates) {
+                $q->whereBetween('created_at', [$dates['start_date'], $dates['end_date']]);
+            });
 
         $totalTasks = $query->count();
 
@@ -36,10 +32,10 @@ class TaskController extends Controller
         $productivity = $totalTasks > 0 ? ($completedTasks / $totalTasks) * 100 : 0;
 
         return $this->apiResponse([
-            'report_type'             => 'task',
-            'total_tasks'             => $totalTasks,
-            'completed_tasks'         => $completedTasks,
-            'pending_tasks'           => $pendingTasks,
+            'report_type' => 'task',
+            'total_tasks' => $totalTasks,
+            'completed_tasks' => $completedTasks,
+            'pending_tasks' => $pendingTasks,
             'productivity_statistics' => round($productivity, 2).'%',
         ], 'Task report generated successfully');
     }

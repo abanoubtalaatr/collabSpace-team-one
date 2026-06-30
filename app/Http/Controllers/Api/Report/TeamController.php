@@ -43,6 +43,6 @@ class TeamController extends Controller
             'completion_rates' => round($completionRate, 2).'%',
             'workload_distribution' => $workloadDistribution,
             'team_performance' => $completionRate > 75 ? 'High' : 'Normal',
-        ],'Team report generated successfully');
+        ], 'Team report generated successfully');
     }
 }

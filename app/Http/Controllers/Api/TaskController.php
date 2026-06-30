@@ -2,19 +2,21 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Actions\Task\CreateTaskAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Task\StoreTaskRequest;
 use App\Http\Requests\Task\UpdateTaskRequest;
 use App\Http\Resources\TaskResource;
 use App\Models\Task;
-use App\Traits\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class TaskController extends Controller
 {
-    use ApiResponse;
+    public function __construct(
+        private readonly CreateTaskAction $createTaskAction,
+    ) {}
 
     public function index(Request $request): AnonymousResourceCollection
     {
@@ -32,23 +34,10 @@ class TaskController extends Controller
 
     public function store(StoreTaskRequest $request): TaskResource
     {
-        $data = $request->safe()->except('user_ids');
-
-        if (! isset($data['status'])) {
-            $data['status'] = 'pending';
-        }
-
-        if (! isset($data['progress'])) {
-            $data['progress'] = 0;
-        }
-
-        $task = Task::create($data);
-
-        if ($request->has('user_ids')) {
-            $task->users()->sync($request->input('user_ids'));
-        }
-
-        $task->load(['project', 'users']);
+        $task = $this->createTaskAction->execute(
+            $request->validated(),
+            $request->user()
+        );
 
         return new TaskResource($task);
     }
@@ -82,5 +71,4 @@ class TaskController extends Controller
 
         return response()->json(['message' => 'Task deleted successfully.']);
     }
-
 }

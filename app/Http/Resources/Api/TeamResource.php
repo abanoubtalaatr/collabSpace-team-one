@@ -16,7 +16,14 @@ class TeamResource extends JsonResource
     {
         return [
             'id' => $this->id,
-
+            'name' => $this->name,
+            'display_name' => $this->display_name,
+            'description' => $this->description,
+            'members' => $this->whenLoaded('members', fn () => $this->members->map(fn ($member) => [
+                'id' => $member->id,
+                'name' => $member->name,
+                'email' => $member->email,
+            ])),
         ];
     }
 }

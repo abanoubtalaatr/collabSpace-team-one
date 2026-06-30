@@ -1855,6 +1855,1422 @@
 					]
 				}
 			]
+		},
+		{
+			"name": "Notifications Module",
+			"description": "Laravel database notifications APIs and notification-triggering collaboration endpoints. All requests require Sanctum Bearer token auth unless noted by the error examples.",
+			"item": [
+				{
+					"name": "List Notifications",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"description": "Required Sanctum bearer token"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8000/api/notifications",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"notifications"
+							]
+						},
+						"description": "Requires Authorization: Bearer {{auth_token}}."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8000/api/notifications",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"notifications"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\n  \"data\": [\n    {\n      \"id\": \"9b0dd7dc-0347-480c-9c15-92c88c12e5b7\",\n      \"type\": \"task_created\",\n      \"data\": {\n        \"type\": \"task_created\",\n        \"title\": \"Task created\",\n        \"message\": \"A new task \\\"Prepare launch notes\\\" was created.\",\n        \"actor_id\": 1,\n        \"target_user_id\": 2,\n        \"entity_type\": \"task\",\n        \"entity_id\": 10,\n        \"old_status\": null,\n        \"new_status\": null\n      },\n      \"title\": \"Task created\",\n      \"message\": \"A new task \\\"Prepare launch notes\\\" was created.\",\n      \"actor_id\": 1,\n      \"target_user_id\": 2,\n      \"entity_type\": \"task\",\n      \"entity_id\": 10,\n      \"old_status\": null,\n      \"new_status\": null,\n      \"read_at\": null,\n      \"created_at\": \"2026-06-26 14:30:00\"\n    }\n  ]\n}"
+						},
+						{
+							"name": "401 Unauthorized",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8000/api/notifications",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"notifications"
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\n  \"message\": \"Unauthenticated.\"\n}"
+						}
+					]
+				},
+				{
+					"name": "List Unread Notifications",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"description": "Required Sanctum bearer token"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8000/api/notifications/unread",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"notifications",
+								"unread"
+							]
+						},
+						"description": "Requires Authorization: Bearer {{auth_token}}."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8000/api/notifications/unread",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"notifications",
+										"unread"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\n  \"data\": [\n    {\n      \"id\": \"9b0dd7dc-0347-480c-9c15-92c88c12e5b7\",\n      \"type\": \"task_created\",\n      \"data\": {\n        \"type\": \"task_created\",\n        \"title\": \"Task created\",\n        \"message\": \"A new task \\\"Prepare launch notes\\\" was created.\",\n        \"actor_id\": 1,\n        \"target_user_id\": 2,\n        \"entity_type\": \"task\",\n        \"entity_id\": 10,\n        \"old_status\": null,\n        \"new_status\": null\n      },\n      \"title\": \"Task created\",\n      \"message\": \"A new task \\\"Prepare launch notes\\\" was created.\",\n      \"actor_id\": 1,\n      \"target_user_id\": 2,\n      \"entity_type\": \"task\",\n      \"entity_id\": 10,\n      \"old_status\": null,\n      \"new_status\": null,\n      \"read_at\": null,\n      \"created_at\": \"2026-06-26 14:30:00\"\n    }\n  ]\n}"
+						},
+						{
+							"name": "401 Unauthorized",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8000/api/notifications/unread",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"notifications",
+										"unread"
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\n  \"message\": \"Unauthenticated.\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Unread Notifications Count",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"description": "Required Sanctum bearer token"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8000/api/notifications/unread-count",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"notifications",
+								"unread-count"
+							]
+						},
+						"description": "Requires Authorization: Bearer {{auth_token}}."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8000/api/notifications/unread-count",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"notifications",
+										"unread-count"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\n  \"data\": {\n    \"count\": 3\n  }\n}"
+						},
+						{
+							"name": "401 Unauthorized",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8000/api/notifications/unread-count",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"notifications",
+										"unread-count"
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\n  \"message\": \"Unauthenticated.\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Mark Notification As Read",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"description": "Required Sanctum bearer token"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8000/api/notifications/9b0dd7dc-0347-480c-9c15-92c88c12e5b7/read",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"notifications",
+								"9b0dd7dc-0347-480c-9c15-92c88c12e5b7",
+								"read"
+							]
+						},
+						"description": "Requires Authorization: Bearer {{auth_token}}."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8000/api/notifications/9b0dd7dc-0347-480c-9c15-92c88c12e5b7/read",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"notifications",
+										"9b0dd7dc-0347-480c-9c15-92c88c12e5b7",
+										"read"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\n  \"data\": {\n    \"id\": \"9b0dd7dc-0347-480c-9c15-92c88c12e5b7\",\n    \"type\": \"task_created\",\n    \"data\": {\n      \"type\": \"task_created\",\n      \"title\": \"Task created\",\n      \"message\": \"A new task \\\"Prepare launch notes\\\" was created.\",\n      \"actor_id\": 1,\n      \"target_user_id\": 2,\n      \"entity_type\": \"task\",\n      \"entity_id\": 10,\n      \"old_status\": null,\n      \"new_status\": null\n    },\n    \"title\": \"Task created\",\n    \"message\": \"A new task \\\"Prepare launch notes\\\" was created.\",\n    \"actor_id\": 1,\n    \"target_user_id\": 2,\n    \"entity_type\": \"task\",\n    \"entity_id\": 10,\n    \"old_status\": null,\n    \"new_status\": null,\n    \"read_at\": \"2026-06-26 14:35:00\",\n    \"created_at\": \"2026-06-26 14:30:00\"\n  }\n}"
+						},
+						{
+							"name": "404 Not Found",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8000/api/notifications/9b0dd7dc-0347-480c-9c15-92c88c12e5b7/read",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"notifications",
+										"9b0dd7dc-0347-480c-9c15-92c88c12e5b7",
+										"read"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\n  \"message\": \"No query results for model [Illuminate\\\\Notifications\\\\DatabaseNotification].\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Mark All Notifications As Read",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"description": "Required Sanctum bearer token"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8000/api/notifications/read-all",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"notifications",
+								"read-all"
+							]
+						},
+						"description": "Requires Authorization: Bearer {{auth_token}}."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8000/api/notifications/read-all",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"notifications",
+										"read-all"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\n  \"message\": \"All notifications marked as read.\"\n}"
+						},
+						{
+							"name": "401 Unauthorized",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8000/api/notifications/read-all",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"notifications",
+										"read-all"
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\n  \"message\": \"Unauthenticated.\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete Notification",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"description": "Required Sanctum bearer token"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8000/api/notifications/9b0dd7dc-0347-480c-9c15-92c88c12e5b7",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"notifications",
+								"9b0dd7dc-0347-480c-9c15-92c88c12e5b7"
+							]
+						},
+						"description": "Requires Authorization: Bearer {{auth_token}}."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8000/api/notifications/9b0dd7dc-0347-480c-9c15-92c88c12e5b7",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"notifications",
+										"9b0dd7dc-0347-480c-9c15-92c88c12e5b7"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\n  \"message\": \"Notification deleted successfully.\"\n}"
+						},
+						{
+							"name": "404 Not Found",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8000/api/notifications/9b0dd7dc-0347-480c-9c15-92c88c12e5b7",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"notifications",
+										"9b0dd7dc-0347-480c-9c15-92c88c12e5b7"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\n  \"message\": \"No query results for model [Illuminate\\\\Notifications\\\\DatabaseNotification].\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete Read Notifications",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"description": "Required Sanctum bearer token"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8000/api/notifications/read",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"notifications",
+								"read"
+							]
+						},
+						"description": "Requires Authorization: Bearer {{auth_token}}."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8000/api/notifications/read",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"notifications",
+										"read"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\n  \"message\": \"Read notifications deleted successfully.\"\n}"
+						},
+						{
+							"name": "401 Unauthorized",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8000/api/notifications/read",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"notifications",
+										"read"
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\n  \"message\": \"Unauthenticated.\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Create Task With Assigned Users",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"disabled": false
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"description": "Required Sanctum bearer token"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8000/api/tasks",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"tasks"
+							]
+						},
+						"description": "Requires Authorization: Bearer {{auth_token}}.",
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"project_id\": 1,\n  \"name\": \"Prepare launch notes\",\n  \"description\": \"Draft collaboration launch notes.\",\n  \"status\": \"pending\",\n  \"user_ids\": [\n    2,\n    3\n  ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8000/api/tasks",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"tasks"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\n  \"data\": {\n    \"id\": 10,\n    \"project_id\": 1,\n    \"name\": \"Prepare launch notes\",\n    \"description\": \"Draft collaboration launch notes.\",\n    \"status\": \"pending\",\n    \"users\": [\n      {\n        \"id\": 2,\n        \"name\": \"Team Member\",\n        \"email\": \"member@example.com\"\n      }\n    ],\n    \"created_at\": \"2026-06-26 14:30:00\",\n    \"updated_at\": \"2026-06-26 14:30:00\"\n  }\n}"
+						},
+						{
+							"name": "422 Unprocessable Entity",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8000/api/tasks",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"tasks"
+									]
+								}
+							},
+							"status": "Unprocessable Entity",
+							"code": 422,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\n  \"message\": \"The project id field is required.\",\n  \"errors\": {\n    \"project_id\": [\n      \"The project id field is required.\"\n    ]\n  }\n}"
+						}
+					]
+				},
+				{
+					"name": "Add Team Member",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"disabled": false
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"description": "Required Sanctum bearer token"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8000/api/teams/1/members",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"teams",
+								"1",
+								"members"
+							]
+						},
+						"description": "Requires Authorization: Bearer {{auth_token}}.",
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"user_id\": 2\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8000/api/teams/1/members",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"teams",
+										"1",
+										"members"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\n  \"data\": {\n    \"id\": 1,\n    \"name\": \"engineering-team\",\n    \"display_name\": \"Engineering Team\",\n    \"members\": [\n      {\n        \"id\": 2,\n        \"name\": \"Team Member\",\n        \"email\": \"member@example.com\"\n      }\n    ]\n  }\n}"
+						},
+						{
+							"name": "422 Unprocessable Entity",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8000/api/teams/1/members",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"teams",
+										"1",
+										"members"
+									]
+								}
+							},
+							"status": "Unprocessable Entity",
+							"code": 422,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\n  \"message\": \"The selected user id is invalid.\",\n  \"errors\": {\n    \"user_id\": [\n      \"The selected user id is invalid.\"\n    ]\n  }\n}"
+						}
+					]
+				},
+				{
+					"name": "Remove Team Member",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"description": "Required Sanctum bearer token"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8000/api/teams/1/members/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"teams",
+								"1",
+								"members",
+								"2"
+							]
+						},
+						"description": "Requires Authorization: Bearer {{auth_token}}."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8000/api/teams/1/members/2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"teams",
+										"1",
+										"members",
+										"2"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\n  \"data\": {\n    \"id\": 1,\n    \"name\": \"engineering-team\",\n    \"display_name\": \"Engineering Team\",\n    \"members\": []\n  }\n}"
+						},
+						{
+							"name": "404 Not Found",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8000/api/teams/1/members/2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"teams",
+										"1",
+										"members",
+										"2"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\n  \"message\": \"No query results for model [App\\\\Models\\\\User] 2\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Add Project Team",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"disabled": false
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"description": "Required Sanctum bearer token"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8000/api/projects/1/teams",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"projects",
+								"1",
+								"teams"
+							]
+						},
+						"description": "Requires Authorization: Bearer {{auth_token}}.",
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"team_id\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8000/api/projects/1/members",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"projects",
+										"1",
+										"members"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\n  \"data\": {\n    \"id\": 1,\n    \"name\": \"API Collaboration\",\n    \"teams\": [\n      {\n        \"id\": 1,\n        \"name\": \"engineering-team\",\n        \"display_name\": \"Engineering Team\",\n        \"members\": [\n          {\n            \"id\": 2,\n            \"name\": \"Team Member\",\n            \"email\": \"member@example.com\"\n          }\n        ]\n      }\n    ]\n  }\n}"
+						},
+						{
+							"name": "422 Unprocessable Entity",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8000/api/projects/1/members",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"projects",
+										"1",
+										"members"
+									]
+								}
+							},
+							"status": "Unprocessable Entity",
+							"code": 422,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\n  \"message\": \"The selected team id is invalid.\",\n  \"errors\": {\n    \"team_id\": [\n      \"The selected team id is invalid.\"\n    ]\n  }\n}"
+						}
+					]
+				},
+				{
+					"name": "Remove Project Team",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"description": "Required Sanctum bearer token"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8000/api/projects/1/teams/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"projects",
+								"1",
+								"teams",
+								"1"
+							]
+						},
+						"description": "Requires Authorization: Bearer {{auth_token}}."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8000/api/projects/1/members/2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"projects",
+										"1",
+										"members",
+										"2"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\n  \"data\": {\n    \"id\": 1,\n    \"name\": \"API Collaboration\",\n    \"teams\": []\n  }\n}"
+						},
+						{
+							"name": "404 Not Found",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8000/api/projects/1/members/2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"projects",
+										"1",
+										"members",
+										"2"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\n  \"message\": \"No query results for model [App\\\\Models\\\\Team] 1\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Update Project Status",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"disabled": false
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"description": "Required Sanctum bearer token"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8000/api/projects/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"projects",
+								"1"
+							]
+						},
+						"description": "Requires Authorization: Bearer {{auth_token}}.",
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"API Collaboration\",\n  \"description\": \"Collaboration backend project.\",\n  \"start_date\": \"2026-06-01\",\n  \"deadline\": \"2026-07-01\",\n  \"priority\": \"medium\",\n  \"status\": \"in_progress\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8000/api/projects/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"projects",
+										"1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\n  \"data\": {\n    \"id\": 1,\n    \"name\": \"API Collaboration\",\n    \"status\": \"in_progress\"\n  }\n}"
+						},
+						{
+							"name": "403 Forbidden",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8000/api/projects/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"projects",
+										"1"
+									]
+								}
+							},
+							"status": "Forbidden",
+							"code": 403,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\n  \"message\": \"You can only update projects you created.\"\n}"
+						}
+					]
+				}
+			]
 		}
 	],
 	"auth": {
