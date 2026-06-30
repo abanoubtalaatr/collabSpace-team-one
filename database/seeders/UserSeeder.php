@@ -33,6 +33,8 @@ class UserSeeder extends Seeder
             ['email' => 'admin@example.com'],
             [
                 'name' => 'Admin User',
+                'job_title' => fake()->word(),
+                'exp' => fake()->numberBetween(1, 30),
                 'password' => Hash::make('password'),
             ]
         );
@@ -41,6 +43,8 @@ class UserSeeder extends Seeder
             ['email' => 'manager@example.com'],
             [
                 'name' => 'Project Manager',
+                'job_title' => fake()->word(),
+                'exp' => fake()->numberBetween(1, 30),
                 'password' => Hash::make('password'),
             ]
         );
@@ -49,6 +53,8 @@ class UserSeeder extends Seeder
             ['email' => 'member@example.com'],
             [
                 'name' => 'Team Member',
+                'job_title' => fake()->word(),
+                'exp' => fake()->numberBetween(1, 30),
                 'password' => Hash::make('password'),
             ]
         );

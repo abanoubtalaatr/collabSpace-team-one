@@ -20,7 +20,7 @@ class NotificationService
             $recipients,
             'task_created',
             'Task created',
-            sprintf('A new task "%s" was created.', $task->name),
+            sprintf('A new task "%s" was created.', $task->title),
             'task',
             (int) $task->id
         );

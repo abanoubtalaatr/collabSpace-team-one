@@ -31,8 +31,14 @@ Route::middleware('auth:sanctum')->prefix('dashboard')->group(function () {
     Route::get('project-overview', [DashboardController::class, 'projectOverview']);
 });
 
+require __DIR__.'/ai.php';
+
 require __DIR__.'/report.php';
 require __DIR__.'/team.php';
 require __DIR__.'/projects.php';
 require __DIR__.'/tasks.php';
 require __DIR__.'/notifications.php';
+require __DIR__.'/chat.php';
+require __DIR__.'/profile.php';
+require __DIR__.'/files.php';
+require __DIR__.'/meetings.php';

@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Searchable\Searchable;
@@ -72,7 +73,7 @@ class Project extends Model implements GlobalSearchable, HasMedia, Searchable
 
     public function creator(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'created_by');
+        return $this->belongsTo(User::class, 'created_by', 'id');
     }
 
     public function tasks(): HasMany
@@ -83,6 +84,16 @@ class Project extends Model implements GlobalSearchable, HasMedia, Searchable
     public function teams(): BelongsToMany
     {
         return $this->belongsToMany(Team::class, 'project_team');
+    }
+
+    public function files(): MorphMany
+    {
+        return $this->morphMany(File::class, 'attachable');
+    }
+
+    public function conversations(): HasMany
+    {
+        return $this->hasMany(Conversation::class);
     }
 
     public function registerMediaCollections(): void

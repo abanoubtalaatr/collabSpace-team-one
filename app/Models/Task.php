@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Contracts\GlobalSearchable;
+use App\Enums\TaskPriority;
 use App\Enums\TaskStatus;
 use Database\Factories\TaskFactory;
 use Illuminate\Database\Eloquent\Builder;
@@ -12,6 +13,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Spatie\Searchable\Searchable;
 use Spatie\Searchable\SearchResult;
 
@@ -26,17 +28,32 @@ class Task extends Model implements GlobalSearchable, Searchable
 
     protected $fillable = [
         'project_id',
-        'name',
+        'title',
         'description',
+        'start_date',
+        'due_date',
+        'progress',
         'status',
+        'priority',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'status' => TaskStatus::class,
+            'start_date' => 'date',
+            'due_date' => 'date',
+            'progress' => 'integer',
+            'priority' => TaskPriority::class,
+        ];
+    }
 
     /**
      * @return array<int, string>
      */
     public static function globalSearchColumns(): array
     {
-        return ['name', 'description'];
+        return ['title', 'description'];
     }
 
     /**
@@ -55,11 +72,9 @@ class Task extends Model implements GlobalSearchable, Searchable
         return 'task';
     }
 
-    protected function casts(): array
+    public function getSearchResult(): SearchResult
     {
-        return [
-            'status' => TaskStatus::class,
-        ];
+        return new SearchResult($this, $this->title);
     }
 
     public function project(): BelongsTo
@@ -90,8 +105,8 @@ class Task extends Model implements GlobalSearchable, Searchable
         return $query->whereHas('users', fn (Builder $userQuery): Builder => $userQuery->where('users.id', $userId));
     }
 
-    public function getSearchResult(): SearchResult
+    public function files(): MorphMany
     {
-        return new SearchResult($this, $this->name);
+        return $this->morphMany(File::class, 'attachable');
     }
 }

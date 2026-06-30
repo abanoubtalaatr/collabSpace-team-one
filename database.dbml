@@ -227,6 +227,8 @@ Table "users" {
   "name" varchar(255) [not null]
   "email" varchar(255) [not null]
   "email_verified_at" timestamp
+  "job_title" varchar(100) [not null]
+  "exp" smallint [not null]
   "password" varchar(255) [not null]
   "remember_token" varchar(100)
   "created_at" timestamp
@@ -258,15 +260,31 @@ Ref "projects_created_by_foreign":"projects"."created_by" > "users"."id" [update
 Table "tasks" {
     id bigint [pk, increment]
     project_id bigint [not null]
-    name varchar(255) [not null]
+    title varchar(255) [not null]
     description text [not null]
-    status varchar(255) [not null, default: 'pending']
+    start_date datetime [not null]
+    due_date datetime [not null]
+    progress smallint [not null]
+    status tasks_status_enum [not null]
+    priority tasks_priority_enum [not null]
     created_at timestamp
     updated_at timestamp
 
     Indexes {
         project_id [name: "tasks_project_id_foreign"]
     }
+}
+Enum "tasks_status_enum" {
+    "Pending"
+    "in_progress"
+    "in_review"
+    "completed"
+}
+Enum "tasks_priority_enum" {
+    "low"
+    "medium"
+    "high"
+    "critical"
 }
 Ref "tasks_project_id_foreign":"tasks"."project_id" > "projects"."id" [update: cascade, delete: cascade]
 
@@ -322,6 +340,38 @@ Table "reports" {
     }
 }
 Ref "reports_user_id_foreign":"reports"."user_id" > "users"."id" [delete: cascade]
+
+Table "meetings" {
+    id bigint [pk, increment]
+    title varchar(255) [not null]
+    description text [null]
+    starts_at datetime [not null]
+    ends_at datetime [not null]
+    meeting_link varchar(255) [null]
+    location varchar(255) [null]
+    created_by bigint [not null]
+    project_id bigint [null]
+    created_at timestamp
+    updated_at timestamp
+}
+Ref "meetings_created_by_foreign":"meetings"."created_by" > "users"."id" [update: cascade, delete: cascade]
+Ref "meetings_project_id_foreign":"meetings"."project_id" > "projects"."id" [update: cascade, delete: set null]
+
+Table "meeting_user" {
+    id bigint [pk, increment]
+    meeting_id bigint [not null]
+    user_id bigint [not null]
+}
+Ref "meeting_user_meeting_id_foreign":"meeting_user"."meeting_id" <> "meetings"."id" [update: cascade, delete: cascade]
+Ref "meeting_user_user_id_foreign":"meeting_user"."user_id" <> "users"."id" [update: cascade, delete: cascade]
+
+Table "meeting_team" {
+    id bigint [pk, increment]
+    meeting_id bigint [not null]
+    team_id bigint [not null]
+}
+Ref "meeting_team_meeting_id_foreign":"meeting_team"."meeting_id" <> "meetings"."id" [update: cascade, delete: cascade]
+Ref "meeting_team_team_id_foreign":"meeting_team"."team_id" <> "teams"."id" [update: cascade, delete: cascade]
 
 
 Ref "permission_role_permission_id_foreign":"permissions"."id" < "permission_role"."permission_id" [update: cascade, delete: cascade]

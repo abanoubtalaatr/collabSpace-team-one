@@ -103,7 +103,7 @@ class DashboardService
         $monthTasks = $tasks->filter(fn ($task): bool => (int) $task->created_at->month === $month);
 
         return [
-            'month' => now()->month($month)->format('M'),
+            'month' => now()->startOfYear()->month($month)->format('M'),
             'total_tasks' => $monthTasks->count(),
             'completed_tasks' => $monthTasks
                 ->filter(fn ($task): bool => $this->statusValue($task->status) === TaskStatus::Completed->value)

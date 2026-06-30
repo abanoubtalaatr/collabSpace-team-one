@@ -5,18 +5,32 @@ namespace App\Http\Controllers\Api;
 use App\Actions\Task\CreateTaskAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Task\StoreTaskRequest;
+use App\Http\Requests\Task\UpdateTaskRequest;
 use App\Http\Resources\TaskResource;
 use App\Models\Task;
-use App\Traits\ApiResponse;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class TaskController extends Controller
 {
-    use ApiResponse;
-
     public function __construct(
         private readonly CreateTaskAction $createTaskAction,
     ) {}
+
+    public function index(Request $request): AnonymousResourceCollection
+    {
+        $tasks = Task::query()
+            ->with(['project', 'users'])
+            ->when($request->filled('project_id'), fn ($query) => $query->where('project_id', $request->integer('project_id')))
+            ->when($request->filled('status'), fn ($query) => $query->where('status', $request->string('status')))
+            ->when($request->filled('priority'), fn ($query) => $query->where('priority', $request->string('priority')))
+            ->when($request->filled('search'), fn ($query) => $query->where('title', 'like', '%'.$request->string('search').'%'))
+            ->latest()
+            ->paginate($request->integer('per_page', 15));
+
+        return TaskResource::collection($tasks);
+    }
 
     public function store(StoreTaskRequest $request): TaskResource
     {
@@ -28,37 +42,33 @@ class TaskController extends Controller
         return new TaskResource($task);
     }
 
-    /**
-     * Display task report statistics based on the given date range.
-     */
-    public function getTaskReport(Request $request)
+    public function show(int $id): TaskResource
     {
-        $startDate = $request->query('start_date');
-        $endDate = $request->query('end_date');
+        $task = Task::with(['project', 'users'])->findOrFail($id);
 
-        $query = Task::query();
+        return new TaskResource($task);
+    }
 
-        if ($startDate && $endDate) {
-            $query->whereBetween('created_at', [$startDate, $endDate]);
+    public function update(UpdateTaskRequest $request, int $id): TaskResource
+    {
+        $task = Task::findOrFail($id);
+
+        $task->update($request->safe()->except('user_ids'));
+
+        if ($request->has('user_ids')) {
+            $task->users()->sync($request->input('user_ids'));
         }
 
-        // calculate task statistics
-        $totalTasks = $query->count();
-        $completedTasks = (clone $query)->where('status', 'completed')->count();
-        $pendingTasks = (clone $query)->where('status', 'pending')->count();
+        $task->load(['project', 'users']);
 
-        // calculate productivity statistics
-        $productivity = $totalTasks > 0 ? ($completedTasks / $totalTasks) * 100 : 0;
+        return new TaskResource($task);
+    }
 
-        return $this->apiResponse([
-            'success' => true,
-            'report_type' => 'task',
-            'data' => [
-                'total_tasks' => $totalTasks,
-                'completed_tasks' => $completedTasks,
-                'pending_tasks' => $pendingTasks,
-                'productivity_statistics' => round($productivity, 2).'%',
-            ],
-        ], 200);
+    public function destroy(int $id): JsonResponse
+    {
+        $task = Task::findOrFail($id);
+        $task->delete();
+
+        return response()->json(['message' => 'Task deleted successfully.']);
     }
 }

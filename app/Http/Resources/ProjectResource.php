@@ -33,7 +33,6 @@ class ProjectResource extends JsonResource
                     ])
                     : null,
             ])),
-            // 'tasks_count' => $this->whenLoaded('tasks', fn () => $this->tasks->count()),
             'media' => $this->whenLoaded('media', fn () => $this->getMedia('attachments')->map(fn ($media) => [
                 'id' => $media->id,
                 'name' => $media->name,

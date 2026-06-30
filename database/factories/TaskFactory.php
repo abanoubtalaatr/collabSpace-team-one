@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\TaskPriority;
 use App\Enums\TaskStatus;
 use App\Models\Project;
 use App\Models\Task;
@@ -19,11 +20,18 @@ class TaskFactory extends Factory
      */
     public function definition(): array
     {
+        $startDate = fake()->dateTimeBetween('-1 month', 'now');
+        $dueDate = fake()->dateTimeBetween($startDate, '+2 months');
+
         return [
             'project_id' => Project::factory(),
-            'name' => fake()->sentence(4),
+            'title' => fake()->sentence(4),
             'description' => fake()->paragraphs(2, true),
+            'start_date' => $startDate,
+            'due_date' => $dueDate,
+            'progress' => fake()->numberBetween(0, 100),
             'status' => fake()->randomElement(TaskStatus::cases())->value,
+            'priority' => fake()->randomElement(TaskPriority::cases())->value,
         ];
     }
 }

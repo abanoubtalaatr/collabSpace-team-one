@@ -14,7 +14,7 @@ class CreateTaskAction
     ) {}
 
     /**
-     * @param  array{project_id: int, name: string, description?: string|null, status?: string|null, user_ids?: array<int, int>}  $data
+     * @param  array<string, mixed>  $data
      */
     public function execute(array $data, User $actor): Task
     {
@@ -22,9 +22,13 @@ class CreateTaskAction
 
         $task = Task::create([
             'project_id' => $data['project_id'],
-            'name' => $data['name'],
+            'title' => $data['title'],
             'description' => $data['description'] ?? '',
+            'start_date' => $data['start_date'] ?? null,
+            'due_date' => $data['due_date'] ?? null,
+            'progress' => $data['progress'] ?? 0,
             'status' => $data['status'] ?? TaskStatus::Pending->value,
+            'priority' => $data['priority'],
         ]);
 
         if ($userIds !== []) {

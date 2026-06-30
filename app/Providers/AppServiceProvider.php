@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\File;
 use App\Models\Project;
 use App\Models\Role;
 use App\Models\Task;
@@ -17,7 +18,15 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $default = config('broadcasting.default');
+
+        if ($default === 'pusher' && empty(config('broadcasting.connections.pusher.key'))) {
+            config(['broadcasting.default' => 'log']);
+        }
+
+        if ($default === 'reverb' && empty(config('broadcasting.connections.reverb.key'))) {
+            config(['broadcasting.default' => 'log']);
+        }
     }
 
     /**
@@ -31,6 +40,7 @@ class AppServiceProvider extends ServiceProvider
             'task' => Task::class,
             'team' => Team::class,
             'role' => Role::class,
+            'file' => File::class,
         ]);
     }
 }
