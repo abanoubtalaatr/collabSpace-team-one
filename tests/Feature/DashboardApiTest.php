@@ -62,6 +62,28 @@ class DashboardApiTest extends TestCase
             ->assertJsonPath('data.completion_rate', 50);
     }
 
+    public function test_user_without_role_gets_accessible_dashboard_stats(): void
+    {
+        $user = User::factory()->create();
+        $project = Project::factory()->createdBy($user)->create();
+        $teamProject = Project::factory()->create();
+        $team = Team::factory()->create();
+        $team->members()->attach($user);
+        $teamProject->teams()->attach($team);
+
+        $this->createTask($project, TaskStatus::Pending);
+        $this->createTask($project, TaskStatus::Completed);
+        $this->createTask($teamProject, TaskStatus::InProgress);
+
+        $this->actingAs($user, 'sanctum')
+            ->getJson('/api/dashboard/stats')
+            ->assertOk()
+            ->assertJsonPath('data.pending_tasks', 1)
+            ->assertJsonPath('data.in_progress_tasks', 1)
+            ->assertJsonPath('data.completed_tasks', 1)
+            ->assertJsonPath('data.total_tasks', 3);
+    }
+
     public function test_member_stats_are_scoped_to_assigned_tasks(): void
     {
         $member = $this->userWithRole('member');

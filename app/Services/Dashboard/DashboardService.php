@@ -7,7 +7,6 @@ use App\Models\Project;
 use App\Models\User;
 use App\Repositories\Dashboard\DashboardRepository;
 use Illuminate\Support\Collection;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class DashboardService
@@ -56,7 +55,7 @@ class DashboardService
         $project = $this->projectOrFail($projectId);
 
         if (! $this->repository->userCanAccessProject($user, $role, $project)) {
-            throw new AccessDeniedHttpException('You are not authorized to access this project dashboard.');
+            abort(403, 'You are not authorized to access this project dashboard.');
         }
 
         $tasks = $this->repository->overviewTasks($user, $role, $project);
@@ -76,11 +75,11 @@ class DashboardService
             return 'project';
         }
 
-        if ($user->hasRole('member') || $user->hasRole('Member')) {
+        if ($user->hasRole(['member', 'Member'])) {
             return 'member';
         }
 
-        throw new AccessDeniedHttpException('User does not have a supported dashboard role.');
+        return 'user';
     }
 
     private function projectOrFail(int $projectId): Project

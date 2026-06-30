@@ -19,7 +19,8 @@ class DashboardRepository
         return match ($role) {
             'admin' => Task::query(),
             'project' => Task::query()->forProjectCreator((int) $user->id),
-            default => Task::query()->assignedToUser((int) $user->id),
+            'member' => Task::query()->assignedToUser((int) $user->id),
+            default => $this->accessibleTasksQuery($user),
         };
     }
 
@@ -31,7 +32,8 @@ class DashboardRepository
         return match ($role) {
             'admin' => Project::query(),
             'project' => Project::query()->createdBy((int) $user->id),
-            default => Project::query()->forTeamMember((int) $user->id),
+            'member' => Project::query()->forTeamMember((int) $user->id),
+            default => $this->accessibleProjectsQuery($user),
         };
     }
 
@@ -45,7 +47,9 @@ class DashboardRepository
         return match ($role) {
             'admin' => true,
             'project' => (int) $project->created_by === (int) $user->id,
-            default => $project->teams()->whereHas('members', fn (Builder $query): Builder => $query->where('users.id', $user->id))->exists(),
+            'member' => $project->teams()->whereHas('members', fn (Builder $query): Builder => $query->where('users.id', $user->id))->exists(),
+            default => (int) $project->created_by === (int) $user->id
+                || $project->teams()->whereHas('members', fn (Builder $query): Builder => $query->where('users.id', $user->id))->exists(),
         };
     }
 
@@ -85,5 +89,28 @@ class DashboardRepository
             ->latest()
             ->limit($limit)
             ->get();
+    }
+
+    /**
+     * @return Builder<Task>
+     */
+    private function accessibleTasksQuery(User $user): Builder
+    {
+        return Task::query()->where(function (Builder $query) use ($user): void {
+            $query->whereHas('users', fn (Builder $userQuery): Builder => $userQuery->where('users.id', $user->id))
+                ->orWhereHas('project', fn (Builder $projectQuery): Builder => $projectQuery->where('created_by', $user->id))
+                ->orWhereHas('project.teams.members', fn (Builder $memberQuery): Builder => $memberQuery->where('users.id', $user->id));
+        });
+    }
+
+    /**
+     * @return Builder<Project>
+     */
+    private function accessibleProjectsQuery(User $user): Builder
+    {
+        return Project::query()->where(function (Builder $query) use ($user): void {
+            $query->where('created_by', $user->id)
+                ->orWhereHas('teams.members', fn (Builder $memberQuery): Builder => $memberQuery->where('users.id', $user->id));
+        });
     }
 }
