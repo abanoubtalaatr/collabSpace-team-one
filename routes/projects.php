@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\admin\ProjectController as AdminProjectController;
 use App\Http\Controllers\Api\Project\ProjectController as PMProjectController;
+use App\Http\Controllers\Api\Project\ProjectTaskController;
 use App\Http\Controllers\Api\Project\ProjectTeamController;
 use App\Http\Controllers\Api\Team\ProjectController as TMProjectController;
 use Illuminate\Support\Facades\Route;
@@ -12,6 +13,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('projects/{project}/teams', [ProjectTeamController::class, 'store']);
     Route::delete('projects/{project}/teams', [ProjectTeamController::class, 'destroy']);
     Route::delete('projects/{project}/teams/{teamId}', [ProjectTeamController::class, 'removeOne']);
+
+    Route::get('projects/{project}/tasks', [ProjectTaskController::class, 'index']);
+    Route::post('projects/{project}/tasks', [ProjectTaskController::class, 'store']);
 
     // ── Admin ────────────────────────────────────────────────
     Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
