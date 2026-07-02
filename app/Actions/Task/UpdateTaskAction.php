@@ -23,7 +23,7 @@ class UpdateTaskAction
                 $task->users()->sync($data['user_ids'] ?? []);
             }
 
-            return $task->fresh(['project', 'users']);
+            return $task->fresh(['project', 'users.media']);
         });
     }
 }

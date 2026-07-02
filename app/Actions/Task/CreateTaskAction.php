@@ -35,7 +35,7 @@ class CreateTaskAction
             $task->users()->syncWithoutDetaching($userIds);
         }
 
-        $task->load(['project', 'users']);
+        $task->load(['project', 'users.media']);
 
         $this->notifications->notifyTaskCreated($actor, $task, $task->users);
 

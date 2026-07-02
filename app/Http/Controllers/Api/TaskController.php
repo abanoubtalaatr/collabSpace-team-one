@@ -23,7 +23,7 @@ class TaskController extends Controller
     public function index(Request $request): AnonymousResourceCollection
     {
         $tasks = Task::query()
-            ->with(['project', 'users'])
+            ->with(['project', 'users.media'])
             ->when($request->filled('project_id'), fn ($query) => $query->where('project_id', $request->integer('project_id')))
             ->when($request->filled('team_id'), fn ($query) => $query->forTeam($request->integer('team_id')))
             ->when($request->filled('status'), fn ($query) => $query->where('status', $request->string('status')))
@@ -47,7 +47,7 @@ class TaskController extends Controller
 
     public function show(Task $task): TaskResource
     {
-        $task->load(['project', 'users']);
+        $task->load(['project', 'users.media']);
 
         return new TaskResource($task);
     }
