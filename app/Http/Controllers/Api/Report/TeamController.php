@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\Report;
 
 use App\Http\Controllers\Controller;
 use App\Models\Team;
@@ -37,15 +37,12 @@ class TeamController extends Controller
         });
 
         return $this->apiResponse([
-            'success' => true,
             'report_type' => 'team',
             'team_name' => $team->name,
-            'data' => [
-                'active_projects' => $activeProjects,
-                'completion_rates' => round($completionRate, 2).'%',
-                'workload_distribution' => $workloadDistribution,
-                'team_performance' => $completionRate > 75 ? 'High' : 'Normal',
-            ],
-        ], 200);
+            'active_projects' => $activeProjects,
+            'completion_rates' => round($completionRate, 2).'%',
+            'workload_distribution' => $workloadDistribution,
+            'team_performance' => $completionRate > 75 ? 'High' : 'Normal',
+        ], 'Team report generated successfully');
     }
 }

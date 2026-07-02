@@ -1,0 +1,242 @@
+{
+	"info": {
+		"_postman_id": "profile-collabspace-2026",
+		"name": "CollabSpace - Profile API",
+		"description": "Profile module: view/update profile, recent activity, my tasks (to do / done), and my files.\n\n**Setup:** Run Auth → Login first to save `token`.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.data && jsonData.data.token) {",
+									"    pm.collectionVariables.set('token', jsonData.data.token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": { "type": "noauth" },
+						"method": "POST",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"manager@example.com\",\n    \"password\": \"password\"\n}"
+						},
+						"url": "{{url}}/api/login"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Profile",
+			"item": [
+				{
+					"name": "Get My Profile",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }],
+						"url": "{{url}}/api/profile",
+						"description": "Full profile: name, email, phone, about, job title, experience, availability, current team/project, teams, files."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Profile",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"John Manager\",\n    \"email\": \"manager@example.com\",\n    \"phone\": \"1012345678\",\n    \"country_code\": \"+20\",\n    \"about\": \"Senior project manager with 5 years experience.\",\n    \"job_title\": \"Project Manager\",\n    \"experience_years\": 5,\n    \"availability_status\": \"available\",\n    \"current_team_id\": 1,\n    \"current_project_id\": 1\n}"
+						},
+						"url": "{{url}}/api/profile",
+						"description": "Update profile fields. availability_status: available | unavailable"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Recent Activity",
+			"item": [
+				{
+					"name": "Get Recent Activity",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }],
+						"url": {
+							"raw": "{{url}}/api/profile/activity?limit=15",
+							"host": ["{{url}}"],
+							"path": ["api", "profile", "activity"],
+							"query": [{ "key": "limit", "value": "15" }]
+						},
+						"description": "Recent tasks, messages, and projects for the authenticated user."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "My Tasks",
+			"item": [
+				{
+					"name": "Task Summary (To Do / Done counts)",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }],
+						"url": "{{url}}/api/profile/tasks/summary",
+						"description": "Counts: to_do, in_progress, in_review, completed, done, total."
+					},
+					"response": []
+				},
+				{
+					"name": "List All My Tasks",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }],
+						"url": {
+							"raw": "{{url}}/api/profile/tasks?per_page=15",
+							"host": ["{{url}}"],
+							"path": ["api", "profile", "tasks"],
+							"query": [{ "key": "per_page", "value": "15" }]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List To Do Tasks",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }],
+						"url": {
+							"raw": "{{url}}/api/profile/tasks?classification=to_do",
+							"host": ["{{url}}"],
+							"path": ["api", "profile", "tasks"],
+							"query": [{ "key": "classification", "value": "to_do" }]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Done / Completed Tasks",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }],
+						"url": {
+							"raw": "{{url}}/api/profile/tasks?classification=done",
+							"host": ["{{url}}"],
+							"path": ["api", "profile", "tasks"],
+							"query": [{ "key": "classification", "value": "done" }]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List In Progress Tasks",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }],
+						"url": {
+							"raw": "{{url}}/api/profile/tasks?classification=in_progress",
+							"host": ["{{url}}"],
+							"path": ["api", "profile", "tasks"],
+							"query": [{ "key": "classification", "value": "in_progress" }]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Filter by Status (pending)",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }],
+						"url": {
+							"raw": "{{url}}/api/profile/tasks?status=pending",
+							"host": ["{{url}}"],
+							"path": ["api", "profile", "tasks"],
+							"query": [{ "key": "status", "value": "pending" }]
+						},
+						"description": "status: pending | in_progress | in_review | completed"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "My Files",
+			"item": [
+				{
+					"name": "List My Files",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }],
+						"url": "{{url}}/api/profile/files"
+					},
+					"response": []
+				},
+				{
+					"name": "Upload File",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Accept", "value": "application/json" }],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": "{{url}}/api/profile/files",
+						"description": "Max 10MB per file."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete File",
+					"request": {
+						"method": "DELETE",
+						"header": [{ "key": "Accept", "value": "application/json" }],
+						"url": "{{url}}/api/profile/files/{{file_id}}"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{ "key": "url", "value": "http://127.0.0.1:8000" },
+		{ "key": "token", "value": "" },
+		{ "key": "file_id", "value": "1" }
+	]
+}

@@ -1,0 +1,252 @@
+{
+	"info": {
+		"_postman_id": "tasks-collabspace-2026",
+		"name": "CollabSpace - Tasks API",
+		"description": "Tasks module: list/create/update/delete tasks.\n\n**Important:** Use `Content-Type: application/json` and `Accept: application/json` for POST/PUT.\n\n**Setup:** Run Auth → Login first to save `token`.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"variable": [
+		{
+			"key": "url",
+			"value": "http://localhost:8000"
+		},
+		{
+			"key": "token",
+			"value": ""
+		},
+		{
+			"key": "project_id",
+			"value": "1"
+		},
+		{
+			"key": "task_id",
+			"value": "1"
+		}
+	],
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.data && jsonData.data.token) {",
+									"    pm.collectionVariables.set('token', jsonData.data.token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": { "type": "noauth" },
+						"method": "POST",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"manager@example.com\",\n    \"password\": \"password\"\n}"
+						},
+						"url": "{{url}}/api/login"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Project Tasks",
+			"item": [
+				{
+					"name": "List Tasks by Project ID",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }],
+						"url": {
+							"raw": "{{url}}/api/projects/{{project_id}}/tasks?per_page=15",
+							"host": ["{{url}}"],
+							"path": ["api", "projects", "{{project_id}}", "tasks"],
+							"query": [
+								{ "key": "per_page", "value": "15" },
+								{ "key": "status", "value": "pending", "disabled": true },
+								{ "key": "priority", "value": "high", "disabled": true },
+								{ "key": "team_id", "value": "1", "disabled": true },
+								{ "key": "search", "value": "design", "disabled": true }
+							]
+						},
+						"description": "Get all tasks for a specific project."
+					},
+					"response": []
+				},
+				{
+					"name": "Create Task for Project (JSON)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.data && jsonData.data.id) {",
+									"    pm.collectionVariables.set('task_id', jsonData.data.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Design homepage\",\n    \"description\": \"Create wireframes and UI mockups\",\n    \"priority\": \"high\",\n    \"status\": \"pending\",\n    \"start_date\": \"2026-07-01\",\n    \"due_date\": \"2026-07-15\",\n    \"progress\": 0,\n    \"user_ids\": [2, 3]\n}"
+						},
+						"url": "{{url}}/api/projects/{{project_id}}/tasks",
+						"description": "project_id comes from URL — do NOT send it in body.\n\nRequired: title, priority\nOptional: description, status, start_date, due_date, progress, user_ids"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Task for Project (Minimal JSON)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Quick task\",\n    \"priority\": \"medium\"\n}"
+						},
+						"url": "{{url}}/api/projects/{{project_id}}/tasks",
+						"description": "Minimal body — dates/status/progress use defaults."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Tasks (General)",
+			"item": [
+				{
+					"name": "List All Tasks",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }],
+						"url": {
+							"raw": "{{url}}/api/tasks?per_page=15",
+							"host": ["{{url}}"],
+							"path": ["api", "tasks"],
+							"query": [
+								{ "key": "per_page", "value": "15" },
+								{ "key": "project_id", "value": "{{project_id}}", "disabled": true },
+								{ "key": "team_id", "value": "1", "description": "Filter tasks by team (via project teams)" }
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Tasks by project_id query",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }],
+						"url": {
+							"raw": "{{url}}/api/tasks?project_id={{project_id}}",
+							"host": ["{{url}}"],
+							"path": ["api", "tasks"],
+							"query": [{ "key": "project_id", "value": "{{project_id}}" }]
+						},
+						"description": "Alternative filter using query param."
+					},
+					"response": []
+				},
+				{
+					"name": "Create Task (JSON)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"project_id\": {{project_id}},\n    \"title\": \"API integration task\",\n    \"description\": \"Connect frontend with tasks API\",\n    \"priority\": \"high\",\n    \"status\": \"pending\",\n    \"start_date\": \"2026-07-01\",\n    \"due_date\": \"2026-07-20\",\n    \"progress\": 0,\n    \"user_ids\": [3]\n}"
+						},
+						"url": "{{url}}/api/tasks",
+						"description": "Send as JSON (NOT form-data).\n\nRequired headers:\n- Accept: application/json\n- Content-Type: application/json\n\nRequired fields:\n- project_id (integer)\n- title (string)\n- priority: low | medium | high | critical\n\nOptional:\n- description, status, start_date, due_date, progress, user_ids"
+					},
+					"response": []
+				},
+				{
+					"name": "List Tasks by team_id",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }],
+						"url": {
+							"raw": "{{url}}/api/tasks?team_id=1",
+							"host": ["{{url}}"],
+							"path": ["api", "tasks"],
+							"query": [{ "key": "team_id", "value": "1" }]
+						},
+						"description": "Returns tasks for projects linked to this team."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Task",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }],
+						"url": "{{url}}/api/tasks/{{task_id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Task (JSON)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Updated task title\",\n    \"status\": \"in_progress\",\n    \"progress\": 50,\n    \"priority\": \"high\"\n}"
+						},
+						"url": "{{url}}/api/tasks/{{task_id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Task",
+					"request": {
+						"method": "DELETE",
+						"header": [{ "key": "Accept", "value": "application/json" }],
+						"url": "{{url}}/api/tasks/{{task_id}}"
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

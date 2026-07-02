@@ -8,15 +8,15 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('tasks', function (Blueprint $table) {
-            $table->string('status')->default('pending')->after('description');
+        Schema::table('meeting_user', function (Blueprint $table) {
+            $table->unique(['meeting_id', 'user_id']);
         });
     }
 
     public function down(): void
     {
-        Schema::table('tasks', function (Blueprint $table) {
-            $table->dropColumn('status');
+        Schema::table('meeting_user', function (Blueprint $table) {
+            $table->dropUnique(['meeting_id', 'user_id']);
         });
     }
 };
