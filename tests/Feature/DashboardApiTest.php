@@ -227,7 +227,7 @@ class DashboardApiTest extends TestCase
         $this->actingAs($admin, 'sanctum')
             ->getJson("/api/dashboard/project-overview?project_id={$project->id}")
             ->assertOk()
-            ->assertJsonPath('data.user.avatar_url', null)
+            ->assertJsonPath('data.user.avatar_url', fn (string $url) => str_contains($url, 'ui-avatars.com'))
             ->assertJsonPath('data.chart_data.monthly.0.month', 'Jan')
             ->assertJsonPath('data.chart_data.monthly.0.total_tasks', 2)
             ->assertJsonPath('data.chart_data.monthly.0.completed_tasks', 1)

@@ -147,7 +147,7 @@ class DashboardService
 
     /**
      * @param  Collection<int, User>  $members
-     * @return array<int, array{id: int, name: string, email: string, job_title: string|null, avatar_url: string|null}>
+     * @return array<int, array{id: int, name: string, email: string, job_title: string|null, avatar_url: string}>
      */
     private function mapTeamMembers(Collection $members): array
     {

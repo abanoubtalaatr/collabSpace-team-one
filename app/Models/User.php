@@ -130,10 +130,19 @@ class User extends Authenticatable implements GlobalSearchable, HasMedia, Search
         return new SearchResult($this, $this->name);
     }
 
-    public function avatarUrl(): ?string
+    public function avatarUrl(): string
     {
-        return $this->getMedia(self::MEDIA_COLLECTION_FILES)
+        $url = $this->getMedia(self::MEDIA_COLLECTION_FILES)
             ->first(fn ($media) => str_starts_with((string) $media->mime_type, 'image/'))
             ?->getFullUrl();
+
+        return $url ?? $this->defaultAvatarUrl();
+    }
+
+    public function defaultAvatarUrl(): string
+    {
+        $name = urlencode($this->name ?: 'User');
+
+        return "https://ui-avatars.com/api/?name={$name}&background=6366f1&color=ffffff&size=128&bold=true";
     }
 }
