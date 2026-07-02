@@ -24,7 +24,7 @@ class ProjectTeamController extends Controller
 
     public function index(Project $project): AnonymousResourceCollection
     {
-        $project->load('teams:id,name,display_name,description');
+        $project->load('teams:id,name,display_name,description,created_at,updated_at');
 
         return TeamResource::collection($project->teams);
     }
@@ -46,7 +46,7 @@ class ProjectTeamController extends Controller
 
         $this->refreshProjectChatParticipants($project);
 
-        $project->load(['creator', 'media', 'teams:id,name,display_name,description']);
+        $project->load(['creator', 'media', 'teams:id,name,display_name,description,created_at,updated_at']);
 
         return new ProjectResource($project);
     }
@@ -66,7 +66,7 @@ class ProjectTeamController extends Controller
         $project->teams()->detach($teamIds);
         $this->refreshProjectChatParticipants($project);
 
-        $project->load(['creator', 'media', 'teams:id,name,display_name,description']);
+        $project->load(['creator', 'media', 'teams:id,name,display_name,description,created_at,updated_at']);
 
         return new ProjectResource($project);
     }
