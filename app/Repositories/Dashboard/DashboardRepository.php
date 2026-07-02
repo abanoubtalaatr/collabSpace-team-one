@@ -2,10 +2,13 @@
 
 namespace App\Repositories\Dashboard;
 
+use App\Enums\FileStatus;
+use App\Models\File;
 use App\Models\Project;
 use App\Models\Task;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Collection;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
@@ -85,18 +88,75 @@ class DashboardRepository
     }
 
     /**
-     * @return Collection<int, Media>
+     * @return Collection<int, File|Media>
      */
     public function recentFilesForProject(Project $project, int $limit = 10): Collection
     {
-        return Media::query()
+        return $this->recentFilesForProjectIds(collect([$project->id]), $limit);
+    }
+
+    /**
+     * @return Collection<int, File|Media>
+     */
+    public function recentFiles(User $user, string $role, int $limit = 10): Collection
+    {
+        $projectIds = $this->projectScopeFor($user, $role)->pluck('id');
+
+        return $this->recentFilesForProjectIds($projectIds, $limit);
+    }
+
+    /**
+     * @param  Collection<int, int|string>  $projectIds
+     * @return Collection<int, File|Media>
+     */
+    private function recentFilesForProjectIds(Collection $projectIds, int $limit): Collection
+    {
+        if ($projectIds->isEmpty()) {
+            return collect();
+        }
+
+        $taskIds = Task::query()
+            ->whereIn('project_id', $projectIds)
+            ->pluck('id');
+
+        $files = File::query()
+            ->with([
+                'uploader:id,name,email',
+                'uploader.media',
+                'attachable' => function (MorphTo $morphTo): void {
+                    $morphTo->morphWith([
+                        Task::class => ['project:id,name'],
+                    ]);
+                },
+            ])
+            ->where('status', FileStatus::Attached)
+            ->where(function (Builder $query) use ($projectIds, $taskIds): void {
+                $query->where(function (Builder $projectFiles) use ($projectIds): void {
+                    $projectFiles->where('attachable_type', 'project')
+                        ->whereIn('attachable_id', $projectIds);
+                });
+
+                if ($taskIds->isNotEmpty()) {
+                    $query->orWhere(function (Builder $taskFiles) use ($taskIds): void {
+                        $taskFiles->where('attachable_type', 'task')
+                            ->whereIn('attachable_id', $taskIds);
+                    });
+                }
+            })
+            ->get();
+
+        $media = Media::query()
             ->with(['model.creator'])
             ->where('model_type', (new Project)->getMorphClass())
-            ->where('model_id', $project->id)
+            ->whereIn('model_id', $projectIds)
             ->where('collection_name', Project::MEDIA_COLLECTION_ATTACHMENTS)
-            ->latest()
-            ->limit($limit)
             ->get();
+
+        return $files
+            ->concat($media)
+            ->sortByDesc(fn (File|Media $item) => $item->created_at)
+            ->take($limit)
+            ->values();
     }
 
     /**
@@ -110,27 +170,6 @@ class DashboardRepository
             ->flatMap(fn ($team) => $team->members)
             ->unique('id')
             ->values();
-    }
-
-    /**
-     * @return Collection<int, Media>
-     */
-    public function recentFiles(User $user, string $role, int $limit = 10): Collection
-    {
-        $projectIds = $this->projectScopeFor($user, $role)->pluck('id');
-
-        if ($projectIds->isEmpty()) {
-            return collect();
-        }
-
-        return Media::query()
-            ->with(['model.creator'])
-            ->where('model_type', (new Project)->getMorphClass())
-            ->whereIn('model_id', $projectIds)
-            ->where('collection_name', Project::MEDIA_COLLECTION_ATTACHMENTS)
-            ->latest()
-            ->limit($limit)
-            ->get();
     }
 
     /**

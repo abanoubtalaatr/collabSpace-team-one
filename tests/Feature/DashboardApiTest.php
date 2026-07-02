@@ -2,7 +2,10 @@
 
 namespace Tests\Feature;
 
+use App\Enums\FileStatus;
+use App\Enums\FileType;
 use App\Enums\TaskStatus;
+use App\Models\File;
 use App\Models\Project;
 use App\Models\Role;
 use App\Models\Task;
@@ -127,14 +130,8 @@ class DashboardApiTest extends TestCase
         $hiddenProject = Project::factory()->create(['name' => 'Hidden']);
         $visibleProject->teams()->attach($team);
 
-        $visibleProject->addMediaFromString('visible file')
-            ->usingName('UX_Research_Summary.pdf')
-            ->usingFileName('ux-research-summary.pdf')
-            ->toMediaCollection(Project::MEDIA_COLLECTION_ATTACHMENTS);
-        $hiddenProject->addMediaFromString('hidden file')
-            ->usingName('Hidden.pdf')
-            ->usingFileName('hidden.pdf')
-            ->toMediaCollection(Project::MEDIA_COLLECTION_ATTACHMENTS);
+        $this->createAttachedProjectFile($member, $visibleProject, 'UX_Research_Summary.pdf');
+        $this->createAttachedProjectFile($creator, $hiddenProject, 'Hidden.pdf');
 
         $this->actingAs($member, 'sanctum')
             ->getJson('/api/dashboard/recent-files')
@@ -142,7 +139,7 @@ class DashboardApiTest extends TestCase
             ->assertJsonCount(1, 'data')
             ->assertJsonPath('data.0.name', 'UX_Research_Summary.pdf')
             ->assertJsonPath('data.0.project_name', 'Alpha')
-            ->assertJsonPath('data.0.uploaded_by', 'Mohamed Wahib');
+            ->assertJsonPath('data.0.uploaded_by', $member->name);
     }
 
     public function test_stats_progress_uses_average_task_progress(): void
@@ -308,6 +305,24 @@ class DashboardApiTest extends TestCase
             'progress' => $progress,
             'created_at' => $createdAt ?? now(),
             'updated_at' => $createdAt ?? now(),
+        ]);
+    }
+
+    private function createAttachedProjectFile(User $uploader, Project $project, string $name): File
+    {
+        return File::create([
+            'user_id' => $uploader->id,
+            'name' => $name,
+            'original_name' => strtolower(str_replace(' ', '-', $name)),
+            'file_name' => 'files/test/'.strtolower(str_replace(' ', '-', $name)),
+            'disk' => 'public',
+            'mime_type' => 'application/pdf',
+            'extension' => 'pdf',
+            'file_type' => FileType::Pdf,
+            'size' => 128,
+            'status' => FileStatus::Attached,
+            'attachable_type' => 'project',
+            'attachable_id' => $project->id,
         ]);
     }
 }
