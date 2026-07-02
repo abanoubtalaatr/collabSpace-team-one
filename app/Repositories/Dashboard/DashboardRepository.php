@@ -2,7 +2,6 @@
 
 namespace App\Repositories\Dashboard;
 
-use App\Enums\FileStatus;
 use App\Models\File;
 use App\Models\Project;
 use App\Models\Task;
@@ -100,9 +99,27 @@ class DashboardRepository
      */
     public function recentFiles(User $user, string $role, int $limit = 10): Collection
     {
-        $projectIds = $this->projectScopeFor($user, $role)->pluck('id');
+        $files = File::query()
+            ->with($this->fileRelations())
+            ->where('user_id', $user->id)
+            ->latest()
+            ->limit($limit)
+            ->get();
 
-        return $this->recentFilesForProjectIds($projectIds, $limit);
+        $profileMedia = Media::query()
+            ->with(['model.media'])
+            ->where('model_type', (new User)->getMorphClass())
+            ->where('model_id', $user->id)
+            ->where('collection_name', User::MEDIA_COLLECTION_FILES)
+            ->latest()
+            ->limit($limit)
+            ->get();
+
+        return $files
+            ->concat($profileMedia)
+            ->sortByDesc(fn (File|Media $item) => $item->created_at)
+            ->take($limit)
+            ->values();
     }
 
     /**
@@ -120,16 +137,7 @@ class DashboardRepository
             ->pluck('id');
 
         $files = File::query()
-            ->with([
-                'uploader:id,name,email',
-                'uploader.media',
-                'attachable' => function (MorphTo $morphTo): void {
-                    $morphTo->morphWith([
-                        Task::class => ['project:id,name'],
-                    ]);
-                },
-            ])
-            ->where('status', FileStatus::Attached)
+            ->with($this->fileRelations())
             ->where(function (Builder $query) use ($projectIds, $taskIds): void {
                 $query->where(function (Builder $projectFiles) use ($projectIds): void {
                     $projectFiles->where('attachable_type', 'project')
@@ -157,6 +165,22 @@ class DashboardRepository
             ->sortByDesc(fn (File|Media $item) => $item->created_at)
             ->take($limit)
             ->values();
+    }
+
+    /**
+     * @return array<int|string, mixed>
+     */
+    private function fileRelations(): array
+    {
+        return [
+            'uploader:id,name,email',
+            'uploader.media',
+            'attachable' => function (MorphTo $morphTo): void {
+                $morphTo->morphWith([
+                    Task::class => ['project:id,name'],
+                ]);
+            },
+        ];
     }
 
     /**

@@ -5,6 +5,7 @@ namespace App\Http\Resources\Dashboard;
 use App\Models\File;
 use App\Models\Project;
 use App\Models\Task;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -57,6 +58,21 @@ class RecentFileResource extends JsonResource
     {
         /** @var Media $media */
         $media = $this->resource;
+
+        if ($media->model instanceof User) {
+            return [
+                'id' => $media->id,
+                'name' => $media->name,
+                'url' => $media->getFullUrl(),
+                'download_url' => $media->getFullUrl(),
+                'project_name' => null,
+                'uploaded_by' => $media->model->name,
+                'uploaded_by_id' => $media->model->id,
+                'avatar_url' => $media->model->avatarUrl(),
+                'created_at' => $media->created_at?->format('H:i'),
+            ];
+        }
+
         $project = $media->model instanceof Project ? $media->model : null;
         $uploader = $project?->creator;
 

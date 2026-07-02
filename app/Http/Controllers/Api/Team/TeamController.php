@@ -16,6 +16,7 @@ class TeamController extends Controller
     public function index(Request $request): AnonymousResourceCollection
     {
         $teams = Team::query()
+            ->with(['members.media'])
             ->withCount(['members', 'projects'])
             ->when(
                 $request->filled('search'),

@@ -7,8 +7,8 @@ use App\Actions\Team\RemoveTeamMemberAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Team\AssignTeamMembersRequest;
 use App\Http\Requests\Team\RemoveTeamMembersRequest;
+use App\Http\Resources\TeamMemberResource;
 use App\Http\Resources\TeamResource;
-use App\Http\Resources\UserSummaryResource;
 use App\Models\Team;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -23,9 +23,9 @@ class TeamMemberController extends Controller
 
     public function index(Team $team): AnonymousResourceCollection
     {
-        $team->load('members:id,name,email');
+        $team->load('members.media');
 
-        return UserSummaryResource::collection($team->members);
+        return TeamMemberResource::collection($team->members);
     }
 
     public function store(AssignTeamMembersRequest $request, Team $team): TeamResource

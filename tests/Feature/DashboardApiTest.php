@@ -119,7 +119,7 @@ class DashboardApiTest extends TestCase
             ->assertJsonPath('data.completion_rate', 50);
     }
 
-    public function test_member_recent_files_are_scoped_to_team_projects(): void
+    public function test_member_recent_files_return_their_own_uploads(): void
     {
         $member = $this->userWithRole('member');
         $creator = User::factory()->create(['name' => 'Mohamed Wahib']);
@@ -133,13 +133,28 @@ class DashboardApiTest extends TestCase
         $this->createAttachedProjectFile($member, $visibleProject, 'UX_Research_Summary.pdf');
         $this->createAttachedProjectFile($creator, $hiddenProject, 'Hidden.pdf');
 
-        $this->actingAs($member, 'sanctum')
+        File::create([
+            'user_id' => $member->id,
+            'name' => 'Detached Upload.pdf',
+            'original_name' => 'detached-upload.pdf',
+            'file_name' => 'files/test/detached-upload.pdf',
+            'disk' => 'public',
+            'mime_type' => 'application/pdf',
+            'extension' => 'pdf',
+            'file_type' => FileType::Pdf,
+            'size' => 64,
+            'status' => FileStatus::Detached,
+        ]);
+
+        $response = $this->actingAs($member, 'sanctum')
             ->getJson('/api/dashboard/recent-files')
             ->assertOk()
-            ->assertJsonCount(1, 'data')
-            ->assertJsonPath('data.0.name', 'UX_Research_Summary.pdf')
-            ->assertJsonPath('data.0.project_name', 'Alpha')
-            ->assertJsonPath('data.0.uploaded_by', $member->name);
+            ->assertJsonCount(2, 'data');
+
+        $names = collect($response->json('data'))->pluck('name')->all();
+        $this->assertContains('UX_Research_Summary.pdf', $names);
+        $this->assertContains('Detached Upload.pdf', $names);
+        $response->assertJsonPath('data.0.uploaded_by', $member->name);
     }
 
     public function test_stats_progress_uses_average_task_progress(): void
