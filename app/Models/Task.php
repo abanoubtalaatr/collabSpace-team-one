@@ -105,6 +105,18 @@ class Task extends Model implements GlobalSearchable, Searchable
         return $query->whereHas('users', fn (Builder $userQuery): Builder => $userQuery->where('users.id', $userId));
     }
 
+    /**
+     * @param  Builder<Task>  $query
+     * @return Builder<Task>
+     */
+    public function scopeForTeam(Builder $query, int $teamId): Builder
+    {
+        return $query->whereHas(
+            'project.teams',
+            fn (Builder $teamQuery): Builder => $teamQuery->where('teams.id', $teamId)
+        );
+    }
+
     public function files(): MorphMany
     {
         return $this->morphMany(File::class, 'attachable');

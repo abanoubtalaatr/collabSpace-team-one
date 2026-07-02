@@ -22,6 +22,7 @@ class ProjectTaskController extends Controller
         $tasks = Task::query()
             ->where('project_id', $project->id)
             ->with(['project', 'users'])
+            ->when($request->filled('team_id'), fn ($query) => $query->forTeam($request->integer('team_id')))
             ->when($request->filled('status'), fn ($query) => $query->where('status', $request->string('status')))
             ->when($request->filled('priority'), fn ($query) => $query->where('priority', $request->string('priority')))
             ->when($request->filled('search'), fn ($query) => $query->where('title', 'like', '%'.$request->string('search').'%'))

@@ -86,6 +86,7 @@
 								{ "key": "per_page", "value": "15" },
 								{ "key": "status", "value": "pending", "disabled": true },
 								{ "key": "priority", "value": "high", "disabled": true },
+								{ "key": "team_id", "value": "1", "disabled": true },
 								{ "key": "search", "value": "design", "disabled": true }
 							]
 						},
@@ -157,7 +158,8 @@
 							"path": ["api", "tasks"],
 							"query": [
 								{ "key": "per_page", "value": "15" },
-								{ "key": "project_id", "value": "{{project_id}}", "disabled": true }
+								{ "key": "project_id", "value": "{{project_id}}", "disabled": true },
+								{ "key": "team_id", "value": "1", "description": "Filter tasks by team (via project teams)" }
 							]
 						}
 					},
@@ -192,6 +194,21 @@
 						},
 						"url": "{{url}}/api/tasks",
 						"description": "Send as JSON (NOT form-data).\n\nRequired headers:\n- Accept: application/json\n- Content-Type: application/json\n\nRequired fields:\n- project_id (integer)\n- title (string)\n- priority: low | medium | high | critical\n\nOptional:\n- description, status, start_date, due_date, progress, user_ids"
+					},
+					"response": []
+				},
+				{
+					"name": "List Tasks by team_id",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }],
+						"url": {
+							"raw": "{{url}}/api/tasks?team_id=1",
+							"host": ["{{url}}"],
+							"path": ["api", "tasks"],
+							"query": [{ "key": "team_id", "value": "1" }]
+						},
+						"description": "Returns tasks for projects linked to this team."
 					},
 					"response": []
 				},

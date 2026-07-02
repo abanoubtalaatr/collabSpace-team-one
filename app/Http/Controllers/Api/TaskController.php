@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Actions\Task\CreateTaskAction;
+use App\Actions\Task\UpdateTaskAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Task\StoreTaskRequest;
 use App\Http\Requests\Task\UpdateTaskRequest;
@@ -16,6 +17,7 @@ class TaskController extends Controller
 {
     public function __construct(
         private readonly CreateTaskAction $createTaskAction,
+        private readonly UpdateTaskAction $updateTaskAction,
     ) {}
 
     public function index(Request $request): AnonymousResourceCollection
@@ -23,6 +25,7 @@ class TaskController extends Controller
         $tasks = Task::query()
             ->with(['project', 'users'])
             ->when($request->filled('project_id'), fn ($query) => $query->where('project_id', $request->integer('project_id')))
+            ->when($request->filled('team_id'), fn ($query) => $query->forTeam($request->integer('team_id')))
             ->when($request->filled('status'), fn ($query) => $query->where('status', $request->string('status')))
             ->when($request->filled('priority'), fn ($query) => $query->where('priority', $request->string('priority')))
             ->when($request->filled('search'), fn ($query) => $query->where('title', 'like', '%'.$request->string('search').'%'))
@@ -42,31 +45,22 @@ class TaskController extends Controller
         return new TaskResource($task);
     }
 
-    public function show(int $id): TaskResource
+    public function show(Task $task): TaskResource
     {
-        $task = Task::with(['project', 'users'])->findOrFail($id);
-
-        return new TaskResource($task);
-    }
-
-    public function update(UpdateTaskRequest $request, int $id): TaskResource
-    {
-        $task = Task::findOrFail($id);
-
-        $task->update($request->safe()->except('user_ids'));
-
-        if ($request->has('user_ids')) {
-            $task->users()->sync($request->input('user_ids'));
-        }
-
         $task->load(['project', 'users']);
 
         return new TaskResource($task);
     }
 
-    public function destroy(int $id): JsonResponse
+    public function update(UpdateTaskRequest $request, Task $task): TaskResource
     {
-        $task = Task::findOrFail($id);
+        $updatedTask = $this->updateTaskAction->execute($task, $request->validated());
+
+        return new TaskResource($updatedTask);
+    }
+
+    public function destroy(Task $task): JsonResponse
+    {
         $task->delete();
 
         return response()->json(['message' => 'Task deleted successfully.']);
