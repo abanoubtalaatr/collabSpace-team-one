@@ -13,13 +13,17 @@ class ProfileService
 {
     public function getProfile(User $user): User
     {
-        return $user->load([
-            'teams:id,name,display_name',
-            'currentTeam:id,name,display_name',
-            'currentProject:id,name,status',
-            'roles:id,name,display_name',
-            'media',
-        ])->loadCount(['tasks', 'teams', 'projects']);
+        return User::query()
+            ->whereKey($user->getKey())
+            ->with([
+                'teams:id,name,display_name',
+                'currentTeam:id,name,display_name',
+                'currentProject:id,name,status',
+                'roles:id,name,display_name',
+                'media',
+            ])
+            ->withCount(['tasks', 'teams', 'projects'])
+            ->firstOrFail();
     }
 
     /**
