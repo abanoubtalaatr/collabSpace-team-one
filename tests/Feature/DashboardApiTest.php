@@ -157,6 +157,24 @@ class DashboardApiTest extends TestCase
         $response->assertJsonPath('data.0.uploaded_by', $member->name);
     }
 
+    public function test_recent_files_include_project_spatie_media(): void
+    {
+        $user = User::factory()->create(['name' => 'Project Owner']);
+        $project = Project::factory()->createdBy($user)->create(['name' => 'Docs Project']);
+
+        $project->addMediaFromString('project attachment content')
+            ->usingName('Project_Brief.pdf')
+            ->usingFileName('project-brief.pdf')
+            ->toMediaCollection(Project::MEDIA_COLLECTION_ATTACHMENTS);
+
+        $this->actingAs($user, 'sanctum')
+            ->getJson('/api/dashboard/recent-files')
+            ->assertOk()
+            ->assertJsonPath('data.0.name', 'Project_Brief.pdf')
+            ->assertJsonPath('data.0.project_name', 'Docs Project')
+            ->assertJsonPath('data.0.uploaded_by', 'Project Owner');
+    }
+
     public function test_stats_progress_uses_average_task_progress(): void
     {
         $admin = $this->userWithRole('admin');

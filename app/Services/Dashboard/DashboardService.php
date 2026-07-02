@@ -47,7 +47,7 @@ class DashboardService
             }
 
             $query = $this->repository->taskScopeForProject($user, $role, $project);
-            $recentFiles = $this->repository->recentFilesForProject($project);
+            $recentFiles = $this->repository->recentFilesForProject($project, $user);
             $teamMembers = $this->mapTeamMembers($this->repository->projectTeamMembers($project));
         } else {
             $query = $this->repository->taskScopeFor($user, $role);

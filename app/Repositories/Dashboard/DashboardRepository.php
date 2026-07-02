@@ -89,9 +89,9 @@ class DashboardRepository
     /**
      * @return Collection<int, File|Media>
      */
-    public function recentFilesForProject(Project $project, int $limit = 10): Collection
+    public function recentFilesForProject(Project $project, ?User $user = null, int $limit = 10): Collection
     {
-        return $this->recentFilesForProjectIds(collect([$project->id]), $limit);
+        return $this->collectRecentFiles($user, collect([$project->id]), $limit);
     }
 
     /**
@@ -99,72 +99,96 @@ class DashboardRepository
      */
     public function recentFiles(User $user, string $role, int $limit = 10): Collection
     {
-        $files = File::query()
-            ->with($this->fileRelations())
-            ->where('user_id', $user->id)
-            ->latest()
-            ->limit($limit)
-            ->get();
+        $projectIds = $this->projectScopeFor($user, $role)->pluck('id');
 
-        $profileMedia = Media::query()
-            ->with(['model.media'])
-            ->where('model_type', (new User)->getMorphClass())
-            ->where('model_id', $user->id)
-            ->where('collection_name', User::MEDIA_COLLECTION_FILES)
-            ->latest()
-            ->limit($limit)
-            ->get();
-
-        return $files
-            ->concat($profileMedia)
-            ->sortByDesc(fn (File|Media $item) => $item->created_at)
-            ->take($limit)
-            ->values();
+        return $this->collectRecentFiles($user, $projectIds, $limit);
     }
 
     /**
      * @param  Collection<int, int|string>  $projectIds
      * @return Collection<int, File|Media>
      */
-    private function recentFilesForProjectIds(Collection $projectIds, int $limit): Collection
+    private function collectRecentFiles(?User $user, Collection $projectIds, int $limit): Collection
     {
-        if ($projectIds->isEmpty()) {
-            return collect();
+        $items = collect();
+
+        if ($user instanceof User) {
+            $items = $items->concat(
+                File::query()
+                    ->with($this->fileRelations())
+                    ->where('user_id', $user->id)
+                    ->get()
+            );
+
+            $items = $items->concat(
+                $this->userProfileMediaQuery($user)->get()
+            );
         }
 
-        $taskIds = Task::query()
-            ->whereIn('project_id', $projectIds)
-            ->pluck('id');
+        if ($projectIds->isNotEmpty()) {
+            $taskIds = Task::query()
+                ->whereIn('project_id', $projectIds)
+                ->pluck('id');
 
-        $files = File::query()
-            ->with($this->fileRelations())
-            ->where(function (Builder $query) use ($projectIds, $taskIds): void {
-                $query->where(function (Builder $projectFiles) use ($projectIds): void {
-                    $projectFiles->where('attachable_type', 'project')
-                        ->whereIn('attachable_id', $projectIds);
-                });
+            $items = $items->concat(
+                File::query()
+                    ->with($this->fileRelations())
+                    ->where(function (Builder $query) use ($projectIds, $taskIds): void {
+                        $query->where(function (Builder $projectFiles) use ($projectIds): void {
+                            $projectFiles->whereIn('attachable_type', $this->morphTypes('project'))
+                                ->whereIn('attachable_id', $projectIds);
+                        });
 
-                if ($taskIds->isNotEmpty()) {
-                    $query->orWhere(function (Builder $taskFiles) use ($taskIds): void {
-                        $taskFiles->where('attachable_type', 'task')
-                            ->whereIn('attachable_id', $taskIds);
-                    });
-                }
-            })
-            ->get();
+                        if ($taskIds->isNotEmpty()) {
+                            $query->orWhere(function (Builder $taskFiles) use ($taskIds): void {
+                                $taskFiles->whereIn('attachable_type', $this->morphTypes('task'))
+                                    ->whereIn('attachable_id', $taskIds);
+                            });
+                        }
+                    })
+                    ->get()
+            );
 
-        $media = Media::query()
-            ->with(['model.creator'])
-            ->where('model_type', (new Project)->getMorphClass())
-            ->whereIn('model_id', $projectIds)
-            ->where('collection_name', Project::MEDIA_COLLECTION_ATTACHMENTS)
-            ->get();
+            $items = $items->concat(
+                Media::query()
+                    ->with(['model.creator.media'])
+                    ->whereIn('model_type', $this->morphTypes('project'))
+                    ->whereIn('model_id', $projectIds)
+                    ->where('collection_name', Project::MEDIA_COLLECTION_ATTACHMENTS)
+                    ->get()
+            );
+        }
 
-        return $files
-            ->concat($media)
+        return $items
+            ->unique(fn (File|Media $item): string => ($item instanceof File ? 'file' : 'media').'-'.$item->id)
             ->sortByDesc(fn (File|Media $item) => $item->created_at)
             ->take($limit)
             ->values();
+    }
+
+    /**
+     * @return Builder<Media>
+     */
+    private function userProfileMediaQuery(User $user): Builder
+    {
+        return Media::query()
+            ->with(['model.media'])
+            ->where('model_id', $user->id)
+            ->where('collection_name', User::MEDIA_COLLECTION_FILES)
+            ->whereIn('model_type', $this->morphTypes('user'));
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    private function morphTypes(string $alias): array
+    {
+        return match ($alias) {
+            'project' => ['project', Project::class],
+            'task' => ['task', Task::class],
+            'user' => ['user', User::class],
+            default => [$alias],
+        };
     }
 
     /**
