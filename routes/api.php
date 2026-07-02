@@ -26,6 +26,7 @@ Route::post('reset-password', [AuthController::class, 'resetPassword'])->name('p
 Route::get('search', GlobalSearchController::class)->middleware('auth:sanctum');
 
 Route::middleware('auth:sanctum')->prefix('dashboard')->group(function () {
+    Route::get('overview', [DashboardController::class, 'overview']);
     Route::get('stats', [DashboardController::class, 'stats']);
     Route::get('recent-files', [DashboardController::class, 'recentFiles']);
     Route::get('project-overview', [DashboardController::class, 'projectOverview']);

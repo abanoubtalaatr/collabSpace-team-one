@@ -7,6 +7,7 @@ use App\Models\Project;
 use App\Models\Task;
 use App\Models\User;
 use App\Repositories\Dashboard\DashboardRepository;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -24,6 +25,77 @@ class DashboardService
         $role = $this->roleFor($user);
         $query = $this->repository->taskScopeFor($user, $role);
 
+        return $this->buildStatsPayload($user, $query);
+    }
+
+    /**
+     * Full overview tab payload: user, avatars, charts, files, team members.
+     *
+     * @return array<string, mixed>
+     */
+    public function overview(User $user, ?int $projectId = null): array
+    {
+        $role = $this->roleFor($user);
+        $projectId = $projectId ?? $user->current_project_id;
+        $project = null;
+
+        if ($projectId) {
+            $project = $this->projectOrFail($projectId);
+
+            if (! $this->repository->userCanAccessProject($user, $role, $project)) {
+                abort(403, 'You are not authorized to access this project dashboard.');
+            }
+
+            $query = $this->repository->taskScopeForProject($user, $role, $project);
+            $recentFiles = $this->repository->recentFilesForProject($project);
+            $teamMembers = $this->mapTeamMembers($this->repository->projectTeamMembers($project));
+        } else {
+            $query = $this->repository->taskScopeFor($user, $role);
+            $recentFiles = $this->repository->recentFiles($user, $role);
+            $teamMembers = [];
+        }
+
+        $statsPayload = $this->buildStatsPayload($user, $query);
+
+        return [
+            'user' => $statsPayload['user'],
+            'project' => $project ? $this->mapProject($project, $statsPayload['progress']) : null,
+            'stats' => [
+                'pending_tasks' => $statsPayload['pending_tasks'],
+                'in_progress_tasks' => $statsPayload['in_progress_tasks'],
+                'in_review_tasks' => $statsPayload['in_review_tasks'],
+                'completed_tasks' => $statsPayload['completed_tasks'],
+                'total_tasks' => $statsPayload['total_tasks'],
+                'progress' => $statsPayload['progress'],
+                'completion_rate' => $statsPayload['completion_rate'],
+            ],
+            'chart_data' => $statsPayload['chart_data'],
+            'recent_files' => $recentFiles,
+            'team_members' => $teamMembers,
+        ];
+    }
+
+    /**
+     * @return Collection<int, mixed>
+     */
+    public function recentFiles(User $user): Collection
+    {
+        return $this->repository->recentFiles($user, $this->roleFor($user));
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function projectOverview(User $user, int $projectId): array
+    {
+        return $this->overview($user, $projectId);
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function buildStatsPayload(User $user, Builder $query): array
+    {
         $pendingTasks = (clone $query)->where('status', TaskStatus::Pending->value)->count();
         $inProgressTasks = (clone $query)->where('status', TaskStatus::InProgress->value)->count();
         $inReviewTasks = (clone $query)->where('status', TaskStatus::InReview->value)->count();
@@ -61,30 +133,31 @@ class DashboardService
     }
 
     /**
-     * @return Collection<int, mixed>
+     * @return array{id: int, name: string, status: mixed, progress: float}
      */
-    public function recentFiles(User $user): Collection
+    private function mapProject(Project $project, float $progress): array
     {
-        return $this->repository->recentFiles($user, $this->roleFor($user));
+        return [
+            'id' => $project->id,
+            'name' => $project->name,
+            'status' => $project->status,
+            'progress' => $progress,
+        ];
     }
 
     /**
-     * @return array<int, array{month: string, total_tasks: int, completed_tasks: int, progress: float}>
+     * @param  Collection<int, User>  $members
+     * @return array<int, array{id: int, name: string, email: string, job_title: string|null, avatar_url: string|null}>
      */
-    public function projectOverview(User $user, int $projectId): array
+    private function mapTeamMembers(Collection $members): array
     {
-        $role = $this->roleFor($user);
-        $project = $this->projectOrFail($projectId);
-
-        if (! $this->repository->userCanAccessProject($user, $role, $project)) {
-            abort(403, 'You are not authorized to access this project dashboard.');
-        }
-
-        $tasks = $this->repository->overviewTasks($user, $role, $project);
-
-        return collect(range(1, 12))
-            ->map(fn (int $month): array => $this->monthOverview($tasks, $month))
-            ->all();
+        return $members->map(fn (User $member): array => [
+            'id' => $member->id,
+            'name' => $member->name,
+            'email' => $member->email,
+            'job_title' => $member->job_title,
+            'avatar_url' => $member->avatarUrl(),
+        ])->values()->all();
     }
 
     /**
@@ -152,26 +225,6 @@ class DashboardService
         }
 
         return $project;
-    }
-
-    /**
-     * @param  Collection<int, mixed>  $tasks
-     * @return array{month: string, total_tasks: int, completed_tasks: int, progress: float}
-     */
-    private function monthOverview(Collection $tasks, int $month): array
-    {
-        $monthTasks = $tasks->filter(fn ($task): bool => (int) $task->created_at->month === $month);
-
-        return [
-            'month' => now()->startOfYear()->month($month)->format('M'),
-            'total_tasks' => $monthTasks->count(),
-            'completed_tasks' => $monthTasks
-                ->filter(fn ($task): bool => $this->statusValue($task->status) === TaskStatus::Completed->value)
-                ->count(),
-            'progress' => $monthTasks->isEmpty()
-                ? 0
-                : round((float) $monthTasks->avg('progress'), 2),
-        ];
     }
 
     private function statusValue(mixed $status): string

@@ -17,6 +17,7 @@ class DashboardApiTest extends TestCase
 
     public function test_dashboard_routes_require_authentication(): void
     {
+        $this->getJson('/api/dashboard/overview')->assertUnauthorized();
         $this->getJson('/api/dashboard/stats')->assertUnauthorized();
         $this->getJson('/api/dashboard/recent-files')->assertUnauthorized();
         $this->getJson('/api/dashboard/project-overview?project_id=1')->assertUnauthorized();
@@ -166,6 +167,53 @@ class DashboardApiTest extends TestCase
             ->assertJsonPath('data.progress', 60);
     }
 
+    public function test_overview_returns_user_chart_avatars_and_team_members(): void
+    {
+        $admin = $this->userWithRole('admin');
+        $project = Project::factory()->create(['name' => 'Overview Project']);
+        $team = Team::factory()->create();
+        $member = User::factory()->create(['name' => 'Team Member', 'job_title' => 'Developer']);
+        $team->members()->attach($member);
+        $project->teams()->attach($team);
+
+        $this->createTask($project, TaskStatus::Pending, now(), 25);
+        $this->createTask($project, TaskStatus::Completed, now(), 75);
+
+        $project->addMediaFromString('overview file')
+            ->usingName('Overview.pdf')
+            ->usingFileName('overview.pdf')
+            ->toMediaCollection(Project::MEDIA_COLLECTION_ATTACHMENTS);
+
+        $this->actingAs($admin, 'sanctum')
+            ->getJson("/api/dashboard/overview?project_id={$project->id}")
+            ->assertOk()
+            ->assertJsonStructure([
+                'data' => [
+                    'user' => ['id', 'name', 'email', 'avatar_url'],
+                    'project' => ['id', 'name', 'status', 'progress'],
+                    'stats' => [
+                        'pending_tasks',
+                        'in_progress_tasks',
+                        'in_review_tasks',
+                        'completed_tasks',
+                        'total_tasks',
+                        'progress',
+                        'completion_rate',
+                    ],
+                    'chart_data' => [
+                        'status',
+                        'monthly',
+                    ],
+                    'recent_files',
+                    'team_members' => [['id', 'name', 'email', 'job_title', 'avatar_url']],
+                ],
+            ])
+            ->assertJsonPath('data.project.name', 'Overview Project')
+            ->assertJsonPath('data.stats.total_tasks', 2)
+            ->assertJsonPath('data.stats.progress', 50)
+            ->assertJsonPath('data.team_members.0.name', 'Team Member');
+    }
+
     public function test_project_overview_returns_monthly_data_for_authorized_project(): void
     {
         $admin = $this->userWithRole('admin');
@@ -179,14 +227,15 @@ class DashboardApiTest extends TestCase
         $this->actingAs($admin, 'sanctum')
             ->getJson("/api/dashboard/project-overview?project_id={$project->id}")
             ->assertOk()
-            ->assertJsonPath('data.0.month', 'Jan')
-            ->assertJsonPath('data.0.total_tasks', 2)
-            ->assertJsonPath('data.0.completed_tasks', 1)
-            ->assertJsonPath('data.0.progress', 60)
-            ->assertJsonPath('data.1.month', 'Feb')
-            ->assertJsonPath('data.1.total_tasks', 1)
-            ->assertJsonPath('data.1.completed_tasks', 1)
-            ->assertJsonPath('data.1.progress', 90);
+            ->assertJsonPath('data.user.avatar_url', null)
+            ->assertJsonPath('data.chart_data.monthly.0.month', 'Jan')
+            ->assertJsonPath('data.chart_data.monthly.0.total_tasks', 2)
+            ->assertJsonPath('data.chart_data.monthly.0.completed_tasks', 1)
+            ->assertJsonPath('data.chart_data.monthly.0.progress', 60)
+            ->assertJsonPath('data.chart_data.monthly.1.month', 'Feb')
+            ->assertJsonPath('data.chart_data.monthly.1.total_tasks', 1)
+            ->assertJsonPath('data.chart_data.monthly.1.completed_tasks', 1)
+            ->assertJsonPath('data.chart_data.monthly.1.progress', 90);
     }
 
     public function test_member_project_overview_only_counts_assigned_tasks(): void
@@ -204,8 +253,8 @@ class DashboardApiTest extends TestCase
         $this->actingAs($member, 'sanctum')
             ->getJson("/api/dashboard/project-overview?project_id={$project->id}")
             ->assertOk()
-            ->assertJsonPath('data.0.total_tasks', 1)
-            ->assertJsonPath('data.0.completed_tasks', 1);
+            ->assertJsonPath('data.chart_data.monthly.0.total_tasks', 1)
+            ->assertJsonPath('data.chart_data.monthly.0.completed_tasks', 1);
     }
 
     public function test_project_overview_rejects_unauthorized_projects(): void
@@ -235,10 +284,10 @@ class DashboardApiTest extends TestCase
         $this->actingAs($admin, 'sanctum')
             ->getJson("/api/dashboard/project-overview?project_id={$project->id}")
             ->assertOk()
-            ->assertJsonPath('data.0.total_tasks', 0)
-            ->assertJsonPath('data.0.completed_tasks', 0)
-            ->assertJsonPath('data.11.total_tasks', 0)
-            ->assertJsonPath('data.11.completed_tasks', 0);
+            ->assertJsonPath('data.chart_data.monthly.0.total_tasks', 0)
+            ->assertJsonPath('data.chart_data.monthly.0.completed_tasks', 0)
+            ->assertJsonPath('data.chart_data.monthly.11.total_tasks', 0)
+            ->assertJsonPath('data.chart_data.monthly.11.completed_tasks', 0);
     }
 
     private function userWithRole(string $roleName): User

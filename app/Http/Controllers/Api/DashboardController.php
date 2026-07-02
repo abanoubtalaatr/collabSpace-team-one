@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Dashboard\DashboardOverviewRequest;
 use App\Http\Requests\Dashboard\ProjectOverviewRequest;
-use App\Http\Resources\Dashboard\ProjectOverviewResource;
+use App\Http\Resources\Dashboard\DashboardOverviewResource;
 use App\Http\Resources\Dashboard\RecentFileResource;
 use App\Http\Resources\Dashboard\StatsResource;
 use App\Services\Dashboard\DashboardService;
@@ -17,6 +18,17 @@ class DashboardController extends Controller
         private readonly DashboardService $service,
     ) {}
 
+    public function overview(DashboardOverviewRequest $request): DashboardOverviewResource
+    {
+        $projectId = $request->filled('project_id')
+            ? $request->integer('project_id')
+            : null;
+
+        return new DashboardOverviewResource(
+            $this->service->overview($request->user(), $projectId)
+        );
+    }
+
     public function stats(Request $request): StatsResource
     {
         return new StatsResource($this->service->stats($request->user()));
@@ -27,10 +39,10 @@ class DashboardController extends Controller
         return RecentFileResource::collection($this->service->recentFiles($request->user()));
     }
 
-    public function projectOverview(ProjectOverviewRequest $request): AnonymousResourceCollection
+    public function projectOverview(ProjectOverviewRequest $request): DashboardOverviewResource
     {
-        return ProjectOverviewResource::collection(
-            $this->service->projectOverview($request->user(), (int) $request->validated('project_id'))
+        return new DashboardOverviewResource(
+            $this->service->projectOverview($request->user(), $request->integer('project_id'))
         );
     }
 }

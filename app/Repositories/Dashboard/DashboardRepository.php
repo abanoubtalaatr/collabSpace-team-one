@@ -71,6 +71,48 @@ class DashboardRepository
     }
 
     /**
+     * @return Builder<Task>
+     */
+    public function taskScopeForProject(User $user, string $role, Project $project): Builder
+    {
+        $query = Task::query()->where('project_id', $project->id);
+
+        if ($role === 'member') {
+            $query->assignedToUser((int) $user->id);
+        }
+
+        return $query;
+    }
+
+    /**
+     * @return Collection<int, Media>
+     */
+    public function recentFilesForProject(Project $project, int $limit = 10): Collection
+    {
+        return Media::query()
+            ->with(['model.creator'])
+            ->where('model_type', (new Project)->getMorphClass())
+            ->where('model_id', $project->id)
+            ->where('collection_name', Project::MEDIA_COLLECTION_ATTACHMENTS)
+            ->latest()
+            ->limit($limit)
+            ->get();
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function projectTeamMembers(Project $project): Collection
+    {
+        $project->load(['teams.members:id,name,email,job_title']);
+
+        return $project->teams
+            ->flatMap(fn ($team) => $team->members)
+            ->unique('id')
+            ->values();
+    }
+
+    /**
      * @return Collection<int, Media>
      */
     public function recentFiles(User $user, string $role, int $limit = 10): Collection
