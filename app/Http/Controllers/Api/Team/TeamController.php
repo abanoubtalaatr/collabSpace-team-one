@@ -40,7 +40,7 @@ class TeamController extends Controller
 
     public function show(Team $team): TeamResource
     {
-        $team->load(['members:id,name,email', 'projects:id,name'])
+        $team->load(['members.media', 'projects:id,name,status,priority,start_date,deadline'])
             ->loadCount(['members', 'projects']);
 
         return new TeamResource($team);
@@ -49,7 +49,7 @@ class TeamController extends Controller
     public function update(UpdateTeamRequest $request, Team $team): TeamResource
     {
         $team->update($request->validated());
-        $team->load(['members:id,name,email', 'projects:id,name'])
+        $team->load(['members.media', 'projects:id,name,status,priority,start_date,deadline'])
             ->loadCount(['members', 'projects']);
 
         return new TeamResource($team);

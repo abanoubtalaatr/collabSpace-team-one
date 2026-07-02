@@ -35,7 +35,7 @@ class TeamMemberController extends Controller
             $team = $this->addTeamMemberAction->execute($team, $user, $request->user());
         }
 
-        $team->load(['members:id,name,email', 'projects:id,name'])
+        $team->load(['members.media', 'projects:id,name,status,priority,start_date,deadline'])
             ->loadCount(['members', 'projects']);
 
         return new TeamResource($team);
@@ -48,7 +48,7 @@ class TeamMemberController extends Controller
             $team = $this->removeTeamMemberAction->execute($team, $user, $request->user());
         }
 
-        $team->load(['members:id,name,email', 'projects:id,name'])
+        $team->load(['members.media', 'projects:id,name,status,priority,start_date,deadline'])
             ->loadCount(['members', 'projects']);
 
         return new TeamResource($team);

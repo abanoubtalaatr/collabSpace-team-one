@@ -24,7 +24,14 @@ class ProjectTeamController extends Controller
 
     public function index(Project $project): AnonymousResourceCollection
     {
-        $project->load('teams:id,name,display_name,description,created_at,updated_at');
+        $project->load([
+            'teams' => fn ($query) => $query
+                ->with([
+                    'members.media',
+                    'projects:id,name,status,priority,start_date,deadline',
+                ])
+                ->withCount(['members', 'projects']),
+        ]);
 
         return TeamResource::collection($project->teams);
     }
