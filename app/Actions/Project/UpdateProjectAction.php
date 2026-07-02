@@ -27,6 +27,7 @@ class UpdateProjectAction
             'deadline' => $dto->deadline,
             'priority' => $dto->priority,
             'status' => $dto->status,
+            'type' => $dto->type,
         ]);
 
         // $this->repository->syncTeams($project, $dto->teamIds);
