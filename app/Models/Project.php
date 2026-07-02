@@ -37,6 +37,7 @@ class Project extends Model implements GlobalSearchable, HasMedia, Searchable
         'priority',
         'status',
         'created_by',
+        'type',
     ];
 
     protected $casts = [
@@ -44,6 +45,7 @@ class Project extends Model implements GlobalSearchable, HasMedia, Searchable
         'deadline' => 'date',
         'priority' => ProjectPriority::class,
         'status' => ProjectStatus::class,
+        
     ];
 
     /**
