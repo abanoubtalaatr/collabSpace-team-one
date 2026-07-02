@@ -7,6 +7,7 @@ use App\Actions\Project\UpdateProjectAction;
 use App\DTOs\ProjectDTO;
 use App\Models\Project;
 use App\Repositories\Contracts\ProjectRepositoryInterface;
+use App\Services\NotificationService;
 use Mockery;
 use Tests\TestCase;
 
@@ -26,7 +27,7 @@ class UpdateProjectActionTest extends TestCase
         parent::setUp();
 
         $this->repoMock = Mockery::mock(ProjectRepositoryInterface::class);
-        $this->action = new UpdateProjectAction($this->repoMock);
+        $this->action = new UpdateProjectAction($this->repoMock, Mockery::mock(NotificationService::class));
     }
 
     protected function tearDown(): void

@@ -4,16 +4,22 @@ namespace App\Actions\Project;
 
 use App\DTOs\ProjectDTO;
 use App\Models\Project;
+use App\Models\User;
 use App\Repositories\Contracts\ProjectRepositoryInterface;
+use App\Services\NotificationService;
+use BackedEnum;
 
 class UpdateProjectAction
 {
     public function __construct(
         private readonly ProjectRepositoryInterface $repository,
+        private readonly NotificationService $notifications,
     ) {}
 
-    public function execute(Project $project, ProjectDTO $dto): Project
+    public function execute(Project $project, ProjectDTO $dto, ?User $actor = null): Project
     {
+        $oldStatus = $this->statusValue($project->status);
+
         $project = $this->repository->update($project, [
             'name' => $dto->name,
             'description' => $dto->description,
@@ -33,6 +39,21 @@ class UpdateProjectAction
             }
         }
 
+        $newStatus = $this->statusValue($project->status);
+
+        if ($actor !== null && $oldStatus !== $newStatus) {
+            $this->notifications->notifyProjectStatusUpdated($actor, $project->loadMissing(['creator']), $oldStatus, $newStatus);
+        }
+
         return $project;
+    }
+
+    private function statusValue(mixed $status): string
+    {
+        if ($status instanceof BackedEnum) {
+            return (string) $status->value;
+        }
+
+        return (string) $status;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\Report;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ReportStoreRequest;
@@ -20,9 +20,8 @@ class ReportController extends Controller
         $reports = Report::with('user')->latest()->get();
 
         return $this->apiResponse([
-            'success' => true,
-            'data' => ReportResource::collection($reports),
-        ], 200);
+            ReportResource::collection($reports),
+        ]);
     }
 
     /**
@@ -40,9 +39,8 @@ class ReportController extends Controller
         ]);
 
         return $this->apiResponse([
-            'success' => true,
-            'message' => 'Report created successfully',
-            'data' => new ReportResource($report),
+            new ReportResource($report),
+            'Report created successfully',
         ], 201);
     }
 }

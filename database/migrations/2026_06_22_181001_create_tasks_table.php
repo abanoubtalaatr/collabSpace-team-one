@@ -16,7 +16,7 @@ return new class extends Migration
             $table->datetime('start_date');
             $table->datetime('due_date');
             $table->smallInteger('progress');
-            $table->enum('status', ['Pending', 'in_progress', 'in_review', 'completed'])->default('Pending');
+            $table->enum('status', ['pending', 'in_progress', 'in_review', 'completed'])->default('Pending');
             $table->enum('priority', ['low', 'medium', 'high', 'critical']);
             $table->timestamps();
         });

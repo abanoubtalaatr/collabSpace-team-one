@@ -30,9 +30,8 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
  */
 class ProjectController extends Controller
 {
-
     public function __construct(
-        private readonly ProjectService      $service,
+        private readonly ProjectService $service,
         private readonly CreateProjectAction $createAction,
         private readonly UpdateProjectAction $updateAction,
         private readonly DeleteProjectAction $deleteAction,
@@ -82,7 +81,8 @@ class ProjectController extends Controller
 
         $updated = $this->updateAction->execute(
             $project,
-            ProjectDTO::fromUpdateRequest($request)
+            ProjectDTO::fromUpdateRequest($request),
+            $request->user()
         );
 
         return new ProjectResource($updated);
