@@ -128,4 +128,13 @@ class Project extends Model implements GlobalSearchable, HasMedia, Searchable
     {
         return new SearchResult($this, $this->name);
     }
+
+    // add guests to project
+    public function guests()
+    {
+        return $this->belongsToMany(
+            User::class,
+            'project_guests'
+        )->withTimestamps();
+    }
 }

@@ -28,6 +28,9 @@ class StoreProjectRequest extends FormRequest
             // 'team_ids.*' => ['integer', 'exists:teams,id'],
             'attachments' => ['sometimes', 'array'],
             'attachments.*' => ['file', 'max:10240'],
+            // guests to project
+            'guest_ids' => ['sometimes', 'array'],
+            'guest_ids.*' => [ 'integer', Rule::exists('users', 'id'),],
         ];
     }
 }

@@ -145,4 +145,13 @@ class User extends Authenticatable implements GlobalSearchable, HasMedia, Search
 
         return "https://ui-avatars.com/api/?name={$name}&background=6366f1&color=ffffff&size=128&bold=true";
     }
+
+    // add guests to project
+    public function guestProjects()
+    {
+        return $this->belongsToMany(
+            Project::class,
+            'project_guests'
+        )->withTimestamps();
+    }
 }
