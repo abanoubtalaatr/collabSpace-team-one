@@ -42,4 +42,10 @@ class ProjectService
 
         return $project;
     }
+
+    // tasks count per month for the project for analysis chart
+    public function getMonthlyTasks(Project $project)
+    {
+        return $this->repository->getMonthlyTasks($project);
+    }
 }

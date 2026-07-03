@@ -25,4 +25,6 @@ interface ProjectRepositoryInterface
     // public function syncTeams(Project $project, array $teamIds): void;
 
     public function getProjectGuests();
+
+    public function getMonthlyTasks(Project $project);
 }

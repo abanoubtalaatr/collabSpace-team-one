@@ -19,6 +19,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('projects/{project}/tasks', [ProjectTaskController::class, 'index']);
     Route::post('projects/{project}/tasks', [ProjectTaskController::class, 'store']);
 
+    // analysis chart
+    Route::get('projects/{project}/analytics/tasks',[ProjectTaskController::class, 'analytics']);
+    
     // ── Admin ────────────────────────────────────────────────
     Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
         Route::apiResource('projects', AdminProjectController::class);

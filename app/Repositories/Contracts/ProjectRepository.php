@@ -2,7 +2,9 @@
 namespace App\Repositories\Contracts;
 
 use App\Models\Project;
+use App\Models\Task;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -82,5 +84,49 @@ class ProjectRepository implements ProjectRepositoryInterface
             ])
             ->orderBy('name')
             ->get();
+    }
+
+    public function getMonthlyTasks(Project $project): array
+    {
+        $tasks = Task::query()
+            ->where('project_id', $project->id)
+            ->select(['start_date', 'due_date'])
+            ->get();
+
+        $months = [];
+
+        $current = Carbon::parse($project->start_date)->startOfMonth();
+        $last = Carbon::parse($project->deadline)->startOfMonth();
+
+        while ($current->lte($last)) {
+
+            $key = $current->format('Y-m');
+
+            $months[$key] = [
+                'month' => $current->format('M Y'),
+                'tasks' => 0,
+            ];
+
+            $current->addMonth();
+        }
+
+        foreach ($tasks as $task) {
+
+            $start = Carbon::parse($task->start_date)->startOfMonth();
+            $end = Carbon::parse($task->due_date)->startOfMonth();
+
+            while ($start->lte($end)) {
+
+                $key = $start->format('Y-m');
+
+                if (isset($months[$key])) {
+                    $months[$key]['tasks']++;
+                }
+
+                $start->addMonth();
+            }
+        }
+
+        return array_values($months);
     }
 }
