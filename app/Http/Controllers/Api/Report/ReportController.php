@@ -21,6 +21,7 @@ class ReportController extends Controller
 
         return $this->apiResponse([
             ReportResource::collection($reports),
+            'Reports retrieved successfully'
         ]);
     }
 
