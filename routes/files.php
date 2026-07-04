@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('files', [FileController::class, 'index']);
     Route::post('files', [FileController::class, 'store']);
+    Route::get('files/{file}/download', [FileController::class, 'download'])->name('files.download');
     Route::get('files/{file}', [FileController::class, 'show']);
     Route::post('files/{file}/attach', [FileController::class, 'attach']);
     Route::post('files/{file}/detach', [FileController::class, 'detach']);

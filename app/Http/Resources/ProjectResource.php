@@ -17,6 +17,7 @@ class ProjectResource extends JsonResource
             'deadline' => $this->deadline?->toDateString(),
             'priority' => $this->priority,
             'status' => $this->status,
+            'type' => $this->type,
             'created_by' => $this->whenLoaded('creator', fn () => [
                 'id' => $this->creator->id,
                 'name' => $this->creator->name,
@@ -25,8 +26,14 @@ class ProjectResource extends JsonResource
                 'id' => $team->id,
                 'name' => $team->name,
                 'display_name' => $team->display_name,
+                'members' => $team->relationLoaded('members')
+                    ? $team->members->map(fn ($member) => [
+                        'id' => $member->id,
+                        'name' => $member->name,
+                        'email' => $member->email,
+                    ])
+                    : null,
             ])),
-            // 'tasks_count' => $this->whenLoaded('tasks', fn () => $this->tasks->count()),
             'media' => $this->whenLoaded('media', fn () => $this->getMedia('attachments')->map(fn ($media) => [
                 'id' => $media->id,
                 'name' => $media->name,

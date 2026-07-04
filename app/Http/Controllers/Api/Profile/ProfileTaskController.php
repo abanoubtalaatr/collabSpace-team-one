@@ -24,7 +24,7 @@ class ProfileTaskController extends Controller
 
         $query = $request->user()
             ->tasks()
-            ->with(['project:id,name', 'users:id,name,email']);
+            ->with(['project:id,name', 'users:id,name,email', 'users.media']);
 
         if ($request->filled('status')) {
             $query->where('status', $request->string('status'));

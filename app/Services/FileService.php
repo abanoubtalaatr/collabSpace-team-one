@@ -11,6 +11,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class FileService
 {
@@ -73,6 +74,23 @@ class FileService
         ]);
 
         return $file->fresh(['uploader:id,name,email']);
+    }
+
+    public function download(File $file, User $user): StreamedResponse
+    {
+        $this->authorizeFile($file, $user);
+
+        abort_unless(
+            Storage::disk($file->disk)->exists($file->file_name),
+            404,
+            'File not found on disk.'
+        );
+
+        return Storage::disk($file->disk)->download(
+            $file->file_name,
+            $file->original_name,
+            ['Content-Type' => $file->mime_type ?? 'application/octet-stream'],
+        );
     }
 
     public function delete(File $file, User $user): void

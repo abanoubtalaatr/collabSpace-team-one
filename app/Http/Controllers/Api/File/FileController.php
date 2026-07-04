@@ -66,6 +66,11 @@ class FileController extends Controller
         return new FileResource($file);
     }
 
+    public function download(Request $request, File $file)
+    {
+        return $this->fileService->download($file, $request->user());
+    }
+
     public function show(Request $request, File $file): FileResource
     {
         $this->fileService->authorizeFile($file, $request->user());
@@ -91,6 +96,7 @@ class FileController extends Controller
     public function detach(Request $request, File $file): FileResource
     {
         $file = $this->fileService->detach($file, $request->user());
+        $file->load(['uploader:id,name,email']);
 
         return new FileResource($file);
     }

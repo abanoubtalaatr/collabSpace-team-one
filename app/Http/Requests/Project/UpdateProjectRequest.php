@@ -23,6 +23,7 @@ class UpdateProjectRequest extends FormRequest
             'deadline' => ['nullable', 'date', 'after_or_equal:start_date'],
             'priority' => ['required', Rule::in(ProjectPriority::values())],
             'status' => ['required', Rule::in(ProjectStatus::values())],
+            'type' => ['nullable', 'string', 'max:255'],
             // 'team_ids' => ['sometimes', 'array'],
             // 'team_ids.*' => ['integer', 'exists:teams,id'],
             'attachments' => ['sometimes', 'array'],
