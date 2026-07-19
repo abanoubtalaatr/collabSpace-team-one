@@ -17,6 +17,7 @@ class ProjectResource extends JsonResource
             'deadline' => $this->deadline?->toDateString(),
             'priority' => $this->priority,
             'status' => $this->status,
+            'type' => $this->type,
             'created_by' => $this->whenLoaded('creator', fn () => [
                 'id' => $this->creator->id,
                 'name' => $this->creator->name,
