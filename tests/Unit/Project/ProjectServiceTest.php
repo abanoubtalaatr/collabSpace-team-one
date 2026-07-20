@@ -8,6 +8,7 @@ use App\Services\ProjectService;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Mockery;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Tests\TestCase;
 
@@ -38,7 +39,7 @@ class ProjectServiceTest extends TestCase
     |--------------------------------------------------------------------------
     */
 
-    /** @test */
+    #[Test]
     public function it_returns_paginated_projects_for_all(): void
     {
         // Arrange
@@ -65,7 +66,7 @@ class ProjectServiceTest extends TestCase
     |--------------------------------------------------------------------------
     */
 
-    /** @test */
+    #[Test]
     public function it_returns_paginated_projects_by_creator(): void
     {
         $request = Request::create('/projects', 'GET');
@@ -89,7 +90,7 @@ class ProjectServiceTest extends TestCase
     |--------------------------------------------------------------------------
     */
 
-    /** @test */
+    #[Test]
     public function it_returns_paginated_projects_for_team_member(): void
     {
         $request = Request::create('/projects', 'GET');
@@ -112,11 +113,12 @@ class ProjectServiceTest extends TestCase
     |--------------------------------------------------------------------------
     */
 
-    /** @test */
+    #[Test]
     public function it_returns_project_when_found(): void
     {
         // بنعمل project object وهمي بدون DB
-        $project = new Project(['id' => 1, 'name' => 'Test Project']);
+        $project = new Project(['name' => 'Test Project']);
+        $project->setAttribute('id', 1);
 
         $this->repoMock
             ->shouldReceive('findById')
@@ -130,7 +132,7 @@ class ProjectServiceTest extends TestCase
         $this->assertEquals('Test Project', $result->name);
     }
 
-    /** @test */
+    #[Test]
     public function it_aborts_with_404_when_project_not_found(): void
     {
         $this->repoMock
@@ -154,7 +156,12 @@ class ProjectServiceTest extends TestCase
     /** بتعمل paginator وهمي للاختبار */
     private function makeFakePaginator(int $count): LengthAwarePaginator
     {
-        $items = Project::factory()->count($count)->make();
+        $items = collect(range(1, $count))->map(function (int $id): Project {
+            $project = new Project(['name' => "Project {$id}"]);
+            $project->setAttribute('id', $id);
+
+            return $project;
+        });
 
         return new LengthAwarePaginator(
             $items,

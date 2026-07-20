@@ -138,11 +138,12 @@
 							]
 						},
 						"url": {
-							"raw": "{{url}}/register",
+							"raw": "{{url}}/api/register",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
+								"api",
 								"register"
 							]
 						}
@@ -198,11 +199,12 @@
 							]
 						},
 						"url": {
-							"raw": "{{url}}/login",
+							"raw": "{{url}}/api/login",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
+								"api",
 								"login"
 							]
 						}
@@ -360,11 +362,12 @@
 							"formdata": []
 						},
 						"url": {
-							"raw": "{{url}}/logout",
+							"raw": "{{url}}/api/logout",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
+								"api",
 								"logout"
 							]
 						}
@@ -409,11 +412,12 @@
 							]
 						},
 						"url": {
-							"raw": "{{url}}/verify-otp",
+							"raw": "{{url}}/api/verify-otp",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
+								"api",
 								"verify-otp"
 							]
 						}
@@ -442,11 +446,12 @@
 							]
 						},
 						"url": {
-							"raw": "{{url}}/forgot-password",
+							"raw": "{{url}}/api/forgot-password",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
+								"api",
 								"forgot-password"
 							]
 						}
@@ -491,11 +496,12 @@
 							]
 						},
 						"url": {
-							"raw": "{{url}}/reset-password",
+							"raw": "{{url}}/api/reset-password",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
+								"api",
 								"reset-password"
 							]
 						}
@@ -524,11 +530,12 @@
 							]
 						},
 						"url": {
-							"raw": "{{url}}/resend-otp",
+							"raw": "{{url}}/api/resend-otp",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
+								"api",
 								"resend-otp"
 							]
 						}

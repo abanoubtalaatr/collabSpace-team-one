@@ -7,6 +7,7 @@ use App\Http\Requests\ReportStoreRequest;
 use App\Http\Resources\ReportResource;
 use App\Models\Report;
 use App\Traits\ApiResponse;
+use Illuminate\Http\JsonResponse;
 
 class ReportController extends Controller
 {
@@ -15,7 +16,7 @@ class ReportController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): JsonResponse
     {
         $reports = Report::with('user')->latest()->get();
 
@@ -27,20 +28,17 @@ class ReportController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(ReportStoreRequest $request)
+    public function store(ReportStoreRequest $request): JsonResponse
     {
-        // validate the request
         $report = Report::create([
-            'user_id' => auth()->id() ?? 1, // 1 as fallback for testing without auth
-            'report_type' => $request->report_type,
-            'note' => $request->note,
-            'start_date' => $request->start_date,
-            'end_date' => $request->end_date,
+            'user_id' => $request->user()->id,
+            ...$request->safe()->only(['report_type', 'note', 'start_date', 'end_date']),
         ]);
 
-        return $this->apiResponse([
-            new ReportResource($report),
+        return $this->apiResponse(
+            new ReportResource($report->load('user')),
             'Report created successfully',
-        ], 201);
+            201,
+        );
     }
 }

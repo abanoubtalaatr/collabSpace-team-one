@@ -29,13 +29,21 @@ class StoreProjectTaskRequest extends FormRequest
         return [
             'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
-            'start_date' => ['required', 'date'],
+            'start_date' => ['required', Rule::date()->todayOrAfter()],
             'due_date' => ['required', 'date', 'after_or_equal:start_date'],
             'progress' => ['sometimes', 'integer', 'min:0', 'max:100'],
             'status' => ['sometimes', Rule::in(TaskStatus::values())],
             'priority' => ['required', Rule::in(TaskPriority::values())],
             'user_ids' => ['sometimes', 'array'],
             'user_ids.*' => ['integer', 'exists:users,id'],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'start_date.after_or_equal' => 'The task start date cannot be in the past.',
+            'due_date.after_or_equal' => 'The task due date must be on or after the start date.',
         ];
     }
 }

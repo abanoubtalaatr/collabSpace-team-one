@@ -102,7 +102,8 @@ class ProfileService
      */
     public function getTaskSummary(User $user): array
     {
-        $counts = $user->tasks()
+        $counts = Task::query()
+            ->accessibleToUser($user->id)
             ->selectRaw('status, count(*) as total')
             ->groupBy('status')
             ->pluck('total', 'status');

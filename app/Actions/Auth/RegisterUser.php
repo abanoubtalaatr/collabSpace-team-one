@@ -16,6 +16,8 @@ class RegisterUser
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => $data['password'],
+            'job_title' => '',
+            'exp' => 0,
         ]);
 
         $this->sendOtp->handle($user->email, 'registration', $user->name);

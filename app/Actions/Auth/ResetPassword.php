@@ -41,6 +41,12 @@ class ResetPassword
 
         $user = User::query()->where('email', $email)->firstOrFail();
 
+        if (Hash::check($data['password'], $user->password)) {
+            throw ValidationException::withMessages([
+                'password' => 'The new password must be different from the current password.',
+            ]);
+        }
+
         return DB::transaction(function () use ($email, $data, $user): array {
             $user->update(['password' => $data['password']]);
 

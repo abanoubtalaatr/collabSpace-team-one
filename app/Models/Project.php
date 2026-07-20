@@ -45,7 +45,7 @@ class Project extends Model implements GlobalSearchable, HasMedia, Searchable
         'deadline' => 'date',
         'priority' => ProjectPriority::class,
         'status' => ProjectStatus::class,
-        
+
     ];
 
     /**
@@ -64,7 +64,7 @@ class Project extends Model implements GlobalSearchable, HasMedia, Searchable
         return [
             'creator:id,name,email,email_verified_at,created_at,updated_at',
             'teams:id,name,display_name,description,created_at,updated_at',
-            'tasks:id,project_id,name,description,created_at,updated_at',
+            'tasks:id,project_id,title,description,created_at,updated_at',
         ];
     }
 
@@ -127,5 +127,14 @@ class Project extends Model implements GlobalSearchable, HasMedia, Searchable
     public function getSearchResult(): SearchResult
     {
         return new SearchResult($this, $this->name);
+    }
+
+    // add guests to project
+    public function guests()
+    {
+        return $this->belongsToMany(
+            User::class,
+            'project_guests'
+        )->withTimestamps();
     }
 }

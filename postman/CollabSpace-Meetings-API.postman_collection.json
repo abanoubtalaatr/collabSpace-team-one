@@ -230,7 +230,7 @@
 				{
 					"name": "Mark Notification as Read",
 					"request": {
-						"method": "POST",
+						"method": "PATCH",
 						"header": [{ "key": "Accept", "value": "application/json" }],
 						"url": "{{url}}/api/notifications/{{notification_id}}/read",
 						"description": "Replace notification_id with UUID from list response."
@@ -240,7 +240,7 @@
 				{
 					"name": "Mark All as Read",
 					"request": {
-						"method": "POST",
+						"method": "PATCH",
 						"header": [{ "key": "Accept", "value": "application/json" }],
 						"url": "{{url}}/api/notifications/read-all"
 					},

@@ -5,12 +5,17 @@ namespace Tests\Unit\Project;
 use App\Actions\Project\CreateProjectAction;
 use App\DTOs\ProjectDTO;
 use App\Models\Project;
+use App\Models\User;
 use App\Repositories\Contracts\ProjectRepositoryInterface;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Mockery;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class CreateProjectActionTest extends TestCase
 {
+    use RefreshDatabase;
+
     protected $repoMock;
 
     protected CreateProjectAction $action;
@@ -29,9 +34,11 @@ class CreateProjectActionTest extends TestCase
         parent::tearDown();
     }
 
-    /** @test */
+    #[Test]
     public function it_creates_project_without_media(): void
     {
+        $creator = User::factory()->create();
+
         // Arrange — بنعمل DTO بدون files
         $dto = new ProjectDTO(
             name: 'My Project',
@@ -39,17 +46,17 @@ class CreateProjectActionTest extends TestCase
             startDate: '2025-01-01',
             deadline: '2025-06-01',
             priority: 'high',
-            status: 'active',
-            createdBy: 1,
+            status: 'pending',
+            type: null,
+            createdBy: $creator->id,
             mediaFiles: [],   // مفيش files
-            teamIds: [],
+            guestIds: [],
         );
 
         // الـ project اللي هيرجعه الـ repository
-        $fakeProject = new Project([
-            'id' => 1,
+        $fakeProject = Project::factory()->create([
             'name' => 'My Project',
-            'created_by' => 1,
+            'created_by' => $creator->id,
         ]);
 
         // بنقول للـ repository: لما تتصل بـ create ارجع fakeProject
@@ -62,8 +69,9 @@ class CreateProjectActionTest extends TestCase
                 'start_date' => '2025-01-01',
                 'deadline' => '2025-06-01',
                 'priority' => 'high',
-                'status' => 'active',
-                'created_by' => 1,
+                'status' => 'pending',
+                'type' => null,
+                'created_by' => $creator->id,
             ])
             ->andReturn($fakeProject);
 
@@ -80,9 +88,10 @@ class CreateProjectActionTest extends TestCase
         $this->assertEquals('My Project', $result->name);
     }
 
-    /** @test */
+    #[Test]
     public function it_passes_correct_data_to_repository(): void
     {
+        $creator = User::factory()->create();
         $dto = new ProjectDTO(
             name: 'Sprint Project',
             description: null,
@@ -90,22 +99,26 @@ class CreateProjectActionTest extends TestCase
             deadline: null,
             priority: 'low',
             status: 'pending',
-            createdBy: 2,
+            type: null,
+            createdBy: $creator->id,
             mediaFiles: [],
-            teamIds: [],
+            guestIds: [],
         );
 
         // بنتأكد إن الـ data بتوصل للـ repository صح
         $this->repoMock
             ->shouldReceive('create')
             ->once()
-            ->withArgs(function (array $data) {
+            ->withArgs(function (array $data) use ($creator) {
                 return $data['name'] === 'Sprint Project'
-                    && $data['created_by'] === 2
+                    && $data['created_by'] === $creator->id
                     && $data['priority'] === 'low'
                     && $data['status'] === 'pending';
             })
-            ->andReturn(new Project(['name' => 'Sprint Project']));
+            ->andReturn(Project::factory()->create([
+                'name' => 'Sprint Project',
+                'created_by' => $creator->id,
+            ]));
 
         $this->action->execute($dto);
 

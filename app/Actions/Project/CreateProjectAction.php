@@ -29,11 +29,13 @@ class CreateProjectAction
              $this->repository->syncTeams($project, $dto->teamIds);
          }*/
 
+        $project->guests()->sync($dto->guestIds);
+
         foreach ($dto->mediaFiles as $file) {
             $project->addMedia($file)
                 ->toMediaCollection(Project::MEDIA_COLLECTION_ATTACHMENTS);
         }
 
-        return $project->load(['creator',  'media']); // 'tasks', 'teams',
+        return $project->load(['creator',  'guests', 'media']); // 'tasks', 'teams',
     }
 }

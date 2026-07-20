@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Repositories\Contracts\ProjectRepository;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Request;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class ProjectRepositoryTest extends TestCase
@@ -28,7 +29,7 @@ class ProjectRepositoryTest extends TestCase
     |--------------------------------------------------------------------------
     */
 
-    /** @test */
+    #[Test]
     public function it_creates_a_project_in_database(): void
     {
         // Arrange
@@ -36,7 +37,9 @@ class ProjectRepositoryTest extends TestCase
         $data = [
             'name' => 'Repo Test Project',
             'description' => 'Testing the repo',
-            'status' => 'active',
+            'start_date' => '2026-01-01',
+            'deadline' => '2026-12-31',
+            'status' => 'pending',
             'priority' => 'high',
             'created_by' => $user->id,
         ];
@@ -58,7 +61,7 @@ class ProjectRepositoryTest extends TestCase
     |--------------------------------------------------------------------------
     */
 
-    /** @test */
+    #[Test]
     public function it_finds_existing_project_by_id(): void
     {
         $user = User::factory()->create();
@@ -71,7 +74,7 @@ class ProjectRepositoryTest extends TestCase
         $this->assertEquals($created->name, $found->name);
     }
 
-    /** @test */
+    #[Test]
     public function it_returns_null_for_nonexistent_project_id(): void
     {
         $result = $this->repository->findById(99999);
@@ -85,7 +88,7 @@ class ProjectRepositoryTest extends TestCase
     |--------------------------------------------------------------------------
     */
 
-    /** @test */
+    #[Test]
     public function it_updates_project_data_correctly(): void
     {
         $user = User::factory()->create();
@@ -100,14 +103,14 @@ class ProjectRepositoryTest extends TestCase
         ]);
 
         $this->assertEquals('New Name', $updated->name);
-        $this->assertEquals('completed', $updated->status);
+        $this->assertSame('completed', $updated->status->value);
         $this->assertDatabaseHas('projects', [
             'id' => $project->id,
             'name' => 'New Name',
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_returns_refreshed_project_after_update(): void
     {
         $user = User::factory()->create();
@@ -125,7 +128,7 @@ class ProjectRepositoryTest extends TestCase
     |--------------------------------------------------------------------------
     */
 
-    /** @test */
+    #[Test]
     public function it_deletes_project_from_database(): void
     {
         $user = User::factory()->create();
@@ -143,7 +146,7 @@ class ProjectRepositoryTest extends TestCase
     |--------------------------------------------------------------------------
     */
 
-    /** @test */
+    #[Test]
     public function it_returns_paginated_results(): void
     {
         $user = User::factory()->create();
@@ -164,7 +167,7 @@ class ProjectRepositoryTest extends TestCase
     |--------------------------------------------------------------------------
     */
 
-    /** @test */
+    #[Test]
     public function it_returns_only_projects_by_specific_creator(): void
     {
         $userA = User::factory()->create();

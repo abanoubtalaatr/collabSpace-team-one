@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\DTOs\NotificationData;
+use App\Models\Conversation;
+use App\Models\Message;
 use App\Models\Project;
 use App\Models\Task;
 use App\Models\Team;
@@ -10,6 +12,7 @@ use App\Models\User;
 use App\Notifications\CollaborationDatabaseNotification;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 class NotificationService
 {
@@ -97,6 +100,23 @@ class NotificationService
             (int) $project->id,
             $oldStatus,
             $newStatus
+        );
+    }
+
+    public function notifyConversationMessageSent(User $actor, Conversation $conversation, Message $message): void
+    {
+        $recipients = $conversation->participants()
+            ->where('users.id', '!=', $actor->id)
+            ->get();
+
+        $this->notifyUsers(
+            $actor,
+            $recipients,
+            'conversation_message_sent',
+            'New message',
+            sprintf('%s: %s', $actor->name, Str::limit($message->body, 120)),
+            'conversation',
+            (int) $conversation->id,
         );
     }
 

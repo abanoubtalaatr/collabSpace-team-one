@@ -27,8 +27,7 @@ class ProjectController extends Controller
         $activeProjects = (clone $query)->where('status', 'in_progress')->count();
         $completedProjects = (clone $query)->where('status', 'completed')->count();
 
-        // calculate delayed projects
-        $delayedProjects = Project::where('status', '!=', 'completed')
+        $delayedProjects = (clone $query)->where('status', '!=', 'completed')
             ->where('deadline', '<', now())
             ->count();
 

@@ -25,13 +25,14 @@ class NotificationFlowTest extends TestCase
         $this->actingAs($actor, 'sanctum')
             ->postJson('/api/tasks', [
                 'project_id' => $project->id,
-                'name' => 'Prepare launch notes',
+                'title' => 'Prepare launch notes',
                 'description' => 'Draft collaboration launch notes.',
                 'status' => TaskStatus::Pending->value,
+                'priority' => 'high',
                 'user_ids' => [$assignedUser->id, $actor->id],
             ])
             ->assertCreated()
-            ->assertJsonPath('data.name', 'Prepare launch notes');
+            ->assertJsonPath('data.title', 'Prepare launch notes');
 
         $this->assertSame(1, $assignedUser->fresh()->notifications()->count());
         $this->assertSame(0, $actor->fresh()->notifications()->count());
@@ -48,7 +49,7 @@ class NotificationFlowTest extends TestCase
 
         $this->actingAs($actor, 'sanctum')
             ->postJson("/api/teams/{$team->id}/members", [
-                'user_id' => $targetUser->id,
+                'user_ids' => [$targetUser->id],
             ])
             ->assertOk();
 
@@ -79,7 +80,7 @@ class NotificationFlowTest extends TestCase
 
         $this->actingAs($actor, 'sanctum')
             ->postJson("/api/projects/{$project->id}/teams", [
-                'team_id' => $team->id,
+                'team_ids' => [$team->id],
             ])
             ->assertOk();
 

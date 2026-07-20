@@ -68,4 +68,46 @@ class PasswordResetFlowTest extends TestCase
             ->assertUnprocessable()
             ->assertJsonValidationErrors(['reset_token']);
     }
+
+    public function test_api_auth_rst_004_reset_password_rejects_the_current_password_without_consuming_the_reset_session(): void
+    {
+        $currentPassword = 'current-secure-password';
+        $user = User::factory()->create([
+            'email' => 'same-password@example.test',
+            'password' => Hash::make($currentPassword),
+        ]);
+
+        $this->postJson('/api/forgot-password', [
+            'email' => $user->email,
+        ])->assertOk();
+
+        $verifyResponse = $this->postJson('/api/verify-otp', [
+            'email' => $user->email,
+            'otp' => '123456',
+            'purpose' => 'password_reset',
+        ])->assertOk();
+
+        $resetToken = $verifyResponse->json('data.reset_token');
+        $originalPasswordHash = $user->password;
+
+        $this->postJson('/api/reset-password', [
+            'email' => $user->email,
+            'reset_token' => $resetToken,
+            'password' => $currentPassword,
+            'password_confirmation' => $currentPassword,
+        ])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors(['password']);
+
+        $this->assertSame($originalPasswordHash, $user->fresh()->password);
+        $this->assertDatabaseHas('password_reset_tokens', ['email' => $user->email]);
+        $this->assertDatabaseCount('personal_access_tokens', 0);
+
+        $this->postJson('/api/reset-password', [
+            'email' => $user->email,
+            'reset_token' => $resetToken,
+            'password' => 'different-secure-password',
+            'password_confirmation' => 'different-secure-password',
+        ])->assertOk();
+    }
 }

@@ -117,6 +117,26 @@ class Task extends Model implements GlobalSearchable, Searchable
         );
     }
 
+    /**
+     * @param  Builder<Task>  $query
+     * @return Builder<Task>
+     */
+    public function scopeAccessibleToUser(Builder $query, int $userId): Builder
+    {
+        return $query->where(function (Builder $accessQuery) use ($userId): void {
+            $accessQuery
+                ->assignedToUser($userId)
+                ->orWhereHas(
+                    'project',
+                    fn (Builder $projectQuery): Builder => $projectQuery->where('created_by', $userId),
+                )
+                ->orWhereHas(
+                    'project.teams.members',
+                    fn (Builder $memberQuery): Builder => $memberQuery->where('users.id', $userId),
+                );
+        });
+    }
+
     public function files(): MorphMany
     {
         return $this->morphMany(File::class, 'attachable');

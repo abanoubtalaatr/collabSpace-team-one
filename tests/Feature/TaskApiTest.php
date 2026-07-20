@@ -84,4 +84,119 @@ class TaskApiTest extends TestCase
             ->assertJsonPath('data.title', 'Keep title')
             ->assertJsonPath('data.status', 'completed');
     }
+
+    public function test_api_task_upd_006_task_start_date_can_be_updated_alone_and_with_other_fields(): void
+    {
+        $user = User::factory()->create();
+        $task = Task::factory()->create([
+            'start_date' => '2026-07-01',
+            'due_date' => '2026-08-30',
+            'title' => 'Original task title',
+        ]);
+        Sanctum::actingAs($user);
+
+        $this->patchJson("/api/tasks/{$task->id}", [
+            'start_date' => '2026-07-15',
+        ])
+            ->assertOk()
+            ->assertJsonPath('data.start_date', '2026-07-15');
+
+        $this->assertSame('2026-07-15', $task->fresh()->start_date->toDateString());
+
+        $this->putJson("/api/tasks/{$task->id}", [
+            'start_date' => '2026-07-20',
+            'title' => 'Updated task title',
+        ])
+            ->assertOk()
+            ->assertJsonPath('data.start_date', '2026-07-20')
+            ->assertJsonPath('data.title', 'Updated task title');
+
+        $task->refresh();
+        $this->assertSame('2026-07-20', $task->start_date->toDateString());
+        $this->assertSame('Updated task title', $task->title);
+    }
+
+    public function test_api_bug_018_project_task_analytics_endpoint_is_available(): void
+    {
+        $user = User::factory()->create();
+        $project = Project::factory()->create([
+            'created_by' => $user->id,
+            'start_date' => '2026-01-01',
+            'deadline' => '2026-03-31',
+        ]);
+        Task::factory()->create([
+            'project_id' => $project->id,
+            'start_date' => '2026-02-01',
+            'due_date' => '2026-02-15',
+        ]);
+        Sanctum::actingAs($user);
+
+        $this->getJson("/api/projects/{$project->id}/analytics/tasks")
+            ->assertOk()
+            ->assertJsonCount(3, 'data')
+            ->assertJsonPath('data.1.month', 'Feb 2026')
+            ->assertJsonPath('data.1.tasks', 1);
+    }
+
+    public function test_api_bug_019_create_task_uses_the_canonical_title_field_in_request_and_response(): void
+    {
+        $user = User::factory()->create();
+        $project = Project::factory()->create(['created_by' => $user->id]);
+        Sanctum::actingAs($user);
+
+        $this->postJson('/api/tasks', [
+            'project_id' => $project->id,
+            'title' => 'Canonical task title',
+            'priority' => 'high',
+        ])
+            ->assertCreated()
+            ->assertJsonPath('data.title', 'Canonical task title')
+            ->assertJsonMissingPath('data.name');
+
+        $this->assertSame(
+            'Canonical task title',
+            Task::query()->sole()->title,
+        );
+    }
+
+    public function test_api_task_del_009_project_creator_can_delete_a_task(): void
+    {
+        $projectCreator = User::factory()->create();
+        $project = Project::factory()->create(['created_by' => $projectCreator->id]);
+        $task = Task::factory()->create(['project_id' => $project->id]);
+
+        Sanctum::actingAs($projectCreator);
+
+        $this->deleteJson("/api/tasks/{$task->id}")
+            ->assertOk()
+            ->assertJsonPath('message', 'Task deleted successfully.');
+
+        $this->assertModelMissing($task);
+    }
+
+    public function test_api_task_del_009_authenticated_user_cannot_delete_another_users_project_task(): void
+    {
+        $projectCreator = User::factory()->create();
+        $otherUser = User::factory()->create();
+        $project = Project::factory()->create(['created_by' => $projectCreator->id]);
+        $task = Task::factory()->create(['project_id' => $project->id]);
+        $task->users()->attach($otherUser);
+
+        Sanctum::actingAs($otherUser);
+
+        $this->deleteJson("/api/tasks/{$task->id}")
+            ->assertForbidden();
+
+        $this->assertModelExists($task);
+    }
+
+    public function test_api_task_del_009_guest_cannot_delete_a_task(): void
+    {
+        $task = Task::factory()->create();
+
+        $this->deleteJson("/api/tasks/{$task->id}")
+            ->assertUnauthorized();
+
+        $this->assertModelExists($task);
+    }
 }

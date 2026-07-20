@@ -42,7 +42,7 @@ class NotificationApiTest extends TestCase
             ]);
     }
 
-    public function test_authenticated_user_can_list_unread_notifications(): void
+    public function test_api_nof_025_authenticated_user_can_list_unread_notifications(): void
     {
         $user = User::factory()->create();
         $read = $this->sendNotification($user, 'task_created');
@@ -73,7 +73,7 @@ class NotificationApiTest extends TestCase
             ]);
     }
 
-    public function test_authenticated_user_can_get_unread_count(): void
+    public function test_api_nof_025_authenticated_user_can_get_unread_count(): void
     {
         $user = User::factory()->create();
         $read = $this->sendNotification($user, 'task_created');
@@ -100,7 +100,7 @@ class NotificationApiTest extends TestCase
             ->assertJsonPath('data.count', 1);
     }
 
-    public function test_authenticated_user_can_show_one_notification(): void
+    public function test_api_nof_025_authenticated_user_can_show_one_notification(): void
     {
         $user = User::factory()->create();
         $notification = $this->sendNotification($user, 'task_created');
@@ -123,7 +123,7 @@ class NotificationApiTest extends TestCase
             ->assertNotFound();
     }
 
-    public function test_authenticated_user_can_mark_one_notification_as_read(): void
+    public function test_api_nof_025_authenticated_user_can_mark_one_notification_as_read(): void
     {
         $user = User::factory()->create();
         $notification = $this->sendNotification($user, 'task_created');
@@ -135,7 +135,7 @@ class NotificationApiTest extends TestCase
         $this->assertSame(0, $user->fresh()->unreadNotifications()->count());
     }
 
-    public function test_authenticated_user_can_mark_all_notifications_as_read(): void
+    public function test_api_nof_025_authenticated_user_can_mark_all_notifications_as_read(): void
     {
         $user = User::factory()->create();
         $this->sendNotification($user, 'task_created');
@@ -177,7 +177,7 @@ class NotificationApiTest extends TestCase
         $this->assertSame(0, $user->fresh()->notifications()->count());
     }
 
-    public function test_authenticated_user_can_delete_all_read_notifications(): void
+    public function test_api_nof_025_authenticated_user_can_delete_all_read_notifications(): void
     {
         $user = User::factory()->create();
         $read = $this->sendNotification($user, 'task_created');

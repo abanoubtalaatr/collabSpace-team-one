@@ -8,27 +8,14 @@ use App\DTOs\ProjectDTO;
 use App\Models\Project;
 use App\Repositories\Contracts\ProjectRepositoryInterface;
 use App\Services\NotificationService;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Mockery;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
-/*
-|--------------------------------------------------------------------------
-| UpdateProjectActionTest
-|--------------------------------------------------------------------------
-*/
-class UpdateProjectActionTest extends TestCase
+class UpdateAndDeleteProjectActionTest extends TestCase
 {
-    protected $repoMock;
-
-    protected UpdateProjectAction $action;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->repoMock = Mockery::mock(ProjectRepositoryInterface::class);
-        $this->action = new UpdateProjectAction($this->repoMock, Mockery::mock(NotificationService::class));
-    }
+    use RefreshDatabase;
 
     protected function tearDown(): void
     {
@@ -36,12 +23,12 @@ class UpdateProjectActionTest extends TestCase
         parent::tearDown();
     }
 
-    /** @test */
+    #[Test]
     public function it_updates_project_with_new_data(): void
     {
-        // Arrange
-        $existingProject = new Project(['id' => 1, 'name' => 'Old Name']);
-
+        $repository = Mockery::mock(ProjectRepositoryInterface::class);
+        $action = new UpdateProjectAction($repository, Mockery::mock(NotificationService::class));
+        $existingProject = Project::factory()->create(['name' => 'Old Name']);
         $dto = new ProjectDTO(
             name: 'New Name',
             description: 'Updated desc',
@@ -49,19 +36,18 @@ class UpdateProjectActionTest extends TestCase
             deadline: '2025-12-01',
             priority: 'medium',
             status: 'in_progress',
-            createdBy: 1,
+            type: null,
+            createdBy: $existingProject->created_by,
             mediaFiles: [],
-            teamIds: [],
+            guestIds: [],
         );
-
-        $updatedProject = new Project([
-            'id' => 1,
+        $updatedProject = Project::factory()->create([
             'name' => 'New Name',
             'description' => 'Updated desc',
             'status' => 'in_progress',
         ]);
 
-        $this->repoMock
+        $repository
             ->shouldReceive('update')
             ->once()
             ->with($existingProject, [
@@ -71,116 +57,85 @@ class UpdateProjectActionTest extends TestCase
                 'deadline' => '2025-12-01',
                 'priority' => 'medium',
                 'status' => 'in_progress',
+                'type' => null,
             ])
             ->andReturn($updatedProject);
 
-        // Act
-        $result = $this->action->execute($existingProject, $dto);
+        $result = $action->execute($existingProject, $dto);
 
-        // Assert
-        $this->assertEquals('New Name', $result->name);
-        $this->assertEquals('in_progress', $result->status);
+        $this->assertSame('New Name', $result->name);
+        $this->assertSame('in_progress', $result->status->value);
     }
 
-    /** @test */
+    #[Test]
     public function it_returns_project_instance_after_update(): void
     {
-        $project = new Project(['id' => 2, 'name' => 'Project X']);
+        $repository = Mockery::mock(ProjectRepositoryInterface::class);
+        $action = new UpdateProjectAction($repository, Mockery::mock(NotificationService::class));
+        $project = Project::factory()->create(['name' => 'Project X']);
         $dto = new ProjectDTO(
             name: 'Project X Updated',
             description: null,
             startDate: null,
             deadline: null,
             priority: 'high',
-            status: 'active',
-            createdBy: 1,
+            status: 'pending',
+            type: null,
+            createdBy: $project->created_by,
             mediaFiles: [],
-            teamIds: [],
+            guestIds: [],
         );
 
-        $this->repoMock
+        $repository
             ->shouldReceive('update')
             ->once()
-            ->andReturn(new Project(['id' => 2, 'name' => 'Project X Updated']));
+            ->andReturn(Project::factory()->create(['name' => 'Project X Updated']));
 
-        $result = $this->action->execute($project, $dto);
-
-        $this->assertInstanceOf(Project::class, $result);
-    }
-}
-
-/*
-|--------------------------------------------------------------------------
-| DeleteProjectActionTest
-|--------------------------------------------------------------------------
-*/
-class DeleteProjectActionTest extends TestCase
-{
-    protected $repoMock;
-
-    protected DeleteProjectAction $action;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->repoMock = Mockery::mock(ProjectRepositoryInterface::class);
-        $this->action = new DeleteProjectAction($this->repoMock);
+        $this->assertInstanceOf(Project::class, $action->execute($project, $dto));
     }
 
-    protected function tearDown(): void
-    {
-        Mockery::close();
-        parent::tearDown();
-    }
-
-    /** @test */
+    #[Test]
     public function it_deletes_project_via_repository(): void
     {
-        // Arrange — بنعمل project mock عشان clearMediaCollection مش بتتصل بـ DB
+        $repository = Mockery::mock(ProjectRepositoryInterface::class);
+        $action = new DeleteProjectAction($repository);
         $project = Mockery::mock(Project::class)->makePartial();
         $project->shouldReceive('clearMediaCollection')
             ->once()
             ->with(Project::MEDIA_COLLECTION_ATTACHMENTS);
-
-        $this->repoMock
-            ->shouldReceive('delete')
+        $repository->shouldReceive('delete')
             ->once()
             ->with($project);
 
-        // Act
-        $this->action->execute($project);
+        $action->execute($project);
 
-        // Assert — Mockery بيتحقق تلقائياً إن الـ methods اتصلت
-        $this->assertTrue(true);
+        $this->addToAssertionCount(1);
     }
 
-    /** @test */
+    #[Test]
     public function it_clears_media_before_deleting(): void
     {
-        // بنتأكد إن الترتيب صح: أول clearMedia وبعدين delete
+        $repository = Mockery::mock(ProjectRepositoryInterface::class);
+        $action = new DeleteProjectAction($repository);
         $callOrder = [];
-
         $project = Mockery::mock(Project::class)->makePartial();
         $project->shouldReceive('clearMediaCollection')
             ->once()
-            ->withArgs(function ($collection) use (&$callOrder) {
+            ->withArgs(function (string $collection) use (&$callOrder): bool {
                 $callOrder[] = 'clearMedia';
 
-                return true;
+                return $collection === Project::MEDIA_COLLECTION_ATTACHMENTS;
             });
-
-        $this->repoMock
-            ->shouldReceive('delete')
+        $repository->shouldReceive('delete')
             ->once()
-            ->withArgs(function ($p) use (&$callOrder) {
+            ->withArgs(function (Project $deletedProject) use (&$callOrder, $project): bool {
                 $callOrder[] = 'delete';
 
-                return true;
+                return $deletedProject === $project;
             });
 
-        $this->action->execute($project);
+        $action->execute($project);
 
-        $this->assertEquals(['clearMedia', 'delete'], $callOrder);
+        $this->assertSame(['clearMedia', 'delete'], $callOrder);
     }
 }

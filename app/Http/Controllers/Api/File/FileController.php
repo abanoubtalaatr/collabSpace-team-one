@@ -46,7 +46,7 @@ class FileController extends Controller
         return FileResource::collection($files);
     }
 
-    public function store(StoreFileRequest $request): FileResource
+    public function store(StoreFileRequest $request): JsonResponse
     {
         $attachable = null;
 
@@ -63,7 +63,7 @@ class FileController extends Controller
             $attachable,
         );
 
-        return new FileResource($file);
+        return (new FileResource($file))->response()->setStatusCode(201);
     }
 
     public function download(Request $request, File $file)

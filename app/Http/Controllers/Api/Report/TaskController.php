@@ -27,7 +27,7 @@ class TaskController extends Controller
         $totalTasks = $query->count();
 
         $completedTasks = (clone $query)->where('status', 'completed')->count();
-        $pendingTasks = (clone $query)->where('status', 'Pending')->count();
+        $pendingTasks = (clone $query)->where('status', 'pending')->count();
 
         $productivity = $totalTasks > 0 ? ($completedTasks / $totalTasks) * 100 : 0;
 

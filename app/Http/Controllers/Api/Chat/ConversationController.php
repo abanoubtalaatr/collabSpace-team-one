@@ -9,6 +9,7 @@ use App\Models\Conversation;
 use App\Models\Project;
 use App\Models\User;
 use App\Services\ChatService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
@@ -48,7 +49,7 @@ class ConversationController extends Controller
         return new ConversationResource($conversation);
     }
 
-    public function showProject(Request $request, Project $project): ConversationResource
+    public function showProject(Request $request, Project $project): JsonResponse
     {
         abort_unless(
             $this->chatService->canAccessProject($request->user(), $project),
@@ -63,7 +64,9 @@ class ConversationController extends Controller
             'lastMessage.sender:id,name,email',
         ]);
 
-        return new ConversationResource($conversation);
+        return (new ConversationResource($conversation))
+            ->response()
+            ->setStatusCode(200);
     }
 
     public function storeDirect(StoreDirectConversationRequest $request): ConversationResource

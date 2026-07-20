@@ -32,10 +32,12 @@ class UpdateMeetingAction
             ]);
 
             if (isset($data['user_ids']) || isset($data['team_ids'])) {
+                $hasExplicitUserList = isset($data['user_ids']);
                 $userIds = $data['user_ids'] ?? $meeting->users()->pluck('users.id')->all();
                 $teamIds = $data['team_ids'] ?? $meeting->teams()->pluck('teams.id')->all();
+                $participantTeamIds = $hasExplicitUserList ? [] : $teamIds;
 
-                $participants = $this->resolveParticipants->execute($userIds, $teamIds, $meeting->created_by);
+                $participants = $this->resolveParticipants->execute($userIds, $participantTeamIds, $meeting->created_by);
 
                 $meeting->users()->sync($participants->pluck('id'));
                 $meeting->teams()->sync($teamIds);

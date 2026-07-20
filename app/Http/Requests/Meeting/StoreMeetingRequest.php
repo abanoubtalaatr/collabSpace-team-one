@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Meeting;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Validator;
 
 class StoreMeetingRequest extends FormRequest
 {
@@ -25,6 +26,37 @@ class StoreMeetingRequest extends FormRequest
             'user_ids.*' => ['integer', 'exists:users,id'],
             'team_ids' => ['nullable', 'array'],
             'team_ids.*' => ['integer', 'exists:teams,id'],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'starts_at.after' => 'The meeting start time must be in the future.',
+            'ends_at.after' => 'The meeting end time must be after the start time.',
+        ];
+    }
+
+    /**
+     * @return array<int, callable(Validator): void>
+     */
+    public function after(): array
+    {
+        return [
+            function (Validator $validator): void {
+                $hasProject = $this->filled('project_id');
+                $userIds = $this->input('user_ids', []);
+                $teamIds = $this->input('team_ids', []);
+                $hasUsers = is_array($userIds) && $userIds !== [];
+                $hasTeams = is_array($teamIds) && $teamIds !== [];
+
+                if (! $hasProject && ! $hasUsers && ! $hasTeams) {
+                    $validator->errors()->add(
+                        'participants',
+                        'A meeting must have a project, user, or team.',
+                    );
+                }
+            },
         ];
     }
 }

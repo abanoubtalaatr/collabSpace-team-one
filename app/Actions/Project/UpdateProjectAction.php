@@ -32,6 +32,7 @@ class UpdateProjectAction
 
         // $this->repository->syncTeams($project, $dto->teamIds);
 
+        $project->guests()->sync($dto->guestIds);
         if (! empty($dto->mediaFiles)) {
             foreach ($dto->mediaFiles as $file) {
                 $project->addMedia($file)

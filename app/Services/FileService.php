@@ -23,6 +23,10 @@ class FileService
         ?string $displayName = null,
         ?Model $attachable = null,
     ): File {
+        if ($attachable !== null) {
+            $this->authorizeAttachable($attachable, $user);
+        }
+
         $extension = strtolower($uploadedFile->getClientOriginalExtension() ?: 'bin');
         $storedPath = $uploadedFile->store('files/'.now()->format('Y/m'), 'public');
 
@@ -40,10 +44,16 @@ class FileService
         ]);
 
         if ($attachable !== null) {
-            $this->attach($file, $attachable, $user);
+            $file->update([
+                'attachable_type' => $attachable->getMorphClass(),
+                'attachable_id' => $attachable->getKey(),
+                'status' => FileStatus::Attached,
+            ]);
         }
 
-        return $file->fresh(['uploader:id,name,email', 'attachable']);
+        $file->load(['uploader:id,name,email', 'attachable']);
+
+        return $file;
     }
 
     public function attach(File $file, Model $attachable, User $user): File

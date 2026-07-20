@@ -8,6 +8,7 @@ use App\Models\Task;
 use App\Models\Team;
 use App\Models\User;
 use App\Services\GlobalSearchModelRegistry;
+use Database\Seeders\GlobalSearchDemoSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Collection;
 use Illuminate\Testing\TestResponse;
@@ -18,10 +19,10 @@ class GlobalSearchTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected bool $seed = true;
-
     public function test_demo_seeder_creates_requested_record_counts(): void
     {
+        $this->seed(GlobalSearchDemoSeeder::class);
+
         $this->assertSame(100, User::query()->count());
         $this->assertSame(50, Project::query()->count());
         $this->assertSame(500, Task::query()->count());
@@ -121,7 +122,7 @@ class GlobalSearchTest extends TestCase
         ]);
 
         $task = Task::factory()->create([
-            'name' => 'Grouped Test Task',
+            'title' => 'Grouped Test Task',
             'description' => 'Task visible in grouped search response.',
         ]);
 
@@ -193,12 +194,17 @@ class GlobalSearchTest extends TestCase
             'name' => 'Apollo Knowledge Hub',
             'description' => 'A searchable internal collaboration project.',
         ]);
+        $task = Task::factory()->create([
+            'project_id' => $project->id,
+            'title' => 'Apollo Delivery Checklist',
+        ]);
 
         $response = $this->getJson('/api/search?q=Apollo%20Knowledge');
 
         $response->assertOk();
 
         $this->assertSearchContains($response, 'Project', $project->id, 'Apollo Knowledge Hub');
+        $this->assertSearchResultHasData($response, 'Project', $project->id, 'tasks.0.title', $task->title);
     }
 
     public function test_it_searches_tasks_by_title(): void
@@ -206,8 +212,8 @@ class GlobalSearchTest extends TestCase
         $this->authenticateForSearch();
 
         $task = Task::factory()->create([
-            'name' => 'Launch Checklist Search Task',
-            'description' => 'A task record using the existing name column as its title.',
+            'title' => 'Launch Checklist Search Task',
+            'description' => 'A task record using the title column.',
         ]);
 
         $response = $this->getJson('/api/search?q=Launch%20Checklist');
@@ -217,7 +223,7 @@ class GlobalSearchTest extends TestCase
         $this->assertSearchContains($response, 'Task', $task->id, 'Launch Checklist Search Task');
     }
 
-    public function test_it_searches_teams_by_name(): void
+    public function test_api_search_007_searching_an_existing_team_returns_it_without_a_server_error(): void
     {
         $this->authenticateForSearch();
 

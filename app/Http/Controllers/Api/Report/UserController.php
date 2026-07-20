@@ -38,7 +38,7 @@ class UserController extends Controller
             'assigned_tasks' => $assignedTasks,
             'completed_tasks' => $completedTasks,
             'uploaded_files' => $uploadedFilesCount,
-            'meeting_attendance' => rand(80, 100).'%', // Randomized for demonstration
+            'meeting_attendance' => $user->meetings()->count(),
             'productivity_score' => round($productivityScore, 2).'%',
             'performance_overview' => $productivityScore >= 80 ? 'Excellent' : 'Good',
         ], 'User report generated successfully');

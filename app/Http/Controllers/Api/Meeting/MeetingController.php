@@ -9,6 +9,7 @@ use App\Concerns\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Meeting\CalendarMeetingRequest;
 use App\Http\Requests\Meeting\StoreMeetingRequest;
+use App\Http\Requests\Meeting\UpcomingMeetingsRequest;
 use App\Http\Requests\Meeting\UpdateMeetingRequest;
 use App\Http\Resources\MeetingResource;
 use App\Models\Meeting;
@@ -73,7 +74,7 @@ class MeetingController extends Controller
         );
     }
 
-    public function upcoming(Request $request): JsonResponse
+    public function upcoming(UpcomingMeetingsRequest $request): JsonResponse
     {
         $user = $request->user();
         $days = $request->integer('days', 7);

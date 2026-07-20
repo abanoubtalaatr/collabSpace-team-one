@@ -8,6 +8,7 @@ use App\Http\Requests\AskAiRequest;
 use App\Traits\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Laravel\Ai\Enums\Lab;
+use Throwable;
 
 class AskAiController extends Controller
 {
@@ -15,11 +16,17 @@ class AskAiController extends Controller
 
     public function __invoke(AskAiRequest $request): JsonResponse
     {
-        $response = WorkspaceAssistant::make($request->user())
-            ->prompt(
-                $request->validated('question'),
-                provider: [Lab::Groq, Lab::Gemini],
-            );
+        try {
+            $response = WorkspaceAssistant::make($request->user())
+                ->prompt(
+                    $request->validated('question'),
+                    provider: [Lab::Groq, Lab::Gemini],
+                );
+        } catch (Throwable $exception) {
+            report($exception);
+
+            return $this->errorResponse('AI service is temporarily unavailable.', 503);
+        }
 
         return $this->apiResponse([
             'answer' => $response->text,

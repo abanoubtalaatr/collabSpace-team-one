@@ -8,6 +8,7 @@ use App\Http\Resources\FileResource;
 use App\Models\Project;
 use App\Services\ChatService;
 use App\Services\FileService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
@@ -35,7 +36,7 @@ class ProjectFileController extends Controller
         return FileResource::collection($files);
     }
 
-    public function store(StoreFileRequest $request, Project $project): FileResource
+    public function store(StoreFileRequest $request, Project $project): JsonResponse
     {
         $file = $this->fileService->store(
             $request->file('file'),
@@ -44,6 +45,6 @@ class ProjectFileController extends Controller
             $project,
         );
 
-        return new FileResource($file);
+        return (new FileResource($file))->response()->setStatusCode(201);
     }
 }

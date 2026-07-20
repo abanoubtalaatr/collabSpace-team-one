@@ -9,12 +9,16 @@ use App\Http\Resources\MessageResource;
 use App\Models\Conversation;
 use App\Models\Message;
 use App\Services\ChatService;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class MessageController extends Controller
 {
-    public function __construct(private readonly ChatService $chatService) {}
+    public function __construct(
+        private readonly ChatService $chatService,
+        private readonly NotificationService $notificationService,
+    ) {}
 
     public function index(Request $request, Conversation $conversation): AnonymousResourceCollection
     {
@@ -50,6 +54,7 @@ class MessageController extends Controller
         $conversation->touch();
         $message->load('sender:id,name,email');
 
+        $this->notificationService->notifyConversationMessageSent($request->user(), $conversation, $message);
         MessageSent::dispatch($message);
 
         return new MessageResource($message);

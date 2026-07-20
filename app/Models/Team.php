@@ -50,19 +50,13 @@ class Team extends LaratrustTeam implements GlobalSearchable, Searchable
         return $this->belongsToMany(Project::class, 'project_team', 'team_id', 'project_id', 'id', 'id');
     }
 
-<<<<<<<<< Temporary merge branch 1
-    public function members()
+    public function members(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'team_user');
+        return $this->belongsToMany(User::class, 'team_user', 'team_id', 'user_id', 'id', 'id');
     }
 
     public function getSearchResult(): SearchResult
     {
         return new SearchResult($this, $this->name);
-=========
-    public function members(): BelongsToMany
-    {
-        return $this->belongsToMany(User::class, 'team_user', 'team_id', 'user_id', 'id', 'id');
->>>>>>>>> Temporary merge branch 2
     }
 }

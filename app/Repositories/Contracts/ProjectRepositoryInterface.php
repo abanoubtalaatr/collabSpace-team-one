@@ -23,4 +23,8 @@ interface ProjectRepositoryInterface
     public function delete(Project $project): void;
 
     // public function syncTeams(Project $project, array $teamIds): void;
+
+    public function getProjectGuests();
+
+    public function getMonthlyTasks(Project $project);
 }
