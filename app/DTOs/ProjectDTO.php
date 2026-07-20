@@ -18,6 +18,7 @@ final class ProjectDTO
         public readonly int $createdBy,
         // public readonly array $teamIds = [],
         public readonly array $mediaFiles = [],
+        public readonly array $guestIds = [],
     ) {}
 
     public static function fromStoreRequest(StoreProjectRequest $request): self
@@ -33,6 +34,7 @@ final class ProjectDTO
             createdBy: $request->user()->id,
             // teamIds: $request->validated('team_ids', []),
             mediaFiles: $request->file('attachments', []),
+            guestIds: $request->validated('guest_ids', []),
         );
     }
 
@@ -49,6 +51,7 @@ final class ProjectDTO
             createdBy: $request->user()->id,
             // teamIds: $request->validated('team_ids', []),
             mediaFiles: $request->file('attachments', []),
+            guestIds: $request->validated('guest_ids', []),
         );
     }
 }

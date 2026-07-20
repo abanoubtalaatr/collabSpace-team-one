@@ -43,8 +43,9 @@ class ProjectController extends Controller
 
     public function index(Request $request): AnonymousResourceCollection
     {
-        $projects = $this->service->getAllPaginated($request, perPage: 15);
-
+        //$projects = $this->service->getAllPaginated($request, perPage: 15);
+        $projects = $this->service->getByCreatorPaginated($request,$request->user()->id,15);
+        
         return ProjectResource::collection($projects);
 
     }

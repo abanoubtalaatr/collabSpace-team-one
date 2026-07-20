@@ -154,6 +154,8 @@ class DashboardApiSeeder extends Seeder
             'status' => $status->value,
             'created_at' => $createdAt,
             'updated_at' => $createdAt,
+            'start_date' => $project->start_date,
+            'due_date' => $project->deadline,
         ]);
         $task->save();
 
