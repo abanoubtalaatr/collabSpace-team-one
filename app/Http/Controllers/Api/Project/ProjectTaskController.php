@@ -6,8 +6,10 @@ use App\Actions\Task\CreateTaskAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Task\StoreProjectTaskRequest;
 use App\Http\Resources\TaskResource;
+use App\Http\Resources\MonthlyTaskAnalyticsResource;
 use App\Models\Project;
 use App\Models\Task;
+use App\Services\ProjectService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
@@ -15,6 +17,8 @@ class ProjectTaskController extends Controller
 {
     public function __construct(
         private readonly CreateTaskAction $createTaskAction,
+        private readonly ProjectService $projectService,
+
     ) {}
 
     public function index(Request $request, Project $project): AnonymousResourceCollection
@@ -41,5 +45,14 @@ class ProjectTaskController extends Controller
         $task = $this->createTaskAction->execute($data, $request->user());
 
         return new TaskResource($task);
+    }
+
+    // for analysis part request from frontend to get the tasks count during monthes in the project
+    public function analytics(Project $project)
+    {
+        return MonthlyTaskAnalyticsResource::collection(
+            $this->projectService->getMonthlyTasks($project)
+    );
+        
     }
 }
