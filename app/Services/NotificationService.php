@@ -86,7 +86,7 @@ class NotificationService
         $recipients = $project->teams()
             ->with('members')
             ->get()
-            ->flatMap(fn (Team $team): EloquentCollection => $team->members)
+            ->flatMap(fn(Team $team): EloquentCollection => $team->members)
             ->push($project->creator)
             ->filter();
 
@@ -160,9 +160,9 @@ class NotificationService
         ?string $newStatus = null,
     ): void {
         $recipients
-            ->filter(fn (User $user): bool => ! $user->is($actor))
+            ->filter(fn(User $user): bool => ! $user->is($actor))
             ->unique('id')
-            ->each(fn (User $user): mixed => $this->notifyUser(
+            ->each(fn(User $user): mixed => $this->notifyUser(
                 $actor,
                 $user,
                 $type,
