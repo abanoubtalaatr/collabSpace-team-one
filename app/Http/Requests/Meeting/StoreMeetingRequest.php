@@ -53,7 +53,7 @@ class StoreMeetingRequest extends FormRequest
                 if (! $hasProject && ! $hasUsers && ! $hasTeams) {
                     $validator->errors()->add(
                         'participants',
-                        'A meeting must have a project, user, or team.',
+                        'Project ID, Team ID, and Member IDs are required.',
                     );
                 }
             },

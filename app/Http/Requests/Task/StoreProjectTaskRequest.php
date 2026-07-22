@@ -16,6 +16,10 @@ class StoreProjectTaskRequest extends FormRequest
 
     protected function prepareForValidation(): void
     {
+        if ($this->filled('name') && ! $this->filled('title')) {
+            $this->merge(['title' => $this->input('name')]);
+        }
+
         $this->merge([
             'progress' => $this->input('progress', 0),
             'status' => $this->input('status', TaskStatus::Pending->value),
@@ -28,6 +32,7 @@ class StoreProjectTaskRequest extends FormRequest
     {
         return [
             'title' => ['required', 'string', 'max:255'],
+            'name' => ['sometimes', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'start_date' => ['required', Rule::date()->todayOrAfter()],
             'due_date' => ['required', 'date', 'after_or_equal:start_date'],

@@ -16,14 +16,22 @@ class UpdateTaskRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation(): void
+    {
+        if ($this->filled('name') && ! $this->filled('title')) {
+            $this->merge(['title' => $this->input('name')]);
+        }
+    }
+
     public function rules(): array
     {
         return [
             'project_id' => ['sometimes', 'integer', 'exists:projects,id'],
             'title' => ['sometimes', 'string', 'max:255'],
+            'name' => ['sometimes', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
-            'start_date' => ['nullable', 'date'],
-            'due_date' => ['nullable', 'date'],
+            'start_date' => ['sometimes', 'nullable', 'date'],
+            'due_date' => ['sometimes', 'nullable', 'date'],
             'progress' => ['sometimes', 'integer', 'min:0', 'max:100'],
             'status' => ['sometimes', Rule::in(TaskStatus::values())],
             'priority' => ['sometimes', Rule::in(TaskPriority::values())],

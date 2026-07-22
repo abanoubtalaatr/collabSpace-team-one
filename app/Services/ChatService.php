@@ -22,8 +22,12 @@ class ChatService
 
     public function usersShareTeam(User $first, User $second): bool
     {
+        if ((int) $first->id === (int) $second->id) {
+            return true;
+        }
+
         return $first->teams()
-            ->whereIn('teams.id', $second->teams()->pluck('teams.id'))
+            ->whereHas('members', fn ($query) => $query->where('users.id', $second->id))
             ->exists();
     }
 

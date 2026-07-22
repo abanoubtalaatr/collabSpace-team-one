@@ -14,7 +14,8 @@ class UpdateTeamRequest extends FormRequest
 
     public function rules(): array
     {
-        $teamId = $this->route('team');
+        $team = $this->route('team');
+        $teamId = is_object($team) ? $team->getKey() : $team;
 
         return [
             'name' => ['sometimes', 'string', 'max:255', Rule::unique('teams', 'name')->ignore($teamId)],

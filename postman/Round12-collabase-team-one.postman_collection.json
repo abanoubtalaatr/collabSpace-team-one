@@ -1,0 +1,3580 @@
+{
+  "info": {
+    "_postman_id": "ecf708b3-1d38-4039-9466-38644695932c",
+    "name": "Round12-collabase-team-one",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "51835274",
+    "_collection_link": "https://go.postman.co/collection/51835274-ecf708b3-1d38-4039-9466-38644695932c?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Reports Module",
+      "item": [
+        {
+          "name": "Get Project Reports",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/reports/projects",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "reports",
+                "projects"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Task Reports",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/reports/tasks",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "reports",
+                "tasks"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Team Reports By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/reports/teams/{{team_id}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "reports",
+                "teams",
+                "{{team_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User Reports By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/reports/users/{{user_id}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "reports",
+                "users",
+                "{{user_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "report store",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"report_type\": \"project\",\r\n    \"note\": \"This is a detailed monthly project progress report.\",\r\n    \"start_date\": \"2026-06-01\",\r\n    \"end_date\": \"2026-06-30\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/reports",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "reports"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Report get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{url}}/reports",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "reports"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "name",
+                  "value": "abanoubtalaat",
+                  "type": "text",
+                  "uuid": "7bdc061f-bedd-4783-917e-817e7dd0b909"
+                },
+                {
+                  "key": "email",
+                  "value": "abanoubtalaat555@gmail.com",
+                  "type": "text",
+                  "uuid": "06711683-1601-41de-bbac-32b74ad2b77a"
+                },
+                {
+                  "key": "password",
+                  "value": "P@ssword12",
+                  "type": "text",
+                  "uuid": "6f8b2092-1e93-4b75-bf06-efc44bc139f4"
+                },
+                {
+                  "key": "password_confirmation",
+                  "value": "P@ssword12",
+                  "type": "text",
+                  "uuid": "d01ef743-16fa-49c1-8a04-696159bb5a13"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url}}/register",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "try {",
+                  "  const json = pm.response.json();",
+                  "  const token = (json.data && json.data.token) || json.token;",
+                  "  if (token) pm.collectionVariables.set('token', token);",
+                  "  const user = (json.data && json.data.user) || json.user;",
+                  "  if (user && user.id) pm.collectionVariables.set('user_id', user.id);",
+                  "} catch (e) { console.log(e); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "email",
+                  "value": "manager@example.com",
+                  "type": "text",
+                  "uuid": "06711683-1601-41de-bbac-32b74ad2b77a"
+                },
+                {
+                  "key": "password",
+                  "value": "password",
+                  "type": "text",
+                  "uuid": "6f8b2092-1e93-4b75-bf06-efc44bc139f4"
+                },
+                {
+                  "key": "",
+                  "value": "",
+                  "type": "text",
+                  "uuid": "f50b9c8c-0c32-4856-8655-89d8845baa10"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url}}/login",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "login"
+              ],
+              "query": [
+                {
+                  "key": "email",
+                  "value": "douglas.herzog@example.net",
+                  "disabled": true
+                },
+                {
+                  "key": "password",
+                  "value": "password",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "logout",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/logout",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "logout"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "verify-otp",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "email",
+                  "value": "abanoubtalaat555@gmail.com",
+                  "type": "text",
+                  "uuid": "06711683-1601-41de-bbac-32b74ad2b77a"
+                },
+                {
+                  "key": "otp",
+                  "value": "123456",
+                  "type": "text",
+                  "uuid": "6f8b2092-1e93-4b75-bf06-efc44bc139f4"
+                },
+                {
+                  "key": "purpose",
+                  "value": "password_reset",
+                  "description": "registration or password_reset",
+                  "type": "text",
+                  "uuid": "d01ef743-16fa-49c1-8a04-696159bb5a13"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url}}/verify-otp",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "verify-otp"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "forgot-password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "email",
+                  "value": "abanoubtalaat555@gmail.com",
+                  "type": "text",
+                  "uuid": "7bdc061f-bedd-4783-917e-817e7dd0b909"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url}}/forgot-password",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "forgot-password"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "reset-password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "email",
+                  "value": "abanoubtalaat555@gmail.com",
+                  "type": "text",
+                  "uuid": "7bdc061f-bedd-4783-917e-817e7dd0b909"
+                },
+                {
+                  "key": "password",
+                  "value": "P@ssword12",
+                  "type": "text",
+                  "uuid": "da405a9f-f187-4724-a265-c588eb98f91e"
+                },
+                {
+                  "key": "password_confirmation",
+                  "value": "P@ssword12",
+                  "type": "text",
+                  "uuid": "94182656-e1b7-4930-8082-0b77842c9153"
+                },
+                {
+                  "key": "reset_token",
+                  "value": "ZNNTVpCkQSP7Do8Yd1kyqPPStiqCI5w7dL4cni6s",
+                  "description": "from verify otp request",
+                  "type": "text",
+                  "uuid": "2b61f4da-317c-4b7a-aedf-89d16ecf6833"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url}}/reset-password",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "reset-password"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "resend-otp",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "email",
+                  "value": "abdulrahman@gmail.com",
+                  "type": "text",
+                  "uuid": "7bdc061f-bedd-4783-917e-817e7dd0b909"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url}}/resend-otp",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "resend-otp"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Global search",
+      "item": [
+        {
+          "name": "Global Search",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": []
+            },
+            "url": {
+              "raw": "{{url}}/search?q=backend",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "search"
+              ],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "backend"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Team",
+      "item": [
+        {
+          "name": "index",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/teams",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "teams"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "store",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "name",
+                  "value": "Backend Team",
+                  "type": "text",
+                  "uuid": "461fdd55-c7e9-4910-941c-296851e9d2a3"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url}}/teams",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "teams"
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "try {",
+                  "  const j = pm.response.json();",
+                  "  const id = (j.data && j.data.id) || j.id;",
+                  "  if (id) pm.collectionVariables.set('team_id', String(id));",
+                  "} catch (e) {}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "show",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": []
+            },
+            "url": {
+              "raw": "{{url}}/teams/{{team_id}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "teams",
+                "{{team_id}}"
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "try {",
+                  "  const j = pm.response.json();",
+                  "  const id = (j.data && j.data.id) || j.id;",
+                  "  if (id) pm.collectionVariables.set('team_id', String(id));",
+                  "} catch (e) {}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "edit form",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Backend 1\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/teams/{{team_id}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "teams",
+                "{{team_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "update",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Backend 1\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/teams/{{team_id}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "teams",
+                "{{team_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "delete",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/teams/{{team_id}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "teams",
+                "{{team_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Members",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/teams/{{team_id}}/members",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "teams",
+                "{{team_id}}",
+                "members"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Adding members to the team",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "user_ids[0]",
+                  "value": "{{user_id}}",
+                  "type": "text",
+                  "uuid": "bf429338-dacc-41cb-a60f-2d169eeadf23"
+                },
+                {
+                  "key": "user_ids[1]",
+                  "value": "2",
+                  "type": "text",
+                  "uuid": "dd47bc9b-91b4-4abc-8ea8-10c69a39e67f"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url}}/teams/{{team_id}}/members",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "teams",
+                "{{team_id}}",
+                "members"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete members from the team",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_ids\": [{{user_id}}]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/teams/{{team_id}}/members",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "teams",
+                "{{team_id}}",
+                "members"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Projects",
+      "item": [
+        {
+          "name": "Member",
+          "item": [
+            {
+              "name": "index",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Auth",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}/Team/projects/",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "Team",
+                    "projects",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "show",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Auth",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/Team/projects/{{project_id}}",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "Team",
+                    "projects",
+                    "{{project_id}}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "auth": {
+            "type": "bearer"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {},
+                "exec": [
+                  ""
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {},
+                "exec": [
+                  ""
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "index",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Auth",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/projects",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "projects"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "update",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Auth",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Updated Project\",\r\n    \"description\": \"Updated Description\",\r\n    \"start_date\": \"2026-06-24\",\r\n    \"deadline\": \"2027-01-15\",\r\n    \"priority\": \"medium\",\r\n    \"status\": \"in_progress\",\r\n    \"type\" : \"Saas\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/projects/{{project_id}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "projects",
+                "{{project_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "insert",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Auth",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "name",
+                  "value": "test Pro1",
+                  "type": "text",
+                  "uuid": "6b43629c-c19a-49cb-8351-8d7f0866d19e"
+                },
+                {
+                  "key": "description",
+                  "value": "Project Description gden",
+                  "type": "text",
+                  "uuid": "9ee5a831-7ace-4292-9dae-7e40c8732b21"
+                },
+                {
+                  "key": "start_date",
+                  "value": "2026-06-24",
+                  "type": "text",
+                  "uuid": "01fcbd10-9be3-4806-8653-762efe865888"
+                },
+                {
+                  "key": "deadline",
+                  "value": "2026-12-31",
+                  "type": "text",
+                  "uuid": "03369ab3-2473-4ce6-bdfa-7f9f8f8bfbf2"
+                },
+                {
+                  "key": "priority",
+                  "value": "high",
+                  "type": "text",
+                  "uuid": "eec0908e-8b98-406c-ab71-44414c8e6c1d"
+                },
+                {
+                  "key": "status",
+                  "value": "pending",
+                  "type": "text",
+                  "uuid": "9b1539cd-b531-4b18-822e-44fc426c4024"
+                },
+                {
+                  "key": "type",
+                  "value": "MicroServices",
+                  "type": "text",
+                  "uuid": "ba8906aa-3963-413c-b239-63a7641f5500"
+                },
+                {
+                  "key": "attachments[]",
+                  "type": "file",
+                  "uuid": "1161ca2c-dc56-4e6d-8b88-ca65ba254cc1",
+                  "src": "postman-cloud:///1f177024-81b3-4aa0-8015-4dccd469b92b"
+                },
+                {
+                  "key": "attachments[]",
+                  "type": "file",
+                  "uuid": "c95af868-625e-45db-a541-753b2f4358f2",
+                  "src": "postman-cloud:///1f177025-d1d0-4960-beb7-8e7e7c75947c"
+                },
+                {
+                  "key": "guest_ids[]",
+                  "value": "3",
+                  "type": "text",
+                  "uuid": "1a3eec57-872f-43de-a654-ca8256af2686"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url}}/projects",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "projects"
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "try {",
+                  "  const j = pm.response.json();",
+                  "  const id = (j.data && j.data.id) || j.id;",
+                  "  if (id) pm.collectionVariables.set('project_id', String(id));",
+                  "} catch (e) {}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "delete",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Auth",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{url}}/projects/{{project_id}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "projects",
+                "{{project_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "show",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Auth",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{url}}/projects/{{project_id}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "projects",
+                "{{project_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "teams in the project",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "user_ids[0]",
+                  "value": "{{user_id}}",
+                  "type": "text",
+                  "uuid": "bf429338-dacc-41cb-a60f-2d169eeadf23"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url}}/projects/{{project_id}}/teams",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "projects",
+                "{{project_id}}",
+                "teams"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Adding teams to the project",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "team_ids[0]",
+                  "value": "1",
+                  "type": "text",
+                  "uuid": "bf429338-dacc-41cb-a60f-2d169eeadf23"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url}}/projects/{{project_id}}/teams",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "projects",
+                "{{project_id}}",
+                "teams"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "remove team from the project",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"team_ids\": [{{team_id}}]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/projects/{{project_id}}/teams",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "projects",
+                "{{project_id}}",
+                "teams"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get project guests",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/projects/guests",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "projects",
+                "guests"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Tasks",
+      "item": [
+        {
+          "name": "index",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": []
+            },
+            "url": {
+              "raw": "{{url}}/tasks",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "tasks"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "store",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "project_id",
+                  "value": "{{project_id}}",
+                  "type": "text",
+                  "uuid": "12714f51-c461-4f65-bd7c-4b5473f880d2"
+                },
+                {
+                  "key": "priority",
+                  "value": "high",
+                  "description": "low, medium, high, critical",
+                  "type": "text",
+                  "uuid": "059c848a-d27d-4e1f-94be-aecd694e60d1"
+                },
+                {
+                  "key": "description",
+                  "value": "description",
+                  "description": "optional ",
+                  "type": "text",
+                  "uuid": "16f90504-9e6e-48ed-aafb-27fe5729420f"
+                },
+                {
+                  "key": "start_date",
+                  "value": "2026-06-29",
+                  "type": "text",
+                  "uuid": "e10903b8-d419-469b-bb2a-2a159e843bba"
+                },
+                {
+                  "key": "user_ids[0]",
+                  "value": "{{user_id}}",
+                  "type": "text",
+                  "uuid": "6b218f78-e24b-4e3d-bd10-be64cbde1863"
+                },
+                {
+                  "key": "status",
+                  "value": "pending",
+                  "description": "pending, in_progress, in_review, completed",
+                  "type": "text",
+                  "uuid": "d4c4f45f-ea8d-4646-99bd-c9979e51ec96"
+                },
+                {
+                  "key": "title",
+                  "value": "taskTwo",
+                  "type": "text",
+                  "uuid": "470105fe-1abc-47f1-b9c9-5014c8fa0e43"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url}}/tasks",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "tasks"
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const d = new Date();",
+                  "const start = d.toISOString().slice(0,10);",
+                  "const due = new Date(d.getTime()+7*864e5).toISOString().slice(0,10);",
+                  "pm.request.body.formdata.each((f) => {",
+                  "  if (f.key === 'start_date') f.value = start;",
+                  "  if (f.key === 'due_date') f.value = due;",
+                  "});"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "try {",
+                  "  const j = pm.response.json();",
+                  "  const id = (j.data && j.data.id) || j.id;",
+                  "  if (id) pm.collectionVariables.set('task_id', String(id));",
+                  "} catch (e) {}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "update",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"project_id\": {{project_id}},\n  \"title\": \"Profile user\",\n  \"priority\": \"high\",\n  \"description\": \"description\",\n  \"start_date\": \"2026-07-20\",\n  \"status\": \"pending\",\n  \"user_ids\": [{{user_id}}]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/tasks/{{task_id}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "tasks",
+                "{{task_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "show",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": []
+            },
+            "url": {
+              "raw": "{{url}}/tasks/{{task_id}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "tasks",
+                "{{task_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "delete",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/tasks/{{task_id}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "tasks",
+                "{{task_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "tasks in the project",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        },
+        {
+          "name": "tasks in project months count",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/projects/{{project_id}}/analytics/tasks",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "projects",
+                "{{project_id}}",
+                "analytics",
+                "tasks"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Pusher (Broadcasting)",
+      "item": [
+        {
+          "name": "Broadcasting Auth",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"channel_name\": \"private-conversation.{{conversation_id}}\",\n    \"socket_id\": \"1234.5678\"\n}"
+            },
+            "url": {
+              "raw": "{{url}}/broadcasting/auth",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "broadcasting",
+                "auth"
+              ]
+            },
+            "description": "Used by Laravel Echo to authorize private Pusher channels. Replace `socket_id` with the real value from Pusher client."
+          },
+          "response": []
+        }
+      ],
+      "description": "Private channel name format: `private-conversation.{conversation_id}`"
+    },
+    {
+      "name": "Profile",
+      "item": [
+        {
+          "name": "My Files",
+          "item": [
+            {
+              "name": "List My Files",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}/profile/files",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "profile",
+                    "files"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Upload File",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "file",
+                      "type": "file",
+                      "value": null
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{url}}/profile/files",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "profile",
+                    "files"
+                  ]
+                },
+                "description": "Max 10MB per file."
+              },
+              "response": []
+            },
+            {
+              "name": "Delete File",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}/profile/files/{{file_id}}",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "profile",
+                    "files",
+                    "{{file_id}}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "My Tasks",
+          "item": [
+            {
+              "name": "Task Summary (To Do / Done counts)",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}/profile/tasks/summary",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "profile",
+                    "tasks",
+                    "summary"
+                  ]
+                },
+                "description": "Counts: to_do, in_progress, in_review, completed, done, total."
+              },
+              "response": []
+            },
+            {
+              "name": "List All My Tasks",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}/profile/tasks?per_page=15",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "profile",
+                    "tasks"
+                  ],
+                  "query": [
+                    {
+                      "key": "per_page",
+                      "value": "15"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "List To Do Tasks",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}/profile/tasks?classification=to_do",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "profile",
+                    "tasks"
+                  ],
+                  "query": [
+                    {
+                      "key": "classification",
+                      "value": "to_do"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "List Done / Completed Tasks",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}/profile/tasks?classification=done",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "profile",
+                    "tasks"
+                  ],
+                  "query": [
+                    {
+                      "key": "classification",
+                      "value": "done"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "List In Progress Tasks",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}/profile/tasks?classification=in_progress",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "profile",
+                    "tasks"
+                  ],
+                  "query": [
+                    {
+                      "key": "classification",
+                      "value": "in_progress"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Filter by Status (pending)",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}/profile/tasks?status=pending",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "profile",
+                    "tasks"
+                  ],
+                  "query": [
+                    {
+                      "key": "status",
+                      "value": "pending"
+                    }
+                  ]
+                },
+                "description": "status: pending | in_progress | in_review | completed"
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Recent Activity",
+          "item": [
+            {
+              "name": "Get Recent Activity",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}/profile/activity?limit=15",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "profile",
+                    "activity"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "15"
+                    }
+                  ]
+                },
+                "description": "Recent tasks, messages, and projects for the authenticated user."
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Profile",
+          "item": [
+            {
+              "name": "Get My Profile",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}/profile",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "profile"
+                  ]
+                },
+                "description": "Full profile: name, email, phone, about, job title, experience, availability, current team/project, teams, files."
+              },
+              "response": []
+            },
+            {
+              "name": "Update Profile",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"hanan\",\n  \"email\": \"hanan.bayazeed56@gmail.com\",\n  \"phone\": \"1012345678\",\n  \"country_code\": \"+20\",\n  \"about\": \"Senior project manager with 5 years experience.\",\n  \"job_title\": \"Project Manager\",\n  \"experience_years\": 5,\n  \"availability_status\": \"available\",\n  \"current_team_id\": {{team_id}},\n  \"current_project_id\": {{project_id}}\n}"
+                },
+                "url": {
+                  "raw": "{{url}}/profile/",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "profile",
+                    ""
+                  ]
+                },
+                "description": "Update profile fields. availability_status: available | unavailable"
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Files",
+      "item": [
+        {
+          "name": "Task Files",
+          "item": [
+            {
+              "name": "List Task Files",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}/tasks/{{task_id}}/files",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "tasks",
+                    "{{task_id}}",
+                    "files"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Upload to Task",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "var jsonData = pm.response.json();",
+                      "var fileId = jsonData.id || (jsonData.data && jsonData.data.id);",
+                      "if (fileId) { pm.collectionVariables.set('file_id', fileId); }"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "file",
+                      "type": "file",
+                      "value": null
+                    },
+                    {
+                      "key": "name",
+                      "value": "Task Document",
+                      "type": "text"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{url}}/tasks/{{task_id}}/files",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "tasks",
+                    "{{task_id}}",
+                    "files"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Files (General)",
+          "item": [
+            {
+              "name": "List All Files",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}/files?per_page=15",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "files"
+                  ],
+                  "query": [
+                    {
+                      "key": "per_page",
+                      "value": "15"
+                    }
+                  ]
+                },
+                "description": "Filters: status, file_type, extension, project_id, task_id, mine=1"
+              },
+              "response": []
+            },
+            {
+              "name": "List My Files",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}/files?mine=1",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "files"
+                  ],
+                  "query": [
+                    {
+                      "key": "mine",
+                      "value": "1"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "List Attached Files",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}/files?status=attached",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "files"
+                  ],
+                  "query": [
+                    {
+                      "key": "status",
+                      "value": "attached"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "List Detached Files",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}/files?status=detached",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "files"
+                  ],
+                  "query": [
+                    {
+                      "key": "status",
+                      "value": "detached"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Filter by Type (PDF)",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}/files?file_type=pdf",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "files"
+                  ],
+                  "query": [
+                    {
+                      "key": "file_type",
+                      "value": "pdf"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Upload File (Detached)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "var jsonData = pm.response.json();",
+                      "var fileId = jsonData.id || (jsonData.data && jsonData.data.id);",
+                      "if (fileId) { pm.collectionVariables.set('file_id', fileId); }"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "file",
+                      "type": "file",
+                      "value": null
+                    },
+                    {
+                      "key": "name",
+                      "value": "My Document",
+                      "type": "text"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{url}}/files",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "files"
+                  ]
+                },
+                "description": "Upload without attaching. Use Attach endpoint later."
+              },
+              "response": []
+            },
+            {
+              "name": "Upload & Attach to Project",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "var jsonData = pm.response.json();",
+                      "var fileId = jsonData.id || (jsonData.data && jsonData.data.id);",
+                      "if (fileId) { pm.collectionVariables.set('file_id', fileId); }"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "file",
+                      "type": "file",
+                      "value": null
+                    },
+                    {
+                      "key": "name",
+                      "value": "Project Attachment",
+                      "type": "text"
+                    },
+                    {
+                      "key": "project_id",
+                      "value": "{{project_id}}",
+                      "type": "text"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{url}}/files",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "files"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Upload & Attach to Task",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "var jsonData = pm.response.json();",
+                      "var fileId = jsonData.id || (jsonData.data && jsonData.data.id);",
+                      "if (fileId) { pm.collectionVariables.set('file_id', fileId); }"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "file",
+                      "type": "file",
+                      "value": null
+                    },
+                    {
+                      "key": "name",
+                      "value": "Task Attachment",
+                      "type": "text"
+                    },
+                    {
+                      "key": "task_id",
+                      "value": "{{task_id}}",
+                      "type": "text"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{url}}/files",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "files"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get File",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}/files/{{file_id}}",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "files",
+                    "{{file_id}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Attach File to Project",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"attachable_type\": \"project\",\n    \"attachable_id\": {{project_id}}\n}"
+                },
+                "url": {
+                  "raw": "{{url}}/files/{{file_id}}/attach",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "files",
+                    "{{file_id}}",
+                    "attach"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Attach File to Task",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"attachable_type\": \"task\",\n    \"attachable_id\": {{task_id}}\n}"
+                },
+                "url": {
+                  "raw": "{{url}}/files/{{file_id}}/attach",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "files",
+                    "{{file_id}}",
+                    "attach"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Detach File",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}/files/{{file_id}}/detach",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "files",
+                    "{{file_id}}",
+                    "detach"
+                  ]
+                },
+                "description": "Removes file from project/task but keeps it in storage (detached)."
+              },
+              "response": []
+            },
+            {
+              "name": "Delete File",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}/files/{{file_id}}",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "files",
+                    "{{file_id}}"
+                  ]
+                },
+                "description": "Permanently deletes file from DB and storage."
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Project Files",
+          "item": [
+            {
+              "name": "List Project Files",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}/projects/{{project_id}}/files",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "projects",
+                    "{{project_id}}",
+                    "files"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Upload to Project",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "var jsonData = pm.response.json();",
+                      "var fileId = jsonData.id || (jsonData.data && jsonData.data.id);",
+                      "if (fileId) { pm.collectionVariables.set('file_id', fileId); }"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "file",
+                      "type": "file",
+                      "src": "/C:/Users/hanan/Desktop/Screenshot 2026-07-01 171730.png"
+                    },
+                    {
+                      "key": "name",
+                      "value": "Project PDF",
+                      "type": "text"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{url}}/projects/{{project_id}}/files",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "projects",
+                    "{{project_id}}",
+                    "files"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Chat",
+      "item": [
+        {
+          "name": "Conversations",
+          "item": [
+            {
+              "name": "List My Conversations",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}/conversations?per_page=15",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "conversations"
+                  ],
+                  "query": [
+                    {
+                      "key": "per_page",
+                      "value": "15"
+                    }
+                  ]
+                },
+                "description": "All conversations where the authenticated user is a participant."
+              },
+              "response": []
+            },
+            {
+              "name": "Get Conversation",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}/conversations/{{conversation_id}}",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "conversations",
+                    "{{conversation_id}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Start / Get Direct Chat (1-to-1)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "var jsonData = pm.response.json();",
+                      "if (jsonData.data && jsonData.data.id) {",
+                      "    pm.collectionVariables.set('conversation_id', jsonData.data.id);",
+                      "}"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"user_id\": {{user_id}}\n}"
+                },
+                "url": {
+                  "raw": "{{url}}/conversations/direct",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "conversations",
+                    "direct"
+                  ]
+                },
+                "description": "Direct chat between two users. Both must belong to at least one shared team."
+              },
+              "response": []
+            },
+            {
+              "name": "Get / Create Project Group Chat",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "var jsonData = pm.response.json();",
+                      "if (jsonData.data && jsonData.data.id) {",
+                      "    pm.collectionVariables.set('conversation_id', jsonData.data.id);",
+                      "}"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}/projects/{{project_id}}/conversation",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "projects",
+                    "{{project_id}}",
+                    "conversation"
+                  ]
+                },
+                "description": "GET project group chat. Creates conversation if missing and syncs participants from project teams + creator."
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Messages",
+          "item": [
+            {
+              "name": "List Messages",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}/conversations/{{conversation_id}}/messages?per_page=30",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "conversations",
+                    "{{conversation_id}}",
+                    "messages"
+                  ],
+                  "query": [
+                    {
+                      "key": "per_page",
+                      "value": "30"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Send Message",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"body\": \"Hello from Postman!\"\n}"
+                },
+                "url": {
+                  "raw": "{{url}}/conversations/{{conversation_id}}/messages",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "conversations",
+                    "{{conversation_id}}",
+                    "messages"
+                  ]
+                },
+                "description": "Sends a message and broadcasts `message.sent` on private channel `conversation.{id}` via Pusher."
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Notifications Module",
+      "item": [
+        {
+          "name": "notifications unread",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"project_id\": 1,\r\n  \"name\": \"Test task notification\",\r\n  \"description\": \"Testing task database notification\",\r\n  \"status\": \"pending\",\r\n  \"user_ids\": [2]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/notifications/unread",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "notifications",
+                "unread"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "all notifications for user",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/notifications?id=0c958055-4c57-4928-9aef-27f92d018a98/read",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "notifications"
+              ],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "0c958055-4c57-4928-9aef-27f92d018a98/read"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "notifications unread  count",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/notifications/unread-count",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "notifications",
+                "unread-count"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "read all",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/notifications/read-all",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "notifications",
+                "read-all"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "delete read notifications",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/notifications/read",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "notifications",
+                "read"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "notifications id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/notifications/{{notification_id}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "notifications",
+                "{{notification_id}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "dashpord-index-page-api",
+      "item": [
+        {
+          "name": "Dashboard Stats",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "disabled": false
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "disabled": false
+              }
+            ],
+            "url": {
+              "raw": "{{url}}/dashboard/stats",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "dashboard",
+                "stats"
+              ]
+            },
+            "description": "Generated from cURL: curl -X GET \"{{base_url}}/api/dashboard/stats\" -H \"Accept: application/json\" -H \"Authorization: Bearer {{token}}\""
+          },
+          "response": []
+        },
+        {
+          "name": "Dashboard Recent Files",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "disabled": false
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "disabled": false
+              }
+            ],
+            "url": {
+              "raw": "{{url}}/dashboard/recent-files",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "dashboard",
+                "recent-files"
+              ]
+            },
+            "description": "Generated from cURL: curl -X GET \"{{base_url}}/api/dashboard/recent-files\" -H \"Accept: application/json\" -H \"Authorization: Bearer {{token}}\""
+          },
+          "response": []
+        },
+        {
+          "name": "Dashboard Project Overview",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "disabled": false
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "disabled": false
+              }
+            ],
+            "url": {
+              "raw": "{{url}}/dashboard/project-overview?project_id=1",
+              "protocol": "https",
+              "host": [
+                "collabspace-team-one",
+                "newcinderella",
+                "online"
+              ],
+              "path": [
+                "dashboard",
+                "project-overview"
+              ],
+              "query": [
+                {
+                  "key": "project_id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Generated from cURL: curl -X GET \"{{base_url}}/api/dashboard/project-overview?project_id=1\" -H \"Accept: application/json\" -H \"Authorization: Bearer {{token}}\""
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Ask Ai",
+      "item": [
+        {
+          "name": "Ask",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "question",
+                  "value": "عندنا كام مشروع",
+                  "type": "text",
+                  "uuid": "e841cf48-47d4-4f09-a993-a9311652e662"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url}}/ai/ask",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "ai",
+                "ask"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Meetings",
+      "item": [
+        {
+          "name": "List Meetings",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{url}}/meetings?per_page=15",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "meetings"
+              ],
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "15"
+                },
+                {
+                  "key": "start_date",
+                  "value": "2026-06-01",
+                  "disabled": true
+                },
+                {
+                  "key": "end_date",
+                  "value": "2026-06-30",
+                  "disabled": true
+                },
+                {
+                  "key": "project_id",
+                  "value": "1",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "List meetings for the authenticated user (creator or participant)."
+          },
+          "response": []
+        },
+        {
+          "name": "Calendar View",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{url}}/meetings/calendar?start_date=2026-06-01&end_date=2026-06-30",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "meetings",
+                "calendar"
+              ],
+              "query": [
+                {
+                  "key": "start_date",
+                  "value": "2026-06-01",
+                  "description": "Required"
+                },
+                {
+                  "key": "end_date",
+                  "value": "2026-06-30",
+                  "description": "Required"
+                }
+              ]
+            },
+            "description": "Calendar grouped by date with meetings for each day."
+          },
+          "response": []
+        },
+        {
+          "name": "Upcoming Meetings",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{url}}/meetings/upcoming?days=7",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "meetings",
+                "upcoming"
+              ],
+              "query": [
+                {
+                  "key": "days",
+                  "value": "7"
+                }
+              ]
+            },
+            "description": "Upcoming meetings within the next N days (default 7, max 365)."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Meeting (assign team + individuals)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.data && jsonData.data.meeting && jsonData.data.meeting.id) {",
+                  "    pm.collectionVariables.set('meeting_id', jsonData.data.meeting.id);",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const start = new Date(Date.now() + 24*60*60*1000);",
+                  "const end = new Date(Date.now() + 25*60*60*1000);",
+                  "const fmt = (d) => d.toISOString().slice(0,19).replace('T',' ');",
+                  "pm.variables.set('meeting_starts_at', fmt(start));",
+                  "pm.variables.set('meeting_ends_at', fmt(end));",
+                  "if (pm.request.body && pm.request.body.raw) {",
+                  "  let raw = pm.request.body.raw;",
+                  "  raw = raw.replace(/\\\"starts_at\\\"\\s*:\\s*\\\"[^\\\"]*\\\"/, '\"starts_at\": \"' + fmt(start) + '\"');",
+                  "  raw = raw.replace(/\\\"ends_at\\\"\\s*:\\s*\\\"[^\\\"]*\\\"/, '\"ends_at\": \"' + fmt(end) + '\"');",
+                  "  // also without escaped quotes in raw string stored in collection",
+                  "  raw = raw.replace(/\"starts_at\"\\s*:\\s*\"[^\"]*\"/, '\"starts_at\": \"' + fmt(start) + '\"');",
+                  "  raw = raw.replace(/\"ends_at\"\\s*:\\s*\"[^\"]*\"/, '\"ends_at\": \"' + fmt(end) + '\"');",
+                  "  pm.request.body.raw = raw;",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Sprint Planning\",\n  \"description\": \"Plan sprint goals\",\n  \"starts_at\": \"2026-07-20 10:00:00\",\n  \"ends_at\": \"2026-07-20 11:00:00\",\n  \"project_id\": {{project_id}},\n  \"team_ids\": [{{team_id}}],\n  \"user_ids\": [{{user_id}}]\n}"
+            },
+            "url": {
+              "raw": "{{url}}/meetings",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "meetings"
+              ]
+            },
+            "description": "Create meeting and notify assigned users. team_ids = full team. user_ids = individual users. Creator is always included."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Meeting (individuals only)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"1-on-1 Review\",\n  \"description\": \"Performance review\",\n  \"starts_at\": \"2026-07-20 14:00:00\",\n  \"ends_at\": \"2026-07-20 15:00:00\",\n  \"user_ids\": [{{user_id}}]\n}"
+            },
+            "url": {
+              "raw": "{{url}}/meetings",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "meetings"
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const start = new Date(Date.now() + 24*60*60*1000);",
+                  "const end = new Date(Date.now() + 25*60*60*1000);",
+                  "const fmt = (d) => d.toISOString().slice(0,19).replace('T',' ');",
+                  "pm.variables.set('meeting_starts_at', fmt(start));",
+                  "pm.variables.set('meeting_ends_at', fmt(end));",
+                  "if (pm.request.body && pm.request.body.raw) {",
+                  "  let raw = pm.request.body.raw;",
+                  "  raw = raw.replace(/\\\"starts_at\\\"\\s*:\\s*\\\"[^\\\"]*\\\"/, '\"starts_at\": \"' + fmt(start) + '\"');",
+                  "  raw = raw.replace(/\\\"ends_at\\\"\\s*:\\s*\\\"[^\\\"]*\\\"/, '\"ends_at\": \"' + fmt(end) + '\"');",
+                  "  // also without escaped quotes in raw string stored in collection",
+                  "  raw = raw.replace(/\"starts_at\"\\s*:\\s*\"[^\"]*\"/, '\"starts_at\": \"' + fmt(start) + '\"');",
+                  "  raw = raw.replace(/\"ends_at\"\\s*:\\s*\"[^\"]*\"/, '\"ends_at\": \"' + fmt(end) + '\"');",
+                  "  pm.request.body.raw = raw;",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Meeting",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{url}}/meetings/{{meeting_id}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "meetings",
+                "{{meeting_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Meeting",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Sprint Planning (Updated)\",\n  \"starts_at\": \"2026-07-21 11:00:00\",\n  \"ends_at\": \"2026-07-21 12:00:00\",\n  \"team_ids\": [{{team_id}}],\n  \"user_ids\": [{{user_id}}]\n}"
+            },
+            "url": {
+              "raw": "{{url}}/meetings/{{meeting_id}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "meetings",
+                "{{meeting_id}}"
+              ]
+            },
+            "description": "Only the meeting creator can update. Participants receive update notifications."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const start = new Date(Date.now() + 24*60*60*1000);",
+                  "const end = new Date(Date.now() + 25*60*60*1000);",
+                  "const fmt = (d) => d.toISOString().slice(0,19).replace('T',' ');",
+                  "pm.variables.set('meeting_starts_at', fmt(start));",
+                  "pm.variables.set('meeting_ends_at', fmt(end));",
+                  "if (pm.request.body && pm.request.body.raw) {",
+                  "  let raw = pm.request.body.raw;",
+                  "  raw = raw.replace(/\\\"starts_at\\\"\\s*:\\s*\\\"[^\\\"]*\\\"/, '\"starts_at\": \"' + fmt(start) + '\"');",
+                  "  raw = raw.replace(/\\\"ends_at\\\"\\s*:\\s*\\\"[^\\\"]*\\\"/, '\"ends_at\": \"' + fmt(end) + '\"');",
+                  "  // also without escaped quotes in raw string stored in collection",
+                  "  raw = raw.replace(/\"starts_at\"\\s*:\\s*\"[^\"]*\"/, '\"starts_at\": \"' + fmt(start) + '\"');",
+                  "  raw = raw.replace(/\"ends_at\"\\s*:\\s*\"[^\"]*\"/, '\"ends_at\": \"' + fmt(end) + '\"');",
+                  "  pm.request.body.raw = raw;",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Delete Meeting",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{url}}/meetings/{{meeting_id}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "meetings",
+                "{{meeting_id}}"
+              ]
+            },
+            "description": "Only creator can delete. Participants receive cancellation notifications."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "{{url}}/login",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{url}}/login",
+          "host": [
+            "{{url}}"
+          ],
+          "path": [
+            "login"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "if (!pm.collectionVariables.get('url')) {",
+          "    pm.collectionVariables.set('url', 'http://127.0.0.1:8000/api');",
+          "}",
+          "// Normalize accidental /api/api double prefix in request URL",
+          "const req = pm.request;",
+          "try {",
+          "  let raw = req.url.toString();",
+          "  if (raw.includes('/api/api/')) {",
+          "    raw = raw.replace('/api/api/', '/api/');",
+          "    pm.request.url = raw;",
+          "  }",
+          "} catch (e) {}"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "const setIf = (key, val) => { if (val !== undefined && val !== null && val !== '') pm.collectionVariables.set(key, String(val)); };",
+          "try {",
+          "  if (pm.response.code < 200 || pm.response.code >= 300) return;",
+          "  const json = pm.response.json();",
+          "  const data = json.data !== undefined ? json.data : json;",
+          "  const obj = Array.isArray(data) ? (data[0] || {}) : (data || {});",
+          "  const path = pm.request.url.getPath ? pm.request.url.getPath() : pm.request.url.toString();",
+          "  const method = pm.request.method;",
+          "  if (json.data && json.data.token) setIf('token', json.data.token);",
+          "  if (json.token) setIf('token', json.token);",
+          "  if (obj.token) setIf('token', obj.token);",
+          "  const user = (json.data && json.data.user) || obj.user || json.user;",
+          "  if (user && user.id) setIf('user_id', user.id);",
+          "  if (obj.id) {",
+          "    if (/\\/teams(\\/|$)/.test(path) && !/members/.test(path) && !/projects/.test(path)) setIf('team_id', obj.id);",
+          "    if (/\\/projects(\\/|$)/.test(path) && !/tasks|teams|conversation|files|analytics/.test(path)) setIf('project_id', obj.id);",
+          "    if (/\\/Team\\/projects/.test(path)) setIf('project_id', obj.id);",
+          "    if (/\\/tasks(\\/|$)/.test(path) && !/files/.test(path)) setIf('task_id', obj.id);",
+          "    if (/\\/meetings(\\/|$)/.test(path)) setIf('meeting_id', obj.id);",
+          "    if (/conversation/.test(path) || /\\/conversations(\\/|$)/.test(path)) setIf('conversation_id', obj.id);",
+          "    if (/\\/files(\\/|$)/.test(path) || /profile\\/files/.test(path)) setIf('file_id', obj.id);",
+          "    if (/\\/notifications(\\/|$)/.test(path)) setIf('notification_id', obj.id);",
+          "  }",
+          "  if (obj.meeting && obj.meeting.id) setIf('meeting_id', obj.meeting.id);",
+          "  if (json.data && json.data.reset_token) setIf('reset_token', json.data.reset_token);",
+          "  if (json.data && json.data.otp) setIf('otp', json.data.otp);",
+          "} catch (e) {}"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "url",
+      "value": "http://127.0.0.1:8000/api"
+    },
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "user_id",
+      "value": ""
+    },
+    {
+      "key": "team_id",
+      "value": "1"
+    },
+    {
+      "key": "project_id",
+      "value": "1"
+    },
+    {
+      "key": "task_id",
+      "value": ""
+    },
+    {
+      "key": "file_id",
+      "value": ""
+    },
+    {
+      "key": "meeting_id",
+      "value": ""
+    },
+    {
+      "key": "conversation_id",
+      "value": ""
+    },
+    {
+      "key": "notification_id",
+      "value": ""
+    },
+    {
+      "key": "reset_token",
+      "value": ""
+    },
+    {
+      "key": "otp",
+      "value": ""
+    }
+  ]
+}

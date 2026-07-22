@@ -14,7 +14,10 @@ class TeamResource extends JsonResource
             'name' => $this->name,
             'display_name' => $this->display_name,
             'description' => $this->description,
-            'members' => TeamMemberResource::collection($this->whenLoaded('members')),
+            'members' => $this->whenLoaded(
+                'members',
+                fn () => TeamMemberResource::collection($this->members),
+            ),
             'projects' => $this->whenLoaded('projects', fn () => $this->projects->map(fn ($project) => [
                 'id' => $project->id,
                 'name' => $project->name,

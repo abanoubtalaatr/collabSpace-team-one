@@ -17,4 +17,11 @@ class UpcomingMeetingsRequest extends FormRequest
             'days' => ['sometimes', 'integer', 'min:1', 'max:365'],
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'days.max' => 'The days value may not be greater than 365.',
+        ];
+    }
 }

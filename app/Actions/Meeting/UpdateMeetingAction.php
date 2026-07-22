@@ -31,16 +31,29 @@ class UpdateMeetingAction
                 'project_id' => $data['project_id'] ?? $meeting->project_id,
             ]);
 
-            if (isset($data['user_ids']) || isset($data['team_ids'])) {
-                $hasExplicitUserList = isset($data['user_ids']);
-                $userIds = $data['user_ids'] ?? $meeting->users()->pluck('users.id')->all();
-                $teamIds = $data['team_ids'] ?? $meeting->teams()->pluck('teams.id')->all();
+            if (array_key_exists('user_ids', $data) || array_key_exists('team_ids', $data)) {
+                $hasExplicitUserList = array_key_exists('user_ids', $data);
+                $userIds = $hasExplicitUserList
+                    ? ($data['user_ids'] ?? [])
+                    : $meeting->users()->pluck('users.id')->all();
+                $teamIds = array_key_exists('team_ids', $data)
+                    ? ($data['team_ids'] ?? [])
+                    : $meeting->teams()->pluck('teams.id')->all();
+
+                // Explicit user_ids is the final participant list — do not re-expand teams into users.
                 $participantTeamIds = $hasExplicitUserList ? [] : $teamIds;
 
-                $participants = $this->resolveParticipants->execute($userIds, $participantTeamIds, $meeting->created_by);
+                $participants = $this->resolveParticipants->execute(
+                    $userIds,
+                    $participantTeamIds,
+                    $meeting->created_by,
+                );
 
                 $meeting->users()->sync($participants->pluck('id'));
-                $meeting->teams()->sync($teamIds);
+
+                if (array_key_exists('team_ids', $data)) {
+                    $meeting->teams()->sync($teamIds);
+                }
             }
 
             $notifyUsers = $meeting->users()->where('users.id', '!=', $actor->id)->get();

@@ -55,6 +55,13 @@ class UpdateMeetingRequest extends FormRequest
                     ? Carbon::parse($this->input('ends_at'))
                     : $meeting->ends_at;
 
+                if ($this->filled('starts_at') && Carbon::parse($this->input('starts_at'))->lt(now())) {
+                    $validator->errors()->add(
+                        'starts_at',
+                        'The start and end dates have to be now or in the future.',
+                    );
+                }
+
                 if ($endsAt->lte($startsAt)) {
                     $validator->errors()->add(
                         'ends_at',

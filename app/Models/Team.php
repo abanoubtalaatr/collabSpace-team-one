@@ -34,9 +34,10 @@ class Team extends LaratrustTeam implements GlobalSearchable, Searchable
      */
     public static function globalSearchRelations(): array
     {
+        // Avoid constrained select lists that can break Spatie search with SQL errors.
         return [
-            'members:id,name,email,email_verified_at,created_at,updated_at',
-            'projects:id,created_by,name,description,start_date,deadline,priority,status,created_at,updated_at',
+            'members:id,name,email',
+            'projects:id,name,status',
         ];
     }
 

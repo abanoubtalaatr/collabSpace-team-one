@@ -11,6 +11,27 @@ class RemoveTeamMembersRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation(): void
+    {
+        $userIds = $this->input('user_ids');
+
+        // DELETE requests often omit multipart/form-data parsing; also accept query JSON.
+        if ($userIds === null && $this->query->has('user_ids')) {
+            $userIds = $this->query('user_ids');
+        }
+
+        if (is_string($userIds)) {
+            $decoded = json_decode($userIds, true);
+            $userIds = json_last_error() === JSON_ERROR_NONE ? $decoded : array_filter(explode(',', $userIds));
+        }
+
+        if (is_array($userIds)) {
+            $this->merge([
+                'user_ids' => array_values(array_map('intval', $userIds)),
+            ]);
+        }
+    }
+
     public function rules(): array
     {
         return [

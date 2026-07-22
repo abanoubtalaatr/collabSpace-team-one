@@ -14,9 +14,23 @@ class RegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'min:10', 'max:255', 'regex:/\p{L}/u'],
-            'email' => ['required', 'string', 'email', Rule::unique('users', 'email')],
+            'name' => [
+                'required',
+                'string',
+                'min:2',
+                'max:255',
+                'regex:/^(?=.*\p{L})[\p{L}\p{M}\s\'\-\.]+$/u',
+            ],
+            'email' => ['required', 'string', 'email:rfc', Rule::unique('users', 'email')],
             'password' => ['required', 'confirmed', Password::defaults()],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'name.regex' => 'The name must contain letters and cannot be only numbers or special characters.',
+            'email.email' => 'The email format is invalid.',
         ];
     }
 }

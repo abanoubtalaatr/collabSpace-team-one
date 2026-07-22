@@ -129,7 +129,11 @@ class GlobalSearchService
     private function searchableData(Model $searchable): array
     {
         if ($searchable instanceof GlobalSearchable) {
-            $searchable->loadMissing($searchable::globalSearchRelations());
+            try {
+                $searchable->loadMissing($searchable::globalSearchRelations());
+            } catch (\Throwable) {
+                // Keep search usable even if a related table/column is missing.
+            }
         }
 
         return $searchable->toArray();

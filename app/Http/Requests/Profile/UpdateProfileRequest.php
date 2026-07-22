@@ -13,6 +13,16 @@ class UpdateProfileRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation(): void
+    {
+        // Support PUT /profile?name=... and JSON/form bodies.
+        $fromQuery = array_filter($this->query(), fn ($value) => $value !== null && $value !== '');
+
+        if ($fromQuery !== []) {
+            $this->merge($fromQuery);
+        }
+    }
+
     public function rules(): array
     {
         return [
