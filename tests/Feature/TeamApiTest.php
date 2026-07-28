@@ -32,6 +32,24 @@ class TeamApiTest extends TestCase
         ], ['Accept' => 'application/json'])->assertOk();
 
         $this->assertFalse($team->members()->whereKey($formMember->id)->exists());
+
+        $indexedMember = User::factory()->create();
+        $team->members()->attach($indexedMember);
+
+        $this->call(
+            'DELETE',
+            "/api/teams/{$team->id}/members",
+            [],
+            [],
+            [],
+            [
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_ACCEPT' => 'application/json',
+            ],
+            json_encode(['user_ids' => [$indexedMember->id]]),
+        )->assertOk();
+
+        $this->assertFalse($team->members()->whereKey($indexedMember->id)->exists());
     }
 
     public function test_api_bug_020_team_name_update_persists(): void

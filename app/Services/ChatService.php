@@ -79,6 +79,26 @@ class ChatService
         return $conversation;
     }
 
+    /**
+     * @param  list<int>  $userIds
+     */
+    public function createProjectConversationWithMembers(Project $project, User $actor, array $userIds): Conversation
+    {
+        $conversation = $this->findOrCreateProjectConversation($project);
+
+        $participantIds = collect($userIds)
+            ->push($actor->id)
+            ->push($project->created_by)
+            ->map(fn ($id) => (int) $id)
+            ->unique()
+            ->values()
+            ->all();
+
+        $conversation->participants()->sync($participantIds);
+
+        return $conversation;
+    }
+
     public function userCanAccessConversation(User $user, Conversation $conversation): bool
     {
         return $conversation->participants()->where('users.id', $user->id)->exists();

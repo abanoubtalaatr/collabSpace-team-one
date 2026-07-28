@@ -30,6 +30,32 @@ class ChatApiTest extends TestCase
             ->assertJsonCount(2, 'data.participants');
     }
 
+    public function test_direct_conversation_includes_last_message_when_body_is_sent_or_message_is_posted(): void
+    {
+        $firstUser = User::factory()->create();
+        $secondUser = User::factory()->create();
+        $sharedTeam = Team::factory()->create();
+        $sharedTeam->members()->attach([$firstUser->id, $secondUser->id]);
+        Sanctum::actingAs($firstUser);
+
+        $createResponse = $this->postJson('/api/conversations/direct', [
+            'user_id' => $secondUser->id,
+            'body' => 'Hello from create',
+        ])
+            ->assertCreated()
+            ->assertJsonPath('data.last_message.body', 'Hello from create');
+
+        $conversationId = $createResponse->json('data.id');
+
+        $this->postJson("/api/conversations/{$conversationId}/messages", [
+            'body' => 'Follow-up message',
+        ])->assertCreated();
+
+        $this->getJson("/api/conversations/{$conversationId}")
+            ->assertOk()
+            ->assertJsonPath('data.last_message.body', 'Follow-up message');
+    }
+
     public function test_access_to_the_same_project_without_a_shared_team_does_not_allow_direct_chat(): void
     {
         $projectCreator = User::factory()->create();
@@ -45,10 +71,11 @@ class ChatApiTest extends TestCase
         ])->assertForbidden();
     }
 
-    public function test_api_conversation_029_project_conversation_uses_get_and_derives_members_from_project_teams(): void
+    public function test_api_conversation_029_project_conversation_get_and_post_with_member_ids(): void
     {
         $projectCreator = User::factory()->create();
         $projectMember = User::factory()->create();
+        $extraMember = User::factory()->create();
         $project = Project::factory()->create(['created_by' => $projectCreator->id]);
         $team = Team::factory()->create();
         $team->members()->attach($projectMember);
@@ -60,16 +87,21 @@ class ChatApiTest extends TestCase
             ->assertJsonPath('data.project.id', $project->id)
             ->assertJsonCount(2, 'data.participants');
 
+        $this->postJson("/api/projects/{$project->id}/conversation", [])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors(['user_ids']);
+
+        $this->postJson("/api/projects/{$project->id}/conversation", [
+            'user_ids' => [$extraMember->id],
+        ])
+            ->assertCreated()
+            ->assertJsonPath('data.project.id', $project->id);
+
         $conversation = Conversation::query()->sole();
         $this->assertEqualsCanonicalizing(
-            [$projectCreator->id, $projectMember->id],
+            [$projectCreator->id, $extraMember->id],
             $conversation->participants()->pluck('users.id')->all(),
         );
-
-        $this->postJson("/api/projects/{$project->id}/conversation", [])
-            ->assertMethodNotAllowed();
-
-        $this->assertSame(1, Conversation::query()->count());
     }
 
     public function test_sending_a_message_creates_a_notification_for_other_participants(): void

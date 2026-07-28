@@ -52,6 +52,7 @@ class MessageController extends Controller
         ]);
 
         $conversation->touch();
+        $conversation->unsetRelation('lastMessage');
         $message->load('sender:id,name,email');
 
         $this->notificationService->notifyConversationMessageSent($request->user(), $conversation, $message);

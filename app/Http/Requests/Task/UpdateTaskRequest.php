@@ -4,6 +4,7 @@ namespace App\Http\Requests\Task;
 
 use App\Enums\TaskPriority;
 use App\Enums\TaskStatus;
+use App\Http\Requests\Concerns\ParsesMethodBody;
 use App\Models\Task;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -11,6 +12,8 @@ use Illuminate\Validation\Validator;
 
 class UpdateTaskRequest extends FormRequest
 {
+    use ParsesMethodBody;
+
     public function authorize(): bool
     {
         return true;
@@ -18,6 +21,19 @@ class UpdateTaskRequest extends FormRequest
 
     protected function prepareForValidation(): void
     {
+        $this->mergeBodyParameters([
+            'project_id',
+            'title',
+            'name',
+            'description',
+            'start_date',
+            'due_date',
+            'progress',
+            'status',
+            'priority',
+            'user_ids',
+        ]);
+
         if ($this->filled('name') && ! $this->filled('title')) {
             $this->merge(['title' => $this->input('name')]);
         }

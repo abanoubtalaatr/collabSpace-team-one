@@ -21,7 +21,7 @@ class RegisterRequest extends FormRequest
                 'max:255',
                 'regex:/^(?=.*\p{L})[\p{L}\p{M}\s\'\-\.]+$/u',
             ],
-            'email' => ['required', 'string', 'email:rfc', Rule::unique('users', 'email')],
+            'email' => ['required', 'string', 'email:rfc,filter', Rule::unique('users', 'email')],
             'password' => ['required', 'confirmed', Password::defaults()],
         ];
     }

@@ -2,10 +2,13 @@
 
 namespace App\Http\Requests\Team;
 
+use App\Http\Requests\Concerns\ParsesMethodBody;
 use Illuminate\Foundation\Http\FormRequest;
 
 class RemoveTeamMembersRequest extends FormRequest
 {
+    use ParsesMethodBody;
+
     public function authorize(): bool
     {
         return true;
@@ -13,16 +16,15 @@ class RemoveTeamMembersRequest extends FormRequest
 
     protected function prepareForValidation(): void
     {
-        $userIds = $this->input('user_ids');
+        $this->mergeBodyParameters(['user_ids']);
 
-        // DELETE requests often omit multipart/form-data parsing; also accept query JSON.
-        if ($userIds === null && $this->query->has('user_ids')) {
-            $userIds = $this->query('user_ids');
-        }
+        $userIds = $this->input('user_ids');
 
         if (is_string($userIds)) {
             $decoded = json_decode($userIds, true);
-            $userIds = json_last_error() === JSON_ERROR_NONE ? $decoded : array_filter(explode(',', $userIds));
+            $userIds = json_last_error() === JSON_ERROR_NONE
+                ? $decoded
+                : array_filter(array_map('trim', explode(',', $userIds)));
         }
 
         if (is_array($userIds)) {

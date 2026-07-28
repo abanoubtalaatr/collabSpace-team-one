@@ -151,12 +151,19 @@ class TaskApiTest extends TestCase
         ])
             ->assertCreated()
             ->assertJsonPath('data.title', 'Canonical task title')
-            ->assertJsonMissingPath('data.name');
+            ->assertJsonPath('data.name', 'Canonical task title');
 
-        $this->assertSame(
-            'Canonical task title',
-            Task::query()->sole()->title,
-        );
+        $this->postJson('/api/tasks', [
+            'project_id' => $project->id,
+            'name' => 'Alias task name',
+            'priority' => 'medium',
+        ])
+            ->assertCreated()
+            ->assertJsonPath('data.title', 'Alias task name')
+            ->assertJsonPath('data.name', 'Alias task name');
+
+        $this->assertDatabaseHas('tasks', ['title' => 'Canonical task title']);
+        $this->assertDatabaseHas('tasks', ['title' => 'Alias task name']);
     }
 
     public function test_api_task_del_009_project_creator_can_delete_a_task(): void

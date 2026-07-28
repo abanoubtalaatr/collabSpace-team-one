@@ -15,6 +15,8 @@ class StoreDirectConversationRequest extends FormRequest
     {
         return [
             'user_id' => ['required', 'integer', 'exists:users,id', 'not_in:'.$this->user()->id],
+            'body' => ['sometimes', 'nullable', 'string', 'max:5000'],
+            'message' => ['sometimes', 'nullable', 'string', 'max:5000'],
         ];
     }
 }

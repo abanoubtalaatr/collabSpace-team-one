@@ -120,6 +120,20 @@ class ProfileTaskApiTest extends TestCase
             ->assertJsonPath('data.done', 1)
             ->assertJsonPath('data.total', 4)
             ->assertJsonPath('data.by_status.pending', 1);
+
+        $this->getJson('/api/profile/tasks')
+            ->assertOk()
+            ->assertJsonCount(4, 'data');
+
+        $this->getJson('/api/profile/tasks?status=pending')
+            ->assertOk()
+            ->assertJsonCount(1, 'data')
+            ->assertJsonPath('data.0.id', $assignedTask->id);
+
+        $this->getJson('/api/profile/tasks?classification=in_progress')
+            ->assertOk()
+            ->assertJsonCount(1, 'data')
+            ->assertJsonPath('data.0.status', TaskStatus::InProgress->value);
     }
 
     /**

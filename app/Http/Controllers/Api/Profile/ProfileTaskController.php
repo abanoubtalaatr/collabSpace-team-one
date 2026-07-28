@@ -6,6 +6,7 @@ use App\Enums\TaskStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Profile\ProfileTaskSummaryResource;
 use App\Http\Resources\TaskResource;
+use App\Models\Task;
 use App\Services\ProfileService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -22,12 +23,13 @@ class ProfileTaskController extends Controller
             'classification' => ['sometimes', Rule::in(['to_do', 'done', 'in_progress', 'in_review', 'completed', 'pending'])],
         ]);
 
-        $query = $request->user()
-            ->tasks()
+        // Same access scope as task summary (assigned ∪ project creator ∪ team membership).
+        $query = Task::query()
+            ->accessibleToUser($request->user()->id)
             ->with(['project:id,name', 'users:id,name,email', 'users.media']);
 
         if ($request->filled('status')) {
-            $query->where('status', $request->string('status'));
+            $query->where('status', $request->string('status')->value());
         }
 
         if ($request->filled('classification')) {

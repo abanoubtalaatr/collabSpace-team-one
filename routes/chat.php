@@ -9,6 +9,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('conversations/direct', [ConversationController::class, 'storeDirect']);
     Route::get('conversations/{conversation}', [ConversationController::class, 'show']);
     Route::get('projects/{project}/conversation', [ConversationController::class, 'showProject']);
+    Route::post('projects/{project}/conversation', [ConversationController::class, 'storeProject']);
 
     Route::get('conversations/{conversation}/messages', [MessageController::class, 'index']);
     Route::post('conversations/{conversation}/messages', [MessageController::class, 'store']);

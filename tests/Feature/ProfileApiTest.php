@@ -24,8 +24,14 @@ class ProfileApiTest extends TestCase
 
         $this->assertSame('Updated Profile Name', $user->fresh()->name);
 
+        $this->put('/api/profile?name=Miro', [], ['Accept' => 'application/json'])
+            ->assertOk()
+            ->assertJsonPath('data.name', 'Miro');
+
+        $this->assertSame('Miro', $user->fresh()->name);
+
         $this->getJson('/api/profile')
             ->assertOk()
-            ->assertJsonPath('data.name', 'Updated Profile Name');
+            ->assertJsonPath('data.name', 'Miro');
     }
 }

@@ -3,11 +3,14 @@
 namespace App\Http\Requests\Profile;
 
 use App\Enums\UserAvailability;
+use App\Http\Requests\Concerns\ParsesMethodBody;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 class UpdateProfileRequest extends FormRequest
 {
+    use ParsesMethodBody;
+
     public function authorize(): bool
     {
         return true;
@@ -15,7 +18,20 @@ class UpdateProfileRequest extends FormRequest
 
     protected function prepareForValidation(): void
     {
-        // Support PUT /profile?name=... and JSON/form bodies.
+        $this->mergeBodyParameters([
+            'name',
+            'email',
+            'phone',
+            'country_code',
+            'about',
+            'job_title',
+            'experience_years',
+            'availability_status',
+            'current_team_id',
+            'current_project_id',
+        ]);
+
+        // Support PUT /profile?name=Miro and JSON/form bodies.
         $fromQuery = array_filter($this->query(), fn ($value) => $value !== null && $value !== '');
 
         if ($fromQuery !== []) {

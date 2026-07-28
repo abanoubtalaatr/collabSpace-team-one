@@ -4,7 +4,8 @@
     "name": "Round12-collabase-team-one",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "51835274",
-    "_collection_link": "https://go.postman.co/collection/51835274-ecf708b3-1d38-4039-9466-38644695932c?source=collection_link"
+    "_collection_link": "https://go.postman.co/collection/51835274-ecf708b3-1d38-4039-9466-38644695932c?source=collection_link",
+    "description": "CollabSpace API collection.\n\nSet `url` to `http://127.0.0.1:8000` (server root, NO trailing /api).\nAll request paths include `/api/...` once.\nRun Auth → login first to set `token` and `user_id`.\nPUT/DELETE must use raw JSON bodies (not multipart form-data)."
   },
   "item": [
     {
@@ -16,11 +17,12 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{url}}/reports/projects",
+              "raw": "{{url}}/api/reports/projects",
               "host": [
                 "{{url}}"
               ],
               "path": [
+                "api",
                 "reports",
                 "projects"
               ]
@@ -34,11 +36,12 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{url}}/reports/tasks",
+              "raw": "{{url}}/api/reports/tasks",
               "host": [
                 "{{url}}"
               ],
               "path": [
+                "api",
                 "reports",
                 "tasks"
               ]
@@ -52,11 +55,12 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{url}}/reports/teams/{{team_id}}",
+              "raw": "{{url}}/api/reports/teams/{{team_id}}",
               "host": [
                 "{{url}}"
               ],
               "path": [
+                "api",
                 "reports",
                 "teams",
                 "{{team_id}}"
@@ -71,11 +75,12 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{url}}/reports/users/{{user_id}}",
+              "raw": "{{url}}/api/reports/users/{{user_id}}",
               "host": [
                 "{{url}}"
               ],
               "path": [
+                "api",
                 "reports",
                 "users",
                 "{{user_id}}"
@@ -99,11 +104,12 @@
               }
             },
             "url": {
-              "raw": "{{url}}/reports",
+              "raw": "{{url}}/api/reports",
               "host": [
                 "{{url}}"
               ],
               "path": [
+                "api",
                 "reports"
               ]
             }
@@ -122,11 +128,12 @@
               }
             ],
             "url": {
-              "raw": "{{url}}/reports",
+              "raw": "{{url}}/api/reports",
               "host": [
                 "{{url}}"
               ],
               "path": [
+                "api",
                 "reports"
               ]
             }
@@ -179,11 +186,12 @@
               ]
             },
             "url": {
-              "raw": "{{url}}/register",
+              "raw": "{{url}}/api/register",
               "host": [
                 "{{url}}"
               ],
               "path": [
+                "api",
                 "register"
               ]
             }
@@ -242,11 +250,12 @@
               ]
             },
             "url": {
-              "raw": "{{url}}/login",
+              "raw": "{{url}}/api/login",
               "host": [
                 "{{url}}"
               ],
               "path": [
+                "api",
                 "login"
               ],
               "query": [
@@ -286,11 +295,12 @@
               }
             },
             "url": {
-              "raw": "{{url}}/logout",
+              "raw": "{{url}}/api/logout",
               "host": [
                 "{{url}}"
               ],
               "path": [
+                "api",
                 "logout"
               ]
             }
@@ -333,11 +343,12 @@
               ]
             },
             "url": {
-              "raw": "{{url}}/verify-otp",
+              "raw": "{{url}}/api/verify-otp",
               "host": [
                 "{{url}}"
               ],
               "path": [
+                "api",
                 "verify-otp"
               ]
             }
@@ -367,11 +378,12 @@
               ]
             },
             "url": {
-              "raw": "{{url}}/forgot-password",
+              "raw": "{{url}}/api/forgot-password",
               "host": [
                 "{{url}}"
               ],
               "path": [
+                "api",
                 "forgot-password"
               ]
             }
@@ -420,11 +432,12 @@
               ]
             },
             "url": {
-              "raw": "{{url}}/reset-password",
+              "raw": "{{url}}/api/reset-password",
               "host": [
                 "{{url}}"
               ],
               "path": [
+                "api",
                 "reset-password"
               ]
             }
@@ -454,11 +467,12 @@
               ]
             },
             "url": {
-              "raw": "{{url}}/resend-otp",
+              "raw": "{{url}}/api/resend-otp",
               "host": [
                 "{{url}}"
               ],
               "path": [
+                "api",
                 "resend-otp"
               ]
             }
@@ -483,11 +497,12 @@
               "formdata": []
             },
             "url": {
-              "raw": "{{url}}/search?q=backend",
+              "raw": "{{url}}/api/search?q=backend",
               "host": [
                 "{{url}}"
               ],
               "path": [
+                "api",
                 "search"
               ],
               "query": [
@@ -511,11 +526,12 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{url}}/teams",
+              "raw": "{{url}}/api/teams",
               "host": [
                 "{{url}}"
               ],
               "path": [
+                "api",
                 "teams"
               ]
             }
@@ -539,11 +555,12 @@
               ]
             },
             "url": {
-              "raw": "{{url}}/teams",
+              "raw": "{{url}}/api/teams",
               "host": [
                 "{{url}}"
               ],
               "path": [
+                "api",
                 "teams"
               ]
             }
@@ -578,11 +595,12 @@
               "formdata": []
             },
             "url": {
-              "raw": "{{url}}/teams/{{team_id}}",
+              "raw": "{{url}}/api/teams/{{team_id}}",
               "host": [
                 "{{url}}"
               ],
               "path": [
+                "api",
                 "teams",
                 "{{team_id}}"
               ]
@@ -631,11 +649,12 @@
               }
             },
             "url": {
-              "raw": "{{url}}/teams/{{team_id}}",
+              "raw": "{{url}}/api/teams/{{team_id}}",
               "host": [
                 "{{url}}"
               ],
               "path": [
+                "api",
                 "teams",
                 "{{team_id}}"
               ]
@@ -669,11 +688,12 @@
               }
             },
             "url": {
-              "raw": "{{url}}/teams/{{team_id}}",
+              "raw": "{{url}}/api/teams/{{team_id}}",
               "host": [
                 "{{url}}"
               ],
               "path": [
+                "api",
                 "teams",
                 "{{team_id}}"
               ]
@@ -702,11 +722,12 @@
               }
             },
             "url": {
-              "raw": "{{url}}/teams/{{team_id}}",
+              "raw": "{{url}}/api/teams/{{team_id}}",
               "host": [
                 "{{url}}"
               ],
               "path": [
+                "api",
                 "teams",
                 "{{team_id}}"
               ]
@@ -720,11 +741,12 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{url}}/teams/{{team_id}}/members",
+              "raw": "{{url}}/api/teams/{{team_id}}/members",
               "host": [
                 "{{url}}"
               ],
               "path": [
+                "api",
                 "teams",
                 "{{team_id}}",
                 "members"
@@ -756,11 +778,12 @@
               ]
             },
             "url": {
-              "raw": "{{url}}/teams/{{team_id}}/members",
+              "raw": "{{url}}/api/teams/{{team_id}}/members",
               "host": [
                 "{{url}}"
               ],
               "path": [
+                "api",
                 "teams",
                 "{{team_id}}",
                 "members"
@@ -795,16 +818,18 @@
               }
             },
             "url": {
-              "raw": "{{url}}/teams/{{team_id}}/members",
+              "raw": "{{url}}/api/teams/{{team_id}}/members",
               "host": [
                 "{{url}}"
               ],
               "path": [
+                "api",
                 "teams",
                 "{{team_id}}",
                 "members"
               ]
-            }
+            },
+            "description": "Remove members. Send JSON body: {\"user_ids\":[1,2]} (same IDs as Add Members). Do not use multipart form-data on DELETE — PHP ignores it."
           },
           "response": []
         }
@@ -833,14 +858,14 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{url}}/Team/projects/",
+                  "raw": "{{url}}/api/Team/projects",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
+                    "api",
                     "Team",
-                    "projects",
-                    ""
+                    "projects"
                   ]
                 }
               },
@@ -875,11 +900,12 @@
                   }
                 },
                 "url": {
-                  "raw": "{{url}}/Team/projects/{{project_id}}",
+                  "raw": "{{url}}/api/Team/projects/{{project_id}}",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
+                    "api",
                     "Team",
                     "projects",
                     "{{project_id}}"
@@ -946,11 +972,12 @@
               }
             },
             "url": {
-              "raw": "{{url}}/projects",
+              "raw": "{{url}}/api/projects",
               "host": [
                 "{{url}}"
               ],
               "path": [
+                "api",
                 "projects"
               ]
             }
@@ -983,11 +1010,12 @@
               }
             },
             "url": {
-              "raw": "{{url}}/projects/{{project_id}}",
+              "raw": "{{url}}/api/projects/{{project_id}}",
               "host": [
                 "{{url}}"
               ],
               "path": [
+                "api",
                 "projects",
                 "{{project_id}}"
               ]
@@ -1077,11 +1105,12 @@
               ]
             },
             "url": {
-              "raw": "{{url}}/projects",
+              "raw": "{{url}}/api/projects",
               "host": [
                 "{{url}}"
               ],
               "path": [
+                "api",
                 "projects"
               ]
             }
@@ -1120,11 +1149,12 @@
               }
             ],
             "url": {
-              "raw": "{{url}}/projects/{{project_id}}",
+              "raw": "{{url}}/api/projects/{{project_id}}",
               "host": [
                 "{{url}}"
               ],
               "path": [
+                "api",
                 "projects",
                 "{{project_id}}"
               ]
@@ -1149,11 +1179,12 @@
               }
             ],
             "url": {
-              "raw": "{{url}}/projects/{{project_id}}",
+              "raw": "{{url}}/api/projects/{{project_id}}",
               "host": [
                 "{{url}}"
               ],
               "path": [
+                "api",
                 "projects",
                 "{{project_id}}"
               ]
@@ -1181,11 +1212,12 @@
               ]
             },
             "url": {
-              "raw": "{{url}}/projects/{{project_id}}/teams",
+              "raw": "{{url}}/api/projects/{{project_id}}/teams",
               "host": [
                 "{{url}}"
               ],
               "path": [
+                "api",
                 "projects",
                 "{{project_id}}",
                 "teams"
@@ -1211,11 +1243,12 @@
               ]
             },
             "url": {
-              "raw": "{{url}}/projects/{{project_id}}/teams",
+              "raw": "{{url}}/api/projects/{{project_id}}/teams",
               "host": [
                 "{{url}}"
               ],
               "path": [
+                "api",
                 "projects",
                 "{{project_id}}",
                 "teams"
@@ -1250,11 +1283,12 @@
               }
             },
             "url": {
-              "raw": "{{url}}/projects/{{project_id}}/teams",
+              "raw": "{{url}}/api/projects/{{project_id}}/teams",
               "host": [
                 "{{url}}"
               ],
               "path": [
+                "api",
                 "projects",
                 "{{project_id}}",
                 "teams"
@@ -1269,11 +1303,12 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{url}}/projects/guests",
+              "raw": "{{url}}/api/projects/guests",
               "host": [
                 "{{url}}"
               ],
               "path": [
+                "api",
                 "projects",
                 "guests"
               ]
@@ -1299,11 +1334,12 @@
               "formdata": []
             },
             "url": {
-              "raw": "{{url}}/tasks",
+              "raw": "{{url}}/api/tasks",
               "host": [
                 "{{url}}"
               ],
               "path": [
+                "api",
                 "tasks"
               ]
             }
@@ -1372,11 +1408,12 @@
               ]
             },
             "url": {
-              "raw": "{{url}}/tasks",
+              "raw": "{{url}}/api/tasks",
               "host": [
                 "{{url}}"
               ],
               "path": [
+                "api",
                 "tasks"
               ]
             }
@@ -1431,7 +1468,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"project_id\": {{project_id}},\n  \"title\": \"Profile user\",\n  \"priority\": \"high\",\n  \"description\": \"description\",\n  \"start_date\": \"2026-07-20\",\n  \"status\": \"pending\",\n  \"user_ids\": [{{user_id}}]\n}",
+              "raw": "{\n  \"project_id\": {{project_id}},\n  \"title\": \"Profile user\",\n  \"priority\": \"high\",\n  \"description\": \"description\",\n  \"start_date\": \"2026-07-20\",\n  \"due_date\": \"2026-08-30\",\n  \"status\": \"pending\",\n  \"user_ids\": [{{user_id}}]\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1439,15 +1476,17 @@
               }
             },
             "url": {
-              "raw": "{{url}}/tasks/{{task_id}}",
+              "raw": "{{url}}/api/tasks/{{task_id}}",
               "host": [
                 "{{url}}"
               ],
               "path": [
+                "api",
                 "tasks",
                 "{{task_id}}"
               ]
-            }
+            },
+            "description": "Update task fields including start_date. Use raw JSON (not form-data) for PUT — PHP does not parse multipart bodies on PUT."
           },
           "response": []
         },
@@ -1470,11 +1509,12 @@
               "formdata": []
             },
             "url": {
-              "raw": "{{url}}/tasks/{{task_id}}",
+              "raw": "{{url}}/api/tasks/{{task_id}}",
               "host": [
                 "{{url}}"
               ],
               "path": [
+                "api",
                 "tasks",
                 "{{task_id}}"
               ]
@@ -1503,11 +1543,12 @@
               }
             },
             "url": {
-              "raw": "{{url}}/tasks/{{task_id}}",
+              "raw": "{{url}}/api/tasks/{{task_id}}",
               "host": [
                 "{{url}}"
               ],
               "path": [
+                "api",
                 "tasks",
                 "{{task_id}}"
               ]
@@ -1529,11 +1570,12 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{url}}/projects/{{project_id}}/analytics/tasks",
+              "raw": "{{url}}/api/projects/{{project_id}}/analytics/tasks",
               "host": [
                 "{{url}}"
               ],
               "path": [
+                "api",
                 "projects",
                 "{{project_id}}",
                 "analytics",
@@ -1567,11 +1609,12 @@
               "raw": "{\n    \"channel_name\": \"private-conversation.{{conversation_id}}\",\n    \"socket_id\": \"1234.5678\"\n}"
             },
             "url": {
-              "raw": "{{url}}/broadcasting/auth",
+              "raw": "{{url}}/api/broadcasting/auth",
               "host": [
                 "{{url}}"
               ],
               "path": [
+                "api",
                 "broadcasting",
                 "auth"
               ]
@@ -1600,11 +1643,12 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{url}}/profile/files",
+                  "raw": "{{url}}/api/profile/files",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
+                    "api",
                     "profile",
                     "files"
                   ]
@@ -1633,16 +1677,17 @@
                   ]
                 },
                 "url": {
-                  "raw": "{{url}}/profile/files",
+                  "raw": "{{url}}/api/profile/files",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
+                    "api",
                     "profile",
                     "files"
                   ]
                 },
-                "description": "Max 10MB per file."
+                "description": "POST {{url}}/profile/files — set collection var url=http://127.0.0.1:8000/api (do NOT add another /api in the path). Max 10MB."
               },
               "response": []
             },
@@ -1657,11 +1702,12 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{url}}/profile/files/{{file_id}}",
+                  "raw": "{{url}}/api/profile/files/{{file_id}}",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
+                    "api",
                     "profile",
                     "files",
                     "{{file_id}}"
@@ -1686,11 +1732,12 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{url}}/profile/tasks/summary",
+                  "raw": "{{url}}/api/profile/tasks/summary",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
+                    "api",
                     "profile",
                     "tasks",
                     "summary"
@@ -1711,11 +1758,12 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{url}}/profile/tasks?per_page=15",
+                  "raw": "{{url}}/api/profile/tasks?per_page=15",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
+                    "api",
                     "profile",
                     "tasks"
                   ],
@@ -1740,11 +1788,12 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{url}}/profile/tasks?classification=to_do",
+                  "raw": "{{url}}/api/profile/tasks?classification=to_do",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
+                    "api",
                     "profile",
                     "tasks"
                   ],
@@ -1769,11 +1818,12 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{url}}/profile/tasks?classification=done",
+                  "raw": "{{url}}/api/profile/tasks?classification=done",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
+                    "api",
                     "profile",
                     "tasks"
                   ],
@@ -1798,11 +1848,12 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{url}}/profile/tasks?classification=in_progress",
+                  "raw": "{{url}}/api/profile/tasks?classification=in_progress",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
+                    "api",
                     "profile",
                     "tasks"
                   ],
@@ -1827,11 +1878,12 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{url}}/profile/tasks?status=pending",
+                  "raw": "{{url}}/api/profile/tasks?status=pending",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
+                    "api",
                     "profile",
                     "tasks"
                   ],
@@ -1862,11 +1914,12 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{url}}/profile/activity?limit=15",
+                  "raw": "{{url}}/api/profile/activity?limit=15",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
+                    "api",
                     "profile",
                     "activity"
                   ],
@@ -1897,11 +1950,12 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{url}}/profile",
+                  "raw": "{{url}}/api/profile",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
+                    "api",
                     "profile"
                   ]
                 },
@@ -1925,19 +1979,24 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"name\": \"hanan\",\n  \"email\": \"hanan.bayazeed56@gmail.com\",\n  \"phone\": \"1012345678\",\n  \"country_code\": \"+20\",\n  \"about\": \"Senior project manager with 5 years experience.\",\n  \"job_title\": \"Project Manager\",\n  \"experience_years\": 5,\n  \"availability_status\": \"available\",\n  \"current_team_id\": {{team_id}},\n  \"current_project_id\": {{project_id}}\n}"
+                  "raw": "{\n  \"name\": \"Miro\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
                 },
                 "url": {
-                  "raw": "{{url}}/profile/",
+                  "raw": "{{url}}/api/profile",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
-                    "profile",
-                    ""
+                    "api",
+                    "profile"
                   ]
                 },
-                "description": "Update profile fields. availability_status: available | unavailable"
+                "description": "Update profile. Prefer JSON body. Query also works: PUT {{url}}/api/profile?name=Miro"
               },
               "response": []
             }
@@ -1962,11 +2021,12 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{url}}/tasks/{{task_id}}/files",
+                  "raw": "{{url}}/api/tasks/{{task_id}}/files",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
+                    "api",
                     "tasks",
                     "{{task_id}}",
                     "files"
@@ -2016,11 +2076,12 @@
                   ]
                 },
                 "url": {
-                  "raw": "{{url}}/tasks/{{task_id}}/files",
+                  "raw": "{{url}}/api/tasks/{{task_id}}/files",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
+                    "api",
                     "tasks",
                     "{{task_id}}",
                     "files"
@@ -2045,11 +2106,12 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{url}}/files?per_page=15",
+                  "raw": "{{url}}/api/files?per_page=15",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
+                    "api",
                     "files"
                   ],
                   "query": [
@@ -2074,11 +2136,12 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{url}}/files?mine=1",
+                  "raw": "{{url}}/api/files?mine=1",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
+                    "api",
                     "files"
                   ],
                   "query": [
@@ -2102,11 +2165,12 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{url}}/files?status=attached",
+                  "raw": "{{url}}/api/files?status=attached",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
+                    "api",
                     "files"
                   ],
                   "query": [
@@ -2130,11 +2194,12 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{url}}/files?status=detached",
+                  "raw": "{{url}}/api/files?status=detached",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
+                    "api",
                     "files"
                   ],
                   "query": [
@@ -2158,11 +2223,12 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{url}}/files?file_type=pdf",
+                  "raw": "{{url}}/api/files?file_type=pdf",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
+                    "api",
                     "files"
                   ],
                   "query": [
@@ -2216,11 +2282,12 @@
                   ]
                 },
                 "url": {
-                  "raw": "{{url}}/files",
+                  "raw": "{{url}}/api/files",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
+                    "api",
                     "files"
                   ]
                 },
@@ -2274,11 +2341,12 @@
                   ]
                 },
                 "url": {
-                  "raw": "{{url}}/files",
+                  "raw": "{{url}}/api/files",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
+                    "api",
                     "files"
                   ]
                 }
@@ -2331,11 +2399,12 @@
                   ]
                 },
                 "url": {
-                  "raw": "{{url}}/files",
+                  "raw": "{{url}}/api/files",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
+                    "api",
                     "files"
                   ]
                 }
@@ -2353,11 +2422,12 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{url}}/files/{{file_id}}",
+                  "raw": "{{url}}/api/files/{{file_id}}",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
+                    "api",
                     "files",
                     "{{file_id}}"
                   ]
@@ -2384,11 +2454,12 @@
                   "raw": "{\n    \"attachable_type\": \"project\",\n    \"attachable_id\": {{project_id}}\n}"
                 },
                 "url": {
-                  "raw": "{{url}}/files/{{file_id}}/attach",
+                  "raw": "{{url}}/api/files/{{file_id}}/attach",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
+                    "api",
                     "files",
                     "{{file_id}}",
                     "attach"
@@ -2416,11 +2487,12 @@
                   "raw": "{\n    \"attachable_type\": \"task\",\n    \"attachable_id\": {{task_id}}\n}"
                 },
                 "url": {
-                  "raw": "{{url}}/files/{{file_id}}/attach",
+                  "raw": "{{url}}/api/files/{{file_id}}/attach",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
+                    "api",
                     "files",
                     "{{file_id}}",
                     "attach"
@@ -2440,11 +2512,12 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{url}}/files/{{file_id}}/detach",
+                  "raw": "{{url}}/api/files/{{file_id}}/detach",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
+                    "api",
                     "files",
                     "{{file_id}}",
                     "detach"
@@ -2465,11 +2538,12 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{url}}/files/{{file_id}}",
+                  "raw": "{{url}}/api/files/{{file_id}}",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
+                    "api",
                     "files",
                     "{{file_id}}"
                   ]
@@ -2494,11 +2568,12 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{url}}/projects/{{project_id}}/files",
+                  "raw": "{{url}}/api/projects/{{project_id}}/files",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
+                    "api",
                     "projects",
                     "{{project_id}}",
                     "files"
@@ -2548,11 +2623,12 @@
                   ]
                 },
                 "url": {
-                  "raw": "{{url}}/projects/{{project_id}}/files",
+                  "raw": "{{url}}/api/projects/{{project_id}}/files",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
+                    "api",
                     "projects",
                     "{{project_id}}",
                     "files"
@@ -2582,11 +2658,12 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{url}}/conversations?per_page=15",
+                  "raw": "{{url}}/api/conversations?per_page=15",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
+                    "api",
                     "conversations"
                   ],
                   "query": [
@@ -2611,11 +2688,12 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{url}}/conversations/{{conversation_id}}",
+                  "raw": "{{url}}/api/conversations/{{conversation_id}}",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
+                    "api",
                     "conversations",
                     "{{conversation_id}}"
                   ]
@@ -2655,24 +2733,65 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n    \"user_id\": {{user_id}}\n}"
+                  "raw": "{\n  \"user_id\": {{user_id}},\n  \"body\": \"Hello from direct chat\"\n}"
                 },
                 "url": {
-                  "raw": "{{url}}/conversations/direct",
+                  "raw": "{{url}}/api/conversations/direct",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
+                    "api",
                     "conversations",
                     "direct"
                   ]
                 },
-                "description": "Direct chat between two users. Both must belong to at least one shared team."
+                "description": "Create/get direct chat. Optional body/message sets last_message on the response."
               },
               "response": []
             },
             {
-              "name": "Get / Create Project Group Chat",
+              "name": "Get Project Group Chat",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "var jsonData = pm.response.json();",
+                      "if (jsonData.data && jsonData.data.id) {",
+                      "    pm.collectionVariables.set('conversation_id', jsonData.data.id);",
+                      "}"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}/api/projects/{{project_id}}/conversation",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "projects",
+                    "{{project_id}}",
+                    "conversation"
+                  ]
+                },
+                "description": "GET find-or-create project chat from project teams + creator."
+              },
+              "response": []
+            },
+            {
+              "name": "Create Project Group Chat",
               "event": [
                 {
                   "listen": "test",
@@ -2690,25 +2809,39 @@
                 }
               ],
               "request": {
-                "method": "GET",
+                "method": "POST",
                 "header": [
                   {
                     "key": "Accept",
                     "value": "application/json"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
                   }
                 ],
                 "url": {
-                  "raw": "{{url}}/projects/{{project_id}}/conversation",
+                  "raw": "{{url}}/api/projects/{{project_id}}/conversation",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
+                    "api",
                     "projects",
                     "{{project_id}}",
                     "conversation"
                   ]
                 },
-                "description": "GET project group chat. Creates conversation if missing and syncs participants from project teams + creator."
+                "description": "POST project group chat. user_ids is required (group member IDs). Creator is always included.",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"user_ids\": [{{user_id}}]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
               },
               "response": []
             }
@@ -2728,11 +2861,12 @@
                   }
                 ],
                 "url": {
-                  "raw": "{{url}}/conversations/{{conversation_id}}/messages?per_page=30",
+                  "raw": "{{url}}/api/conversations/{{conversation_id}}/messages?per_page=30",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
+                    "api",
                     "conversations",
                     "{{conversation_id}}",
                     "messages"
@@ -2766,11 +2900,12 @@
                   "raw": "{\n    \"body\": \"Hello from Postman!\"\n}"
                 },
                 "url": {
-                  "raw": "{{url}}/conversations/{{conversation_id}}/messages",
+                  "raw": "{{url}}/api/conversations/{{conversation_id}}/messages",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
+                    "api",
                     "conversations",
                     "{{conversation_id}}",
                     "messages"
@@ -2815,11 +2950,12 @@
               }
             },
             "url": {
-              "raw": "{{url}}/notifications/unread",
+              "raw": "{{url}}/api/notifications/unread",
               "host": [
                 "{{url}}"
               ],
               "path": [
+                "api",
                 "notifications",
                 "unread"
               ]
@@ -2833,19 +2969,15 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{url}}/notifications?id=0c958055-4c57-4928-9aef-27f92d018a98/read",
+              "raw": "{{url}}/api/notifications",
               "host": [
                 "{{url}}"
               ],
               "path": [
+                "api",
                 "notifications"
               ],
-              "query": [
-                {
-                  "key": "id",
-                  "value": "0c958055-4c57-4928-9aef-27f92d018a98/read"
-                }
-              ]
+              "query": []
             }
           },
           "response": []
@@ -2856,11 +2988,12 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{url}}/notifications/unread-count",
+              "raw": "{{url}}/api/notifications/unread-count",
               "host": [
                 "{{url}}"
               ],
               "path": [
+                "api",
                 "notifications",
                 "unread-count"
               ]
@@ -2874,11 +3007,12 @@
             "method": "PATCH",
             "header": [],
             "url": {
-              "raw": "{{url}}/notifications/read-all",
+              "raw": "{{url}}/api/notifications/read-all",
               "host": [
                 "{{url}}"
               ],
               "path": [
+                "api",
                 "notifications",
                 "read-all"
               ]
@@ -2892,11 +3026,12 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "{{url}}/notifications/read",
+              "raw": "{{url}}/api/notifications/read",
               "host": [
                 "{{url}}"
               ],
               "path": [
+                "api",
                 "notifications",
                 "read"
               ]
@@ -2910,11 +3045,12 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{url}}/notifications/{{notification_id}}",
+              "raw": "{{url}}/api/notifications/{{notification_id}}",
               "host": [
                 "{{url}}"
               ],
               "path": [
+                "api",
                 "notifications",
                 "{{notification_id}}"
               ]
@@ -2954,11 +3090,12 @@
               }
             ],
             "url": {
-              "raw": "{{url}}/dashboard/stats",
+              "raw": "{{url}}/api/dashboard/stats",
               "host": [
-                "{{base_url}}"
+                "{{url}}"
               ],
               "path": [
+                "api",
                 "dashboard",
                 "stats"
               ]
@@ -2994,11 +3131,12 @@
               }
             ],
             "url": {
-              "raw": "{{url}}/dashboard/recent-files",
+              "raw": "{{url}}/api/dashboard/recent-files",
               "host": [
                 "{{url}}"
               ],
               "path": [
+                "api",
                 "dashboard",
                 "recent-files"
               ]
@@ -3034,14 +3172,12 @@
               }
             ],
             "url": {
-              "raw": "{{url}}/dashboard/project-overview?project_id=1",
-              "protocol": "https",
+              "raw": "{{url}}/api/dashboard/project-overview?project_id=1",
               "host": [
-                "collabspace-team-one",
-                "newcinderella",
-                "online"
+                "{{url}}"
               ],
               "path": [
+                "api",
                 "dashboard",
                 "project-overview"
               ],
@@ -3084,11 +3220,12 @@
               ]
             },
             "url": {
-              "raw": "{{url}}/ai/ask",
+              "raw": "{{url}}/api/ai/ask",
               "host": [
                 "{{url}}"
               ],
               "path": [
+                "api",
                 "ai",
                 "ask"
               ]
@@ -3112,11 +3249,12 @@
               }
             ],
             "url": {
-              "raw": "{{url}}/meetings?per_page=15",
+              "raw": "{{url}}/api/meetings?per_page=15",
               "host": [
                 "{{url}}"
               ],
               "path": [
+                "api",
                 "meetings"
               ],
               "query": [
@@ -3156,11 +3294,12 @@
               }
             ],
             "url": {
-              "raw": "{{url}}/meetings/calendar?start_date=2026-06-01&end_date=2026-06-30",
+              "raw": "{{url}}/api/meetings/calendar?start_date=2026-06-01&end_date=2026-06-30",
               "host": [
                 "{{url}}"
               ],
               "path": [
+                "api",
                 "meetings",
                 "calendar"
               ],
@@ -3192,11 +3331,12 @@
               }
             ],
             "url": {
-              "raw": "{{url}}/meetings/upcoming?days=7",
+              "raw": "{{url}}/api/meetings/upcoming?days=7",
               "host": [
                 "{{url}}"
               ],
               "path": [
+                "api",
                 "meetings",
                 "upcoming"
               ],
@@ -3268,11 +3408,12 @@
               "raw": "{\n  \"title\": \"Sprint Planning\",\n  \"description\": \"Plan sprint goals\",\n  \"starts_at\": \"2026-07-20 10:00:00\",\n  \"ends_at\": \"2026-07-20 11:00:00\",\n  \"project_id\": {{project_id}},\n  \"team_ids\": [{{team_id}}],\n  \"user_ids\": [{{user_id}}]\n}"
             },
             "url": {
-              "raw": "{{url}}/meetings",
+              "raw": "{{url}}/api/meetings",
               "host": [
                 "{{url}}"
               ],
               "path": [
+                "api",
                 "meetings"
               ]
             },
@@ -3299,11 +3440,12 @@
               "raw": "{\n  \"title\": \"1-on-1 Review\",\n  \"description\": \"Performance review\",\n  \"starts_at\": \"2026-07-20 14:00:00\",\n  \"ends_at\": \"2026-07-20 15:00:00\",\n  \"user_ids\": [{{user_id}}]\n}"
             },
             "url": {
-              "raw": "{{url}}/meetings",
+              "raw": "{{url}}/api/meetings",
               "host": [
                 "{{url}}"
               ],
               "path": [
+                "api",
                 "meetings"
               ]
             }
@@ -3345,11 +3487,12 @@
               }
             ],
             "url": {
-              "raw": "{{url}}/meetings/{{meeting_id}}",
+              "raw": "{{url}}/api/meetings/{{meeting_id}}",
               "host": [
                 "{{url}}"
               ],
               "path": [
+                "api",
                 "meetings",
                 "{{meeting_id}}"
               ]
@@ -3376,11 +3519,12 @@
               "raw": "{\n  \"title\": \"Sprint Planning (Updated)\",\n  \"starts_at\": \"2026-07-21 11:00:00\",\n  \"ends_at\": \"2026-07-21 12:00:00\",\n  \"team_ids\": [{{team_id}}],\n  \"user_ids\": [{{user_id}}]\n}"
             },
             "url": {
-              "raw": "{{url}}/meetings/{{meeting_id}}",
+              "raw": "{{url}}/api/meetings/{{meeting_id}}",
               "host": [
                 "{{url}}"
               ],
               "path": [
+                "api",
                 "meetings",
                 "{{meeting_id}}"
               ]
@@ -3424,11 +3568,12 @@
               }
             ],
             "url": {
-              "raw": "{{url}}/meetings/{{meeting_id}}",
+              "raw": "{{url}}/api/meetings/{{meeting_id}}",
               "host": [
                 "{{url}}"
               ],
               "path": [
+                "api",
                 "meetings",
                 "{{meeting_id}}"
               ]
@@ -3448,11 +3593,12 @@
         "method": "POST",
         "header": [],
         "url": {
-          "raw": "{{url}}/login",
+          "raw": "{{url}}/api/login",
           "host": [
             "{{url}}"
           ],
           "path": [
+            "api",
             "login"
           ]
         }
@@ -3476,18 +3622,21 @@
       "script": {
         "type": "text/javascript",
         "exec": [
-          "if (!pm.collectionVariables.get('url')) {",
-          "    pm.collectionVariables.set('url', 'http://127.0.0.1:8000/api');",
-          "}",
-          "// Normalize accidental /api/api double prefix in request URL",
-          "const req = pm.request;",
+          "let base = String(pm.collectionVariables.get('url') || 'http://127.0.0.1:8000').replace(/\\/+$/, '');",
+          "base = base.replace(/\\/api$/i, '');",
+          "pm.collectionVariables.set('url', base);",
           "try {",
-          "  let raw = req.url.toString();",
-          "  if (raw.includes('/api/api/')) {",
-          "    raw = raw.replace('/api/api/', '/api/');",
-          "    pm.request.url = raw;",
+          "  let raw = pm.request.url.toString();",
+          "  while (raw.includes('/api/api/')) raw = raw.replace('/api/api/', '/api/');",
+          "  // If request path forgot /api, inject it after host",
+          "  raw = raw.replace(/(https?:\\/\\/[^\\/]+)\\/(?!api\\/)(.*)/, '$1/api/$2');",
+          "  // When using {{url}} host without scheme in toString, also handle {{url}}/profile -> {{url}}/api/profile",
+          "  if (raw.includes('{{url}}/') && !raw.includes('{{url}}/api/')) {",
+          "    raw = raw.replace('{{url}}/', '{{url}}/api/');",
           "  }",
-          "} catch (e) {}"
+          "  while (raw.includes('/api/api/')) raw = raw.replace('/api/api/', '/api/');",
+          "  pm.request.url = raw;",
+          "} catch (e) { console.log(e); }"
         ]
       }
     },
@@ -3530,7 +3679,7 @@
   "variable": [
     {
       "key": "url",
-      "value": "http://127.0.0.1:8000/api"
+      "value": "http://127.0.0.1:8000"
     },
     {
       "key": "token",

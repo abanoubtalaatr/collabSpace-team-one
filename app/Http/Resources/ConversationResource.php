@@ -18,7 +18,12 @@ class ConversationResource extends JsonResource
                 'name' => $this->project->name,
             ]),
             'participants' => UserSummaryResource::collection($this->whenLoaded('participants')),
-            'last_message' => new MessageResource($this->whenLoaded('lastMessage')),
+            'last_message' => $this->when(
+                $this->relationLoaded('lastMessage'),
+                fn () => $this->lastMessage
+                    ? new MessageResource($this->lastMessage)
+                    : null,
+            ),
             'created_at' => $this->created_at?->toDateTimeString(),
             'updated_at' => $this->updated_at?->toDateTimeString(),
         ];

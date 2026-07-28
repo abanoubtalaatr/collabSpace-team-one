@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Api\Chat;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Chat\StoreDirectConversationRequest;
+use App\Http\Requests\Chat\StoreProjectConversationRequest;
 use App\Http\Resources\ConversationResource;
 use App\Models\Conversation;
+use App\Models\Message;
 use App\Models\Project;
 use App\Models\User;
 use App\Services\ChatService;
@@ -69,16 +71,56 @@ class ConversationController extends Controller
             ->setStatusCode(200);
     }
 
-    public function storeDirect(StoreDirectConversationRequest $request): ConversationResource
+    public function storeProject(StoreProjectConversationRequest $request, Project $project): JsonResponse
+    {
+        abort_unless(
+            $this->chatService->canAccessProject($request->user(), $project),
+            403,
+            'You do not have access to this project chat.'
+        );
+
+        $conversation = $this->chatService->createProjectConversationWithMembers(
+            $project,
+            $request->user(),
+            $request->validated('user_ids'),
+        );
+
+        $conversation->load([
+            'project:id,name',
+            'participants:id,name,email',
+            'lastMessage.sender:id,name,email',
+        ]);
+
+        return (new ConversationResource($conversation))
+            ->response()
+            ->setStatusCode(201);
+    }
+
+    public function storeDirect(StoreDirectConversationRequest $request): JsonResponse
     {
         $recipient = User::findOrFail($request->integer('user_id'));
         $conversation = $this->chatService->findOrCreateDirectConversation($request->user(), $recipient);
+
+        $body = $request->validated('body') ?? $request->validated('message');
+
+        if (filled($body)) {
+            Message::create([
+                'conversation_id' => $conversation->id,
+                'user_id' => $request->user()->id,
+                'body' => $body,
+            ]);
+
+            $conversation->touch();
+            $conversation->unsetRelation('lastMessage');
+        }
 
         $conversation->load([
             'participants:id,name,email',
             'lastMessage.sender:id,name,email',
         ]);
 
-        return new ConversationResource($conversation);
+        return (new ConversationResource($conversation))
+            ->response()
+            ->setStatusCode(201);
     }
 }

@@ -2,14 +2,22 @@
 
 namespace App\Http\Requests\Team;
 
+use App\Http\Requests\Concerns\ParsesMethodBody;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 class UpdateTeamRequest extends FormRequest
 {
+    use ParsesMethodBody;
+
     public function authorize(): bool
     {
         return true;
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $this->mergeBodyParameters(['name', 'display_name', 'description']);
     }
 
     public function rules(): array
