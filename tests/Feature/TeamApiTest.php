@@ -83,16 +83,50 @@ class TeamApiTest extends TestCase
     public function test_api_bug_020_team_name_update_persists(): void
     {
         $user = User::factory()->create();
-        $team = Team::factory()->create(['name' => 'old-team-name']);
+        $team = Team::factory()->create([
+            'name' => 'old-team-name',
+            'display_name' => 'Old Team Name',
+        ]);
         Sanctum::actingAs($user);
 
         $this->patchJson("/api/teams/{$team->id}", [
             'name' => 'updated-team-name',
         ])
             ->assertOk()
-            ->assertJsonPath('data.name', 'updated-team-name');
+            ->assertJsonPath('data.name', 'updated-team-name')
+            ->assertJsonPath('data.display_name', 'updated-team-name');
 
         $this->assertSame('updated-team-name', $team->fresh()->name);
+        $this->assertSame('updated-team-name', $team->fresh()->display_name);
+
+        $boundary = '----TeamUpdateBoundaryXyz';
+        $multipartBody = implode("\r\n", [
+            "--{$boundary}",
+            'Content-Disposition: form-data; name="name"',
+            '',
+            'Backend 1',
+            "--{$boundary}--",
+            '',
+        ]);
+
+        $this->call(
+            'PUT',
+            "/api/teams/{$team->id}",
+            [],
+            [],
+            [],
+            [
+                'CONTENT_TYPE' => "multipart/form-data; boundary={$boundary}",
+                'HTTP_ACCEPT' => 'application/json',
+                'CONTENT_LENGTH' => (string) strlen($multipartBody),
+            ],
+            $multipartBody,
+        )
+            ->assertOk()
+            ->assertJsonPath('data.name', 'Backend 1')
+            ->assertJsonPath('data.display_name', 'Backend 1');
+
+        $this->assertSame('Backend 1', $team->fresh()->name);
     }
 
     public function test_api_bug_021_team_details_returns_existing_members_as_an_array(): void

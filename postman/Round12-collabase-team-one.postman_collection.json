@@ -632,21 +632,22 @@
                 "key": "Accept",
                 "value": "application/json",
                 "type": "text"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json",
-                "type": "text"
               }
             ],
             "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"Backend 1\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "name",
+                  "value": "Backend 1",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "Updated team description",
+                  "type": "text"
                 }
-              }
+              ]
             },
             "url": {
               "raw": "{{url}}/api/teams/{{team_id}}",
@@ -658,7 +659,8 @@
                 "teams",
                 "{{team_id}}"
               ]
-            }
+            },
+            "description": "Update team. Use form-data name=Backend 1 (same as store) or raw JSON. display_name follows name when omitted."
           },
           "response": []
         },
@@ -671,21 +673,22 @@
                 "key": "Accept",
                 "value": "application/json",
                 "type": "text"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json",
-                "type": "text"
               }
             ],
             "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"Backend 1\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "name",
+                  "value": "Backend 1",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "Updated team description",
+                  "type": "text"
                 }
-              }
+              ]
             },
             "url": {
               "raw": "{{url}}/api/teams/{{team_id}}",
@@ -697,7 +700,8 @@
                 "teams",
                 "{{team_id}}"
               ]
-            }
+            },
+            "description": "Update team. Use form-data name=Backend 1 (same as store) or raw JSON. display_name follows name when omitted."
           },
           "response": []
         },

@@ -18,6 +18,13 @@ class UpdateTeamRequest extends FormRequest
     protected function prepareForValidation(): void
     {
         $this->mergeBodyParameters(['name', 'display_name', 'description']);
+
+        // Keep display_name in sync when only name is sent (same behavior as store).
+        if ($this->filled('name') && ! $this->exists('display_name')) {
+            $this->merge([
+                'display_name' => $this->input('name'),
+            ]);
+        }
     }
 
     public function rules(): array
