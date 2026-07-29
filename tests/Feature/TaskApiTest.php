@@ -114,6 +114,37 @@ class TaskApiTest extends TestCase
         $task->refresh();
         $this->assertSame('2026-07-20', $task->start_date->toDateString());
         $this->assertSame('Updated task title', $task->title);
+
+        $boundary = '----TaskUpdateBoundaryAbc123';
+        $multipartBody = implode("\r\n", [
+            "--{$boundary}",
+            'Content-Disposition: form-data; name="start_date"',
+            '',
+            '2026-07-25',
+            "--{$boundary}",
+            'Content-Disposition: form-data; name="title"',
+            '',
+            'Multipart updated title',
+            "--{$boundary}--",
+            '',
+        ]);
+
+        $this->call(
+            'PUT',
+            "/api/tasks/{$task->id}",
+            [],
+            [],
+            [],
+            [
+                'CONTENT_TYPE' => "multipart/form-data; boundary={$boundary}",
+                'HTTP_ACCEPT' => 'application/json',
+                'CONTENT_LENGTH' => (string) strlen($multipartBody),
+            ],
+            $multipartBody,
+        )
+            ->assertOk()
+            ->assertJsonPath('data.start_date', '2026-07-25')
+            ->assertJsonPath('data.title', 'Multipart updated title');
     }
 
     public function test_api_bug_018_project_task_analytics_endpoint_is_available(): void

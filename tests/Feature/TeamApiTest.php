@@ -50,6 +50,34 @@ class TeamApiTest extends TestCase
         )->assertOk();
 
         $this->assertFalse($team->members()->whereKey($indexedMember->id)->exists());
+
+        $multipartMember = User::factory()->create();
+        $team->members()->attach($multipartMember);
+        $boundary = '----PostmanBoundary7MA4YWxkTrZu0gW';
+        $multipartBody = implode("\r\n", [
+            "--{$boundary}",
+            'Content-Disposition: form-data; name="user_ids[0]"',
+            '',
+            (string) $multipartMember->id,
+            "--{$boundary}--",
+            '',
+        ]);
+
+        $this->call(
+            'DELETE',
+            "/api/teams/{$team->id}/members",
+            [],
+            [],
+            [],
+            [
+                'CONTENT_TYPE' => "multipart/form-data; boundary={$boundary}",
+                'HTTP_ACCEPT' => 'application/json',
+                'CONTENT_LENGTH' => (string) strlen($multipartBody),
+            ],
+            $multipartBody,
+        )->assertOk();
+
+        $this->assertFalse($team->members()->whereKey($multipartMember->id)->exists());
     }
 
     public function test_api_bug_020_team_name_update_persists(): void

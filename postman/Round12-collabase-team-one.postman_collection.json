@@ -801,21 +801,18 @@
                 "key": "Accept",
                 "value": "application/json",
                 "type": "text"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json",
-                "type": "text"
               }
             ],
             "body": {
-              "mode": "raw",
-              "raw": "{\n  \"user_ids\": [{{user_id}}]\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "user_ids[0]",
+                  "value": "1",
+                  "type": "text",
+                  "description": "Member user id to remove"
                 }
-              }
+              ]
             },
             "url": {
               "raw": "{{url}}/api/teams/{{team_id}}/members",
@@ -829,7 +826,7 @@
                 "members"
               ]
             },
-            "description": "Remove members. Send JSON body: {\"user_ids\":[1,2]} (same IDs as Add Members). Do not use multipart form-data on DELETE — PHP ignores it."
+            "description": "Remove members from the team in the URL.\nSame body style as Add Members: form-data user_ids[0]=1\nOr raw JSON: {\"user_ids\":[1]}\nOr single member URL: DELETE /teams/{team}/members/{userId}"
           },
           "response": []
         }
@@ -1459,21 +1456,57 @@
                 "key": "Accept",
                 "value": "application/json",
                 "type": "text"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json",
-                "type": "text"
               }
             ],
             "body": {
-              "mode": "raw",
-              "raw": "{\n  \"project_id\": {{project_id}},\n  \"title\": \"Profile user\",\n  \"priority\": \"high\",\n  \"description\": \"description\",\n  \"start_date\": \"2026-07-20\",\n  \"due_date\": \"2026-08-30\",\n  \"status\": \"pending\",\n  \"user_ids\": [{{user_id}}]\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "project_id",
+                  "value": "{{project_id}}",
+                  "type": "text"
+                },
+                {
+                  "key": "title",
+                  "value": "Updated task title",
+                  "type": "text"
+                },
+                {
+                  "key": "name",
+                  "value": "Updated task title",
+                  "type": "text"
+                },
+                {
+                  "key": "priority",
+                  "value": "high",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "updated description",
+                  "type": "text"
+                },
+                {
+                  "key": "start_date",
+                  "value": "2026-08-01",
+                  "type": "text"
+                },
+                {
+                  "key": "due_date",
+                  "value": "2026-08-30",
+                  "type": "text"
+                },
+                {
+                  "key": "status",
+                  "value": "pending",
+                  "type": "text"
+                },
+                {
+                  "key": "user_ids[0]",
+                  "value": "{{user_id}}",
+                  "type": "text"
                 }
-              }
+              ]
             },
             "url": {
               "raw": "{{url}}/api/tasks/{{task_id}}",
@@ -1486,7 +1519,7 @@
                 "{{task_id}}"
               ]
             },
-            "description": "Update task fields including start_date. Use raw JSON (not form-data) for PUT — PHP does not parse multipart bodies on PUT."
+            "description": "PUT update task. form-data works (same as create). Or raw JSON with Content-Type application/json. start_date example: 2026-08-01"
           },
           "response": []
         },
