@@ -6,6 +6,7 @@ use App\Enums\UserAvailability;
 use App\Http\Requests\Concerns\ParsesMethodBody;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Validator;
 
 class UpdateProfileRequest extends FormRequest
 {
@@ -61,24 +62,60 @@ class UpdateProfileRequest extends FormRequest
     }
 
     /**
+     * @return array<int, callable(Validator): void>
+     */
+    public function after(): array
+    {
+        return [
+            function (Validator $validator): void {
+                $fields = [
+                    'name',
+                    'email',
+                    'phone',
+                    'country_code',
+                    'about',
+                    'job_title',
+                    'experience_years',
+                    'availability_status',
+                    'current_team_id',
+                    'current_project_id',
+                ];
+
+                $hasAny = collect($fields)->contains(fn (string $field) => $this->exists($field));
+
+                if (! $hasAny) {
+                    $validator->errors()->add(
+                        'profile',
+                        'At least one profile field is required to update.',
+                    );
+                }
+            },
+        ];
+    }
+
+    /**
      * @return array<string, mixed>
      */
     public function profileAttributes(): array
     {
-        $data = $this->safe()->only([
-            'name',
-            'email',
-            'phone',
-            'country_code',
-            'about',
-            'job_title',
-            'availability_status',
-            'current_team_id',
-            'current_project_id',
-        ]);
+        $validated = $this->validated();
 
-        if ($this->has('experience_years')) {
-            $data['exp'] = $this->integer('experience_years');
+        $data = collect($validated)
+            ->only([
+                'name',
+                'email',
+                'phone',
+                'country_code',
+                'about',
+                'job_title',
+                'availability_status',
+                'current_team_id',
+                'current_project_id',
+            ])
+            ->all();
+
+        if (array_key_exists('experience_years', $validated)) {
+            $data['exp'] = (int) $validated['experience_years'];
         }
 
         return $data;

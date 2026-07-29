@@ -30,8 +30,56 @@ class ProfileApiTest extends TestCase
 
         $this->assertSame('Miro', $user->fresh()->name);
 
+        $this->putJson('/api/profile', [])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors(['profile']);
+
+        $boundary = '----ProfileUpdateBoundary';
+        $multipartBody = implode("\r\n", [
+            "--{$boundary}",
+            'Content-Disposition: form-data; name="name"',
+            '',
+            'hanan',
+            "--{$boundary}",
+            'Content-Disposition: form-data; name="job_title"',
+            '',
+            'Project Manager',
+            "--{$boundary}",
+            'Content-Disposition: form-data; name="experience_years"',
+            '',
+            '5',
+            "--{$boundary}--",
+            '',
+        ]);
+
+        $this->call(
+            'PUT',
+            '/api/profile',
+            [],
+            [],
+            [],
+            [
+                'CONTENT_TYPE' => "multipart/form-data; boundary={$boundary}",
+                'HTTP_ACCEPT' => 'application/json',
+                'CONTENT_LENGTH' => (string) strlen($multipartBody),
+            ],
+            $multipartBody,
+        )
+            ->assertOk()
+            ->assertJsonPath('data.name', 'hanan')
+            ->assertJsonPath('data.job_title', 'Project Manager')
+            ->assertJsonPath('data.experience_years', 5);
+
+        $this->postJson('/api/profile', [
+            'name' => 'Post Updated Name',
+            'about' => 'Updated about',
+        ])
+            ->assertOk()
+            ->assertJsonPath('data.name', 'Post Updated Name')
+            ->assertJsonPath('data.about', 'Updated about');
+
         $this->getJson('/api/profile')
             ->assertOk()
-            ->assertJsonPath('data.name', 'Miro');
+            ->assertJsonPath('data.name', 'Post Updated Name');
     }
 }

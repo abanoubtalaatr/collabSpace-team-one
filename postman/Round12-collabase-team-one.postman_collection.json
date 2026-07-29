@@ -2003,7 +2003,7 @@
             {
               "name": "Update Profile",
               "request": {
-                "method": "PUT",
+                "method": "POST",
                 "header": [
                   {
                     "key": "Accept",
@@ -2016,7 +2016,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"name\": \"Miro\"\n}",
+                  "raw": "{\n  \"name\": \"hanan\",\n  \"email\": \"hanan.bayazeed56@gmail.com\",\n  \"phone\": \"1012345678\",\n  \"country_code\": \"+20\",\n  \"about\": \"Senior project manager with 5 years experience.\",\n  \"job_title\": \"Project Manager\",\n  \"experience_years\": 5,\n  \"availability_status\": \"available\",\n  \"current_team_id\": {{team_id}},\n  \"current_project_id\": {{project_id}}\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -2033,7 +2033,7 @@
                     "profile"
                   ]
                 },
-                "description": "Update profile. Prefer JSON body. Query also works: PUT {{url}}/api/profile?name=Miro"
+                "description": "Update profile via POST /api/profile (also accepts PUT/PATCH). Use raw JSON + Content-Type application/json. Empty body returns 422."
               },
               "response": []
             }

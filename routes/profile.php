@@ -10,6 +10,8 @@ Route::middleware(['auth:sanctum'])->prefix('profile')->name('profile.')->group(
     Route::get('/', [ProfileController::class, 'show'])->name('show');
     Route::put('/', [ProfileController::class, 'update'])->name('update');
     Route::patch('/', [ProfileController::class, 'update']);
+    // POST also accepted — some servers/clients drop PUT bodies (esp. form-data).
+    Route::post('/', [ProfileController::class, 'update']);
 
     Route::get('/activity', [ProfileActivityController::class, 'index'])->name('activity');
 
