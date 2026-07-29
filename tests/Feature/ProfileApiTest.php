@@ -78,8 +78,46 @@ class ProfileApiTest extends TestCase
             ->assertJsonPath('data.name', 'Post Updated Name')
             ->assertJsonPath('data.about', 'Updated about');
 
+        // Invalid optional IDs must not block other profile fields.
+        $this->putJson('/api/profile', [
+            'name' => 'Still Updates',
+            'job_title' => 'Engineer',
+            'current_team_id' => 999999,
+            'current_project_id' => 999999,
+        ])
+            ->assertOk()
+            ->assertJsonPath('data.name', 'Still Updates')
+            ->assertJsonPath('data.job_title', 'Engineer');
+
+        $urlencoded = http_build_query([
+            'name' => 'Urlencoded Name',
+            'job_title' => 'PM',
+            'experience_years' => 5,
+            'country_code' => '+20',
+            'phone' => '1012345678',
+        ]);
+
+        $this->call(
+            'PUT',
+            '/api/profile',
+            [],
+            [],
+            [],
+            [
+                'CONTENT_TYPE' => 'application/x-www-form-urlencoded',
+                'HTTP_ACCEPT' => 'application/json',
+                'CONTENT_LENGTH' => (string) strlen($urlencoded),
+            ],
+            $urlencoded,
+        )
+            ->assertOk()
+            ->assertJsonPath('data.name', 'Urlencoded Name')
+            ->assertJsonPath('data.job_title', 'PM')
+            ->assertJsonPath('data.experience_years', 5)
+            ->assertJsonPath('data.country_code', '+20');
+
         $this->getJson('/api/profile')
             ->assertOk()
-            ->assertJsonPath('data.name', 'Post Updated Name');
+            ->assertJsonPath('data.name', 'Urlencoded Name');
     }
 }

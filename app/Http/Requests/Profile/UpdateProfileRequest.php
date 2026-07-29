@@ -4,6 +4,8 @@ namespace App\Http\Requests\Profile;
 
 use App\Enums\UserAvailability;
 use App\Http\Requests\Concerns\ParsesMethodBody;
+use App\Models\Project;
+use App\Models\Team;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Validator;
@@ -32,11 +34,19 @@ class UpdateProfileRequest extends FormRequest
             'current_project_id',
         ]);
 
-        // Support PUT /profile?name=Miro and JSON/form bodies.
         $fromQuery = array_filter($this->query(), fn ($value) => $value !== null && $value !== '');
 
         if ($fromQuery !== []) {
             $this->merge($fromQuery);
+        }
+
+        // Optional relation IDs must not block the rest of the profile update.
+        if ($this->filled('current_team_id') && ! Team::query()->whereKey($this->input('current_team_id'))->exists()) {
+            $this->getInputSource()->remove('current_team_id');
+        }
+
+        if ($this->filled('current_project_id') && ! Project::query()->whereKey($this->input('current_project_id'))->exists()) {
+            $this->getInputSource()->remove('current_project_id');
         }
     }
 
